@@ -9,6 +9,7 @@ import {
   BRAND_COLOR,
   LIGHT_COLOR,
 } from "../color";
+import PostDetail from "../screen/PostDetail";
 
 const Tab = createBottomTabNavigator();
 

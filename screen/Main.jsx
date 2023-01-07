@@ -154,15 +154,13 @@ export default MyPage = () => {
 };
 
 const CommentRow = styled.View`
-  width: 390px;
-  height: 150px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-left: 10px;
+  width: 93%;
+  height: 18%;
+  margin: 3.5%;
   border-radius: 10px;
-  padding-top: 70px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-top: 19%;
+  padding-left: 2%;
+  padding-right: 2%;
 `;
 const UserImg = styled.Image`
   width: 50px;
@@ -194,5 +192,5 @@ const EditDeleteBtn = styled.View`
 const PlusBtn = styled.View`
   position: absolute;
   margin-left: 340px;
-  margin-top: 750px;
+  margin-top: 180%;
 `;
