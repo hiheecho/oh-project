@@ -7,10 +7,12 @@ import {
   Text,
   ScrollView,
   TextInput,
+  StyleSheet,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import styled from "@emotion/native";
 import { LIGHT_GRAY, LIGHT_BTN } from "../color";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const PostDetail = () => {
   return (
@@ -34,31 +36,36 @@ const PostDetail = () => {
         </ContentText>
       </DetailContent>
 
-      <ScrollView>
-        <ContentHeader>
-          <UserInfo>
-            <UserImage source={require("../assets/icon.png")} />
-            <Nickname>부드라미</Nickname>
-          </UserInfo>
-          <MoreBtn>
-            <Feather name="more-horizontal" size={24} color="black" />
-          </MoreBtn>
-        </ContentHeader>
-        <CommentText>
-          부드라미 BGM 너무 좋아요. {"\n"}바들바들 동물콘 브금 다들 들어보세요.
-          {"\n"}감사합니다.
-        </CommentText>
-      </ScrollView>
+      <ContentList>
+        <Content>
+          <ContentHeader>
+            <UserInfo>
+              <UserImage source={require("../assets/icon.png")} />
+              <Nickname>부드라미</Nickname>
+            </UserInfo>
+            <MoreBtn>
+              <Feather name="more-horizontal" size={24} color="black" />
+            </MoreBtn>
+          </ContentHeader>
+          <CommentText>
+            부드라미 BGM 너무 좋아요. {"\n"}바들바들 동물콘 브금 다들
+            들어보세요.
+            {"\n"}감사합니다.
+          </CommentText>
+        </Content>
+      </ContentList>
       {/* 키보드가 UI 가림 (수정중) */}
-      <CommentInputContainer behavior={"padding"}>
-        <CommentUser source={require("../assets/icon.png")} />
-        <CommentInputWrapper>
-          <CommentInput placeholder="댓글을 적어주세요." />
-          <TouchableOpacity>
-            <Text>댓글쓰기</Text>
-          </TouchableOpacity>
-        </CommentInputWrapper>
-      </CommentInputContainer>
+      <KeyboardAwareScrollView>
+        <CommentInputContainer>
+          <CommentUser source={require("../assets/icon.png")} />
+          <CommentInputWrapper>
+            <CommentInput placeholder="댓글을 적어주세요." />
+            <TouchableOpacity>
+              <Text>댓글쓰기</Text>
+            </TouchableOpacity>
+          </CommentInputWrapper>
+        </CommentInputContainer>
+      </KeyboardAwareScrollView>
     </>
   );
 };
@@ -78,12 +85,19 @@ const UserImage = styled.Image`
 //   overflow: hidden;
 //   margin: 20px auto;
 // `;
+
 const UserInfo = styled.View`
   flex-direction: row;
   align-items: center;
 `;
 const Nickname = styled.Text`
   font-size: 18px;
+`;
+const ContentList = styled.ScrollView`
+  flex: 1;
+`;
+const Content = styled.View`
+  margin-left: 15px;
 `;
 const ContentHeader = styled.View`
   flex-direction: row;
@@ -117,13 +131,15 @@ const MoreBtn = styled.TouchableOpacity`
   margin-top: 10px;
 `;
 
-const CommentInputContainer = styled.KeyboardAvoidingView`
+const CommentInputContainer = styled.View`
   width: 100%;
   flex-direction: row;
   height: 60px;
+  background-color: blue;
   justify-content: space-evenly;
   align-items: center;
-  padding-bottom: 100px;
+  position: absolute;
+  bottom: 0px;
 `;
 
 const CommentInputWrapper = styled.View`
@@ -131,7 +147,6 @@ const CommentInputWrapper = styled.View`
   flex-direction: row;
   height: 50px;
   background-color: ${LIGHT_GRAY};
-
   justify-content: space-between;
   align-items: center;
   border-radius: 60px;
