@@ -156,7 +156,8 @@ export default MyPage = () => {
 const CommentRow = styled.View`
   width: 390px;
   height: 150px;
-  margin-top: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   margin-left: 10px;
   border-radius: 10px;
   padding-top: 70px;
