@@ -1,10 +1,17 @@
 import React from "react";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Dimensions,
+} from "react-native";
 import styled from "@emotion/native";
 import { StyleSheet } from "react-native";
 import { LIGHT_GRAY, DARK_COLOR, LIGHT_COLOR, DARK_GRAY } from "../color";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { useColorScheme } from "react-native";
+import { SCREEN_HEIGHT } from "../util";
 
 const MyPage = () => {
   const isDark = useColorScheme() === "dark";
@@ -16,124 +23,26 @@ const MyPage = () => {
 
   return (
     <ScrollView>
-      <MyImg
-        style={StyleSheet.absoluteFill}
-        source={require("../assets/testImg.jpg")}
-      />
-      <TouchableOpacity>
-        <ProfileEdit style={{ paddingHorizontal: 330 }}>
-          <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
-        </ProfileEdit>
-      </TouchableOpacity>
-      <MyInfo>
-        <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyInfoName>
-        <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {myInfoComment.slice(0, 140)}
-          {myInfoComment.length > 140 && "..."}
-        </MyInfoComment>
-      </MyInfo>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
+      <DimensionView>
+        <MyImg
           style={StyleSheet.absoluteFill}
           source={require("../assets/testImg.jpg")}
         />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
+        <TouchableOpacity>
+          <ProfileEdit style={{ paddingHorizontal: 330 }}>
+            <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
+          </ProfileEdit>
+        </TouchableOpacity>
+        <MyInfo>
+          <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+            {username}
+          </MyInfoName>
+          <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+            {myInfoComment.slice(0, 140)}
+            {myInfoComment.length > 140 && "..."}
+          </MyInfoComment>
+        </MyInfo>
+      </DimensionView>
       <MyCommentRow
         style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
       >
@@ -158,12 +67,15 @@ const MyPage = () => {
   );
 };
 export default MyPage;
+const DimensionView = styled.View`
+  height: ${SCREEN_HEIGHT / 4.5 + "px"};
+  /* background-color: red; */
+`;
 
 const ProfileEdit = styled.Text`
   position: absolute;
-  margin-top: 15px;
-  font-weight: 600;
-  font-size: 13px;
+  margin-top: 10px;
+  margin-left: 10px;
 `;
 
 const MyImg = styled.Image`
