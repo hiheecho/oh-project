@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "@emotion/native";
 import { Feather } from "@expo/vector-icons";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
+
 const Comment = () => {
   return (
     <CommentWrapper>
@@ -26,7 +28,7 @@ const CommentWrapper = styled.View`
 const ContentHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  width: 85%;
+  width: ${SCREEN_WIDTH / 1.2 + "px"};
   margin: 20px auto 0 auto;
 `;
 const UserInfo = styled.View`
@@ -44,10 +46,10 @@ const Nickname = styled.Text`
   font-size: 18px;
 `;
 const CommentText = styled.Text`
-  width: 85%;
+  width: ${SCREEN_WIDTH / 1.2 + "px"};
   margin: auto;
   font-size: 18px;
-  line-height: 25px;
+  line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 20px;
 `;
 const MoreBtn = styled.TouchableOpacity`
