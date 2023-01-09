@@ -8,12 +8,12 @@ import { SCREEN_HEIGHT } from "../util";
 
 const PostDetail = ({
   route: {
-    params: { review },
+    params: { item },
   },
 }) => {
   return (
     <>
-      <DetailContent review={review} />
+      <DetailContent item={item} />
       <CommentList>
         <Comment />
       </CommentList>
