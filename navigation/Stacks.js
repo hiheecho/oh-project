@@ -3,6 +3,9 @@ import React from "react";
 import { useColorScheme } from "react-native";
 import Post from "../screen/Post";
 import { BRAND_COLOR } from "../color";
+import Login from "../screen/Login";
+import SignUp from "../screen/SignUp";
+import Main from "../screen/Main";
 // import { authService } from "../firebase";
 // import { signOut } from "firebase/auth";
 import PostDetail from "../screen/PostDetail";
@@ -26,7 +29,23 @@ const Stacks = ({ navigation: { goBack } }) => {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="PostDetail" component={PostDetail} />
+      <Stack.Screen
+        name="Main"
+        component={Main}
+        options={{
+          headerTintColor: BRAND_COLOR,
+        }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="SignUp"
+        component={SignUp}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };
