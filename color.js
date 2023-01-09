@@ -1,6 +1,6 @@
 export const LIGHT_BACKGROUNDCOLOR = "#F5F5F5";
 export const LIGHT_COLOR = "#222222";
-export const LIGHT_GRAY = "#F0F0F0";
+export const LIGHT_GRAY = "#e8e8e8";
 export const LIGHT_BTN = "#666666";
 
 export const DARK_BACKGROUNDCOLOR = "#222222";
