@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
-const SignUp = () => {
+const Login = () => {
   const { navigate } = useNavigation();
   const isDark = useColorScheme() === "dark";
 
@@ -130,4 +130,4 @@ const TextBox = styled.Text`
   font-size: 16px;
 `;
 
-export default SignUp;
+export default Login;

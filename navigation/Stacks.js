@@ -5,7 +5,6 @@ import Post from "../screen/Post";
 import { BRAND_COLOR } from "../color";
 import Login from "../screen/Login";
 import SignUp from "../screen/SignUp";
-import Main from "../screen/Main";
 // import { authService } from "../firebase";
 // import { signOut } from "firebase/auth";
 import PostDetail from "../screen/PostDetail";
@@ -23,17 +22,10 @@ const Stacks = ({ navigation: { goBack } }) => {
       }}
     >
       <Stack.Screen
-        name="글쓰기"
-        component={Post}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         name="Post"
         component={Post}
         options={{
-          headerTintColor: BRAND_COLOR,
+          headerShown: false,
         }}
       />
       <Stack.Screen

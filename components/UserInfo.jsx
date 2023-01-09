@@ -13,20 +13,9 @@ import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { useColorScheme } from "react-native";
 import { SCREEN_HEIGHT } from "../util";
 
-const UserInfo = ({ posts }) => {
-  const username = "영화배우 손석구";
-  const myInfoComment =
-    "저는 이번에 react를 배우게 된 손석구입니다. 만나서 반갑습니다. 이번 경험을 여러분과 함께해서 기쁩니다. 앞으로도 잘 부탁드립니다.";
-  const isDark = useColorScheme() === "dark";
+const UserInfo = ({ item }) => {
 
-  /**  const newPost = {
-    text,
-    createdAt: Date.now(),
-    isEdit: false,
-    nickname,
-    userID,
-  };
- */
+  const isDark = useColorScheme() === "dark";
 
   return (
     <DimensionView>
@@ -41,11 +30,11 @@ const UserInfo = ({ posts }) => {
       </TouchableOpacity>
       <MyInfo>
         <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {posts.username}
+          {item.userName}
         </MyInfoName>
         <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {posts.text.slice(0, 140)}
-          {posts.text.length > 140 && "..."}
+          {item.text.slice(0, 140)}
+          {item.text.length > 140 && "..."}
         </MyInfoComment>
       </MyInfo>
     </DimensionView>
