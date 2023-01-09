@@ -30,8 +30,8 @@ const Stacks = ({ navigation: { goBack } }) => {
         }}
       />
       <Stack.Screen
-        name="Main"
-        component={Main}
+        name="Post"
+        component={Post}
         options={{
           headerTintColor: BRAND_COLOR,
         }}

@@ -12,7 +12,7 @@ import { dbService } from "../firebase";
 import { collection } from "@firebase/firestore";
 import { async } from "@firebase/util";
 
-export default MyPage = () => {
+export default Main = () => {
   const { navigate } = useNavigation();
   const [contentList, setContentList] = useState([]);
 
@@ -20,7 +20,7 @@ export default MyPage = () => {
   useEffect(() => {
     const q = query(
       collection(dbService, "posts"),
-      orderBy("createAt", "desc")
+      orderBy("createdAt", "desc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const newContent = snapshot.docs.map((doc) => ({
@@ -38,7 +38,7 @@ export default MyPage = () => {
   return (
     <>
       <FlatList
-        rItemSeparatorComponent={<View style={{ height: 10 }} />}
+        itemSeparatorComponent={<View style={{ height: 10 }} />}
         data={contentList}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -50,7 +50,7 @@ export default MyPage = () => {
               source={require("../assets/icon.png")}
             />
             <CommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {item.createAt}
+              {item.createdAt}
             </CommentName>
             <CommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
               {item.text.slice(0, 60)}
@@ -72,15 +72,7 @@ export default MyPage = () => {
         <TouchableOpacity
           onPress={() => navigate("Stacks", { screen: "Post" })}
         >
-          <AntDesign
-            name="plus"
-            size={50}
-            color="white"
-            style={{
-              backgroundColor: BRAND_COLOR,
-              borderRadius: 50,
-            }}
-          />
+          <AntDesign name="pluscircle" size={50} color={BRAND_COLOR} />
         </TouchableOpacity>
       </PlusBtn>
     </>
@@ -126,8 +118,9 @@ const EditDeleteBtn = styled.View`
 
 const PlusBtn = styled.View`
   position: absolute;
-  margin-top: 750px;
-  margin-left: 340px;
+  bottom: 10px;
+  right: 10px;
   height: 50px;
   width: 50px;
+  overflow: hidden;
 `;

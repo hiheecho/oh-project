@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   Dimensions,
+  FlatList,
+  TextInput,
 } from "react-native";
 import styled from "@emotion/native";
 import { StyleSheet } from "react-native";
@@ -12,95 +14,107 @@ import { LIGHT_GRAY, DARK_COLOR, LIGHT_COLOR, DARK_GRAY } from "../color";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { useColorScheme } from "react-native";
 import { SCREEN_HEIGHT } from "../util";
+import UserInfo from "../components/UserInfo";
+import { useNavigation } from "@react-navigation/native";
+import {
+  addDoc,
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import { dbService } from "../firebase";
+import { async } from "@firebase/util";
+
+/** 참고contents 
+    const newPost = {
+    text,
+    createdAt: Date.now(),
+    isEdit: false,
+    username,
+    userID,
+  }; */
 
 const MyPage = () => {
+  // const username = "영화배우 손석구";
+  // const myInfoComment =
+  //   "저는 이번에 react를 배우게 된 손석구입니다. 만나서 반갑습니다. 이번 경험을 여러분과 함께해서 기쁩니다. 앞으로도 잘 부탁드립니다.";
+  // const MyComment =
+  //   "이 노래 진짜 좋아요. 저도 영화 촬영 할 때 마다 듣고 하는데 진짜 너무 좋아요! 저는 적극 추천합니다.";
+
+  /**code시작 */
   const isDark = useColorScheme() === "dark";
-  const username = "영화배우 손석구";
-  const myInfoComment =
-    "저는 이번에 react를 배우게 된 손석구입니다. 만나서 반갑습니다. 이번 경험을 여러분과 함께해서 기쁩니다. 앞으로도 잘 부탁드립니다.";
-  const MyComment =
-    "이 노래 진짜 좋아요. 저도 영화 촬영 할 때 마다 듣고 하는데 진짜 너무 좋아요! 저는 적극 추천합니다.";
+  const { navigate } = useNavigation();
+  const [myContents, setMyContents] = useState([]);
+  console.log("myContents", myContents);
+  /**console.log("myContents", myContents);
+    에러 문제점 찾기 
+  */
+
+  /**작성한 글 불러오기 */
+  useEffect(() => {
+    const q = query(
+      collection(dbService, "posts"),
+      orderBy("createdAt", "desc")
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const newContents = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setMyContents(newContents);
+    });
+    return unsubscribe;
+  }, []);
+
+  /**유저 정보 수정하기 */
+
+  /**유저 이미지 수정하기 */
+
+  /**유저 이미지 없으면 기본 이미지로 하기 */
+
+  /**유저 게시물 수정하기 */
+
+  /**유저 게시물 삭제하기 */
 
   return (
-    <ScrollView>
-      <DimensionView>
-        <MyImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <TouchableOpacity>
-          <ProfileEdit style={{ paddingHorizontal: 330 }}>
-            <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
-          </ProfileEdit>
-        </TouchableOpacity>
-        <MyInfo>
-          <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-            {username}
-          </MyInfoName>
-          <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-            {myInfoComment.slice(0, 140)}
-            {myInfoComment.length > 140 && "..."}
-          </MyInfoComment>
-        </MyInfo>
-      </DimensionView>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
-    </ScrollView>
+    <FlatList
+      data={myContents}
+      renderItem={(item) => item.id}
+      keyExtractor={({ item }) => {
+        <>
+          <UserInfo posts={item} />
+
+          <MyCommentRow
+            style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
+          >
+            <MyCommentImg
+              style={StyleSheet.absoluteFill}
+              source={require("../assets/testImg.jpg")}
+            />
+            <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+              {item.createdAt}
+            </MyCommentName>
+            <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+              {item.text.slice(0, 60)}
+              {item.text.length > 60 && "..."}
+            </MyCommentText>
+            <EditDeleteBtn>
+              <TouchableOpacity>
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={17}
+                  color="#AAAAAA"
+                />
+              </TouchableOpacity>
+            </EditDeleteBtn>
+          </MyCommentRow>
+        </>;
+      }}
+    />
   );
 };
 export default MyPage;
-const DimensionView = styled.View`
-  height: ${SCREEN_HEIGHT / 4.5 + "px"};
-  /* background-color: red; */
-`;
-
-const ProfileEdit = styled.Text`
-  position: absolute;
-  margin-top: 10px;
-  margin-left: 10px;
-`;
-
-const MyImg = styled.Image`
-  width: 120px;
-  height: 120px;
-  border-radius: 100px;
-  margin-top: 37px;
-  margin-left: 20px;
-`;
-const MyInfo = styled.View`
-  margin-top: 30px;
-`;
-const MyInfoName = styled.Text`
-  margin-left: 160px;
-  margin-top: 13px;
-  font-size: 22px;
-  font-weight: 700;
-  margin-bottom: 10px;
-`;
-const MyInfoComment = styled.Text`
-  width: 190px;
-  height: 100px;
-  margin-bottom: 5px;
-  margin-left: 160px;
-`;
 
 const MyCommentRow = styled.View`
   width: 345px;

@@ -20,7 +20,7 @@ const SignUp = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log("로그인 성공!");
-        navigate("Stacks", { screen: "Main" });
+        navigate("Tabs", { screen: "Main" });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -56,7 +56,7 @@ const SignUp = () => {
         >
           <TextBox>로그인</TextBox>
         </LoginButton>
-        <SignUpButton onPress={() => navigate("Stacks", { screen: "SignUp" })}>
+        <SignUpButton onPress={() => navigate("Tabs", { screen: "SignUp" })}>
           <TextBox>회원가입</TextBox>
         </SignUpButton>
       </ButtonBox>

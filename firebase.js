@@ -3,13 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 const firebaseConfig = {
-  apiKey: "AIzaSyANXDksNNIobIjLTfBgE2DFcm82ucgQ_7g",
-  authDomain: "react-native-prac-56143.firebaseapp.com",
-  projectId: "react-native-prac-56143",
-  storageBucket: "react-native-prac-56143.appspot.com",
-  messagingSenderId: "53751644224",
-  appId: "1:53751644224:web:45a3cc12b0b43f40301fa5",
-  measurementId: "G-RG6V0ZMNTF",
+  apiKey: "AIzaSyA2EbkUCP0-kT1OL5zW2QEqh24euDeUO8E",
+  authDomain: "todolist-a2034.firebaseapp.com",
+  projectId: "todolist-a2034",
+  storageBucket: "todolist-a2034.appspot.com",
+  messagingSenderId: "914656940447",
+  appId: "1:914656940447:web:41684f3d62dfee252dadaa",
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
