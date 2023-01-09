@@ -50,8 +50,9 @@ const SignUp = () => {
     await createUserWithEmailAndPassword(auth, userId, userPassword)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        await updateProfile(auth.currentUser, { userName })
+        await updateProfile(auth.currentUser, { displayName: userName })
           .then(() => {
+            console.log(auth.currentUser);
             console.log(userCredential);
           })
           .catch((error) => {

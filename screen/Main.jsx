@@ -20,7 +20,7 @@ const Main = () => {
   useEffect(() => {
     const q = query(
       collection(dbService, "posts"),
-      orderBy("createAt", "desc")
+      orderBy("createdAt", "desc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const newContent = snapshot.docs.map((doc) => ({
@@ -50,7 +50,7 @@ const Main = () => {
               source={require("../assets/icon.png")}
             />
             <CommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {item.createAt}
+              {item.createdAt}
             </CommentName>
             <CommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
               {item.text.slice(0, 60)}
@@ -120,8 +120,8 @@ const CommentName = styled.Text`
 
 const EditDeleteBtn = styled.View`
   position: absolute;
-  margin-left: 340px;
-  margin-top: 15px;
+  right: 15px;
+  top: 10px;
 `;
 
 const PlusBtn = styled.View`
@@ -130,6 +130,8 @@ const PlusBtn = styled.View`
   right: 10px;
   height: 50px;
   width: 50px;
+  overflow: hidden;
+  border-radius: 50px;
 `;
 
 export default Main;
