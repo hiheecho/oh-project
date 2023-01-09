@@ -12,7 +12,7 @@ import { dbService } from "../firebase";
 import { collection } from "@firebase/firestore";
 import { async } from "@firebase/util";
 
-export default MyPage = () => {
+const Main = () => {
   const { navigate } = useNavigation();
   const [contentList, setContentList] = useState([]);
 
@@ -126,8 +126,10 @@ const EditDeleteBtn = styled.View`
 
 const PlusBtn = styled.View`
   position: absolute;
-  margin-top: 750px;
-  margin-left: 340px;
+  bottom: 10px;
+  right: 10px;
   height: 50px;
   width: 50px;
 `;
+
+export default Main;
