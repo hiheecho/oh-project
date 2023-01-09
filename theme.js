@@ -10,9 +10,15 @@ import {
 } from "./color";
 
 export const lightTheme = {
-  color: {},
+  background: LIGHT_BACKGROUNDCOLOR,
+  color: LIGHT_COLOR,
+  gray: LIGHT_GRAY,
+  btn: LIGHT_BTN,
 };
 
 export const darkTheme = {
-  color: {},
+  background: DARK_BACKGROUNDCOLOR,
+  color: DARK_COLOR,
+  gray: DARK_GRAY,
+  btn: DARK_BTN,
 };
