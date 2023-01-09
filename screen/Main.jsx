@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  ScrollView,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  TextInput,
-  ActivityIndicator,
-} from "react-native";
+import { FlatList, TouchableOpacity, StyleSheet, View } from "react-native";
 import styled from "@emotion/native";
 import { DARK_COLOR, LIGHT_COLOR, BRAND_COLOR } from "../color";
 import { DARK_GRAY, LIGHT_GRAY } from "../color";
@@ -15,30 +7,14 @@ import { useColorScheme } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { addDoc, query, onSnapshot, orderBy } from "@firebase/firestore";
+import { query, onSnapshot, orderBy } from "@firebase/firestore";
 import { dbService } from "../firebase";
 import { collection } from "@firebase/firestore";
 import { async } from "@firebase/util";
-import { RefreshControl } from "react-native";
 
 export default MyPage = () => {
   const { navigate } = useNavigation();
   const [contentList, setContentList] = useState([]);
-
-  {
-    /*const newPost = {
-    text,
-    createAt: Date.now(),
-    isEdit: false,
-  };*/
-  }
-
-  {
-    /*const addPost = async () => {
-    await addDoc(collection(dbService, "posts"), newPost);
-    setText("");
-  };*/
-  }
 
   //불러오기
   useEffect(() => {
@@ -51,18 +27,18 @@ export default MyPage = () => {
         id: doc.id,
         ...doc.data(),
       }));
+
       setContentList(newContent);
     });
     return unsubscribe;
   }, []);
 
   const isDark = useColorScheme() === "dark";
-  const username = "유저";
 
   return (
     <>
       <FlatList
-        ItemSeparatorComponent={<View style={{ height: 10 }} />}
+        rItemSeparatorComponent={<View style={{ height: 10 }} />}
         data={contentList}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
@@ -93,7 +69,9 @@ export default MyPage = () => {
         )}
       />
       <PlusBtn>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigate("Stacks", { screen: "Post" })}
+        >
           <AntDesign
             name="plus"
             size={50}
@@ -152,10 +130,4 @@ const PlusBtn = styled.View`
   margin-left: 340px;
   height: 50px;
   width: 50px;
-`;
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
