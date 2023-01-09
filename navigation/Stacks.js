@@ -8,6 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { BRAND_COLOR } from "../color";
 // import { authService } from "../firebase";
 // import { signOut } from "firebase/auth";
+import PostDetail from "../screen/PostDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ const Stacks = ({ navigation: { goBack } }) => {
           ),
         }}
       />
+      <Stack.Screen name="PostDetail" component={PostDetail} />
     </Stack.Navigator>
   );
 };

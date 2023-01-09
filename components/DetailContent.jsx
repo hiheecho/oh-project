@@ -2,8 +2,9 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import styled from "@emotion/native";
 import { LIGHT_GRAY, LIGHT_BTN } from "../color";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
 
-const DetailContent = () => {
+const DetailContent = ({ review }) => {
   return (
     <DetailContentWrapper>
       <ContentHeader>
@@ -12,16 +13,14 @@ const DetailContent = () => {
             source={require("../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
-          <Nickname>부드라미</Nickname>
+          <Nickname>{review.nickname}</Nickname>
         </UserInfo>
         <TouchableOpacity>
           <EditBtn>글 수정</EditBtn>
         </TouchableOpacity>
       </ContentHeader>
       {/* <Youtube /> */}
-      <ContentText>
-        부드라미 BGM 너무 좋아요. {"\n"}바들바들 동물콘 브금 다들 들어보세요.
-      </ContentText>
+      <ContentText>{review.text}</ContentText>
     </DetailContentWrapper>
   );
 };
@@ -34,7 +33,7 @@ const DetailContentWrapper = styled.View`
 const ContentHeader = styled.View`
   flex-direction: row;
   justify-content: space-between;
-  width: 85%;
+  width: ${SCREEN_WIDTH / 1.15 + "px"};
   margin: 10% auto 0 auto;
 `;
 const UserInfo = styled.View`
@@ -60,7 +59,7 @@ const ContentText = styled.Text`
   width: 85%;
   margin: auto;
   font-size: 18px;
-  line-height: 25px;
+  line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 5%;
 `;
 export default DetailContent;

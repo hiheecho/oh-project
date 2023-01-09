@@ -1,7 +1,6 @@
 import React from "react";
 import Main from "../screen/Main";
 import MyPage from "../screen/MyPage";
-import PostDetail from "../screen/PostDetail";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useColorScheme } from "react-native";
 import {
@@ -30,8 +29,6 @@ export default function Tabs() {
     >
       <Tab.Screen name="Main" component={Main} />
       <Tab.Screen name="MyPage" component={MyPage} />
-      {/* 컴포넌트 테스트용 */}
-      <Tab.Screen name="PostDetail" component={PostDetail} />
     </Tab.Navigator>
   );
 }
