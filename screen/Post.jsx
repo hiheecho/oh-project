@@ -4,10 +4,13 @@ import { SCREEN_HEIGHT } from "../util";
 import { Ionicons } from "@expo/vector-icons";
 import { addDoc, collection } from "firebase/firestore";
 import { dbService } from "../firebase";
+import { useNavigation } from "@react-navigation/native";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const Post = ({ navigation: { goBack } }) => {
   const [text, setText] = useState();
+
+  const { navigate } = useNavigation();
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
   // const keyboardHeight = useKeyboardHeight();
@@ -39,7 +42,8 @@ const Post = ({ navigation: { goBack } }) => {
 
   const addBtn = async () => {
     await addDoc(collection(dbService, "posts"), newPost);
-    goBack();
+    // goBack();
+    navigate("Tabs", { screen: "Main" });
   };
 
   return (
@@ -124,7 +128,6 @@ const LettersCount = styled.View`
   padding: 15px;
   font-size: 18px;
   margin-left: auto;
-  position: auto;
 `;
 
 const Count = styled.Text`
