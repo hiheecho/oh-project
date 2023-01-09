@@ -4,15 +4,19 @@ import styled from "@emotion/native";
 import { LIGHT_GRAY } from "../color";
 import Comment from "../components/Comment";
 import DetailContent from "../components/DetailContent";
+import { SCREEN_HEIGHT } from "../util";
 
-const PostDetail = () => {
+const PostDetail = ({
+  route: {
+    params: { review },
+  },
+}) => {
   return (
     <>
-      <DetailContent />
+      <DetailContent review={review} />
       <CommentList>
         <Comment />
       </CommentList>
-      {/* 키보드가 UI 가림 (수정중) */}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : ""}
         keyboardVerticalOffset={92}
@@ -48,7 +52,7 @@ const CommentList = styled.ScrollView`
 const CommentInputContainer = styled.View`
   width: 100%;
   flex-direction: row;
-  height: 60px;
+  height: ${SCREEN_HEIGHT / 15 + "px"};
   justify-content: space-evenly;
   align-items: center;
 `;
