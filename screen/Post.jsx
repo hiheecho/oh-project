@@ -3,7 +3,7 @@ import styled from "@emotion/native";
 import { SCREEN_HEIGHT } from "../util";
 import { Ionicons } from "@expo/vector-icons";
 import { addDoc, collection } from "firebase/firestore";
-import { dbService } from "../firebase";
+import { dbService, auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
@@ -19,6 +19,7 @@ const Post = ({ navigation: { goBack } }) => {
     text,
     createdAt: Date.now(),
     isEdit: false,
+    userName: auth.currentUser.displayName,
   };
 
   // useMutation()으로 Create 구현한 부분

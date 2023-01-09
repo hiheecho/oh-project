@@ -9,6 +9,7 @@ import {
   BRAND_COLOR,
   LIGHT_COLOR,
 } from "../color";
+import { Ionicons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,8 +28,32 @@ export default function Tabs() {
         tabBarInactiveTintColor: "#FFF",
       }}
     >
-      <Tab.Screen name="Main" component={Main} />
-      <Tab.Screen name="MyPage" component={MyPage} />
+      <Tab.Screen
+        name="Main"
+        component={Main}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <Ionicons name="md-home-sharp" size={24} color="white" />
+            ) : (
+              <Ionicons name="md-home-outline" size={24} color="white" />
+            ),
+        }}
+      />
+      <Tab.Screen
+        name="MyPage"
+        component={MyPage}
+        options={{
+          tabBarLabel: "My",
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <Ionicons name="md-person" size={24} color="white" />
+            ) : (
+              <Ionicons name="md-person-outline" size={24} color="white" />
+            ),
+        }}
+      />
     </Tab.Navigator>
   );
 }
