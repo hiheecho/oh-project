@@ -8,4 +8,6 @@ export const DARK_COLOR = "#F5F5F5";
 export const DARK_GRAY = "#555555";
 export const DARK_BTN = "#AAAAAA";
 
+// export const BRAND_COLOR = "#E43434";
+
 export const BRAND_COLOR = "#E43434";
