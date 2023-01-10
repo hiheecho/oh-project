@@ -1,4 +1,4 @@
-import { Alert, useColorScheme } from "react-native";
+import { Alert, useColorScheme, KeyboardAvoidingView } from "react-native";
 import React, { useState } from "react";
 import styled from "@emotion/native";
 
@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
 
 const Login = () => {
   const { navigate } = useNavigation();
@@ -15,7 +16,7 @@ const Login = () => {
   const [idValue, setIdValue] = useState();
   const [passwordValue, setPasswordValue] = useState();
 
-  const handleOnPressLogin = () => {
+  const handleLogin = () => {
     signInWithEmailAndPassword(auth, idValue, passwordValue)
       .then((userCredential) => {
         const user = userCredential.user;
@@ -37,25 +38,42 @@ const Login = () => {
   };
 
   return (
-    <SignUpContainer>
-      {isDark ? (
-        <ImageBox source={require("../assets/mainLogoDark.png")} />
-      ) : (
-        <ImageBox source={require("../assets/mainLogoLight.png")} />
-      )}
-      <IdInputBox placeholder="아이디" onChangeText={setIdValue} />
-      <PasswordInputBox
-        placeholder="비밀번호"
-        onChangeText={setPasswordValue}
-      />
+    <SignUpContainer isDark={isDark}>
+      <ImageContainer>
+        {isDark ? (
+          <ImageBox
+            resizeMode="contain"
+            source={require("../assets/mainLogoDark.png")}
+          />
+        ) : (
+          <ImageBox
+            resizeMode="contain"
+            source={require("../assets/mainLogoLight.png")}
+          />
+        )}
+      </ImageContainer>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : ""}
+        keyboardVerticalOffset={92}
+      >
+        <IdInputBox placeholder="아이디 (이메일)" onChangeText={setIdValue} />
+        <PasswordInputBox
+          placeholder="비밀번호"
+          onChangeText={setPasswordValue}
+          onSubmitEditting={() => {
+            handleLogin();
+          }}
+        />
+      </KeyboardAvoidingView>
       <ButtonBox>
         <LoginButton
           onPress={() => {
-            handleOnPressLogin();
+            handleLogin();
           }}
         >
           <TextBox>로그인</TextBox>
         </LoginButton>
+
         <SignUpButton onPress={() => navigate("Stacks", { screen: "SignUp" })}>
           <TextBox>회원가입</TextBox>
         </SignUpButton>
@@ -68,11 +86,13 @@ const SignUpContainer = styled.View`
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: #fff;
+  background-color: ${(props) => {
+    props.theme.background;
+  }};
 `;
 
 const IdInputBox = styled.TextInput`
-  width: 80%;
+  width: ${SCREEN_WIDTH / 1.25 + "px"};
   height: 40px;
 
   border-radius: 10px;
@@ -83,7 +103,7 @@ const IdInputBox = styled.TextInput`
 `;
 
 const PasswordInputBox = styled.TextInput`
-  width: 80%;
+  width: ${SCREEN_WIDTH / 1.25 + "px"};
   height: 40px;
 
   border-radius: 10px;
@@ -93,7 +113,15 @@ const PasswordInputBox = styled.TextInput`
   background-color: #eee;
 `;
 
-const ImageBox = styled.Image``;
+const ImageContainer = styled.View`
+  width: ${SCREEN_WIDTH / 2 + "px"};
+  height: ${SCREEN_HEIGHT / 5 + "px"};
+`;
+
+const ImageBox = styled.Image`
+  width: 100%;
+  height: 100%;
+`;
 
 const ButtonBox = styled.View`
   width: 80%;
