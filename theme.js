@@ -7,6 +7,7 @@ import {
   DARK_COLOR,
   DARK_GRAY,
   DARK_BTN,
+  BRAND_COLOR,
 } from "./color";
 
 export const lightTheme = {
@@ -14,6 +15,7 @@ export const lightTheme = {
   color: LIGHT_COLOR,
   gray: LIGHT_GRAY,
   btn: LIGHT_BTN,
+  brandColor: BRAND_COLOR,
 };
 
 export const darkTheme = {
@@ -21,4 +23,5 @@ export const darkTheme = {
   color: DARK_COLOR,
   gray: DARK_GRAY,
   btn: DARK_BTN,
+  brandColor: BRAND_COLOR,
 };

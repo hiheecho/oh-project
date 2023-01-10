@@ -1,24 +1,14 @@
 import React from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native";
 import styled from "@emotion/native";
 import { StyleSheet } from "react-native";
-import { LIGHT_GRAY, DARK_COLOR, LIGHT_COLOR, DARK_GRAY } from "../color";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import { useColorScheme } from "react-native";
 import { SCREEN_HEIGHT } from "../util";
-import { BRAND_COLOR } from "../color";
 import { auth } from "../firebase";
 const MyPage = () => {
   const onLogOutClick = () => {
     auth.signOut();
   };
-  const isDark = useColorScheme() === "dark";
   const username = "영화배우 손석구";
   const myInfoComment =
     "저는 이번에 react를 배우게 된 손석구입니다. 만나서 반갑습니다. 이번 경험을 여러분과 함께해서 기쁩니다. 앞으로도 잘 부탁드립니다.";
@@ -28,140 +18,138 @@ const MyPage = () => {
   return (
     <ScrollView>
       <DimensionView>
-        <MyImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <TouchableOpacity>
-          <ProfileEdit style={{ paddingHorizontal: 330 }}>
-            <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
-          </ProfileEdit>
-        </TouchableOpacity>
+        <ImgBox>
+          <MyImg source={require("../assets/testImg.jpg")} />
+        </ImgBox>
+
+        <ProfileEdit>
+          <FontAwesome5 name="edit" size={18} color="#AAAAAA" />
+        </ProfileEdit>
+
         <MyInfo>
-          <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-            {username}
-          </MyInfoName>
-          <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-            {myInfoComment.slice(0, 140)}
-            {myInfoComment.length > 140 && "..."}
-          </MyInfoComment>
+          <MyInfoName>{username}</MyInfoName>
+          <MyInfoComment numberOfLines={3}>{myInfoComment}</MyInfoComment>
         </MyInfo>
       </DimensionView>
-      <LogOutBt
-        style={{
-          backgroundColor: BRAND_COLOR,
-          paddingHorizontal: 10,
-          paddingVertical: 15,
-        }}
-        onPress={onLogOutClick}
-      >
+
+      <CommentContainer>
+        <MyCommentRow>
+          <Box1>
+            <ImgBox>
+              <MyCommentImg source={require("../assets/testImg.jpg")} />
+            </ImgBox>
+
+            <MyCommentName>{username}</MyCommentName>
+
+            <EditDeleteBtn>
+              <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
+            </EditDeleteBtn>
+          </Box1>
+          <MyCommentText>{MyComment}</MyCommentText>
+        </MyCommentRow>
+      </CommentContainer>
+      <CommentContainer>
+        <MyCommentRow>
+          <Box1>
+            <ImgBox>
+              <MyCommentImg source={require("../assets/testImg.jpg")} />
+            </ImgBox>
+
+            <MyCommentName>{username}</MyCommentName>
+
+            <EditDeleteBtn>
+              <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
+            </EditDeleteBtn>
+          </Box1>
+          <MyCommentText>{MyComment}</MyCommentText>
+        </MyCommentRow>
+      </CommentContainer>
+
+      <LogOutBtn onPress={onLogOutClick}>
         <LogOutText>로그아웃</LogOutText>
-      </LogOutBt>
-      <MyCommentRow
-        style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-      >
-        <MyCommentImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {username}
-        </MyCommentName>
-        <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-          {MyComment.slice(0, 60)}
-          {MyComment.length > 60 && "..."}
-        </MyCommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
-      </MyCommentRow>
+      </LogOutBtn>
     </ScrollView>
   );
 };
 export default MyPage;
 const DimensionView = styled.View`
-  height: ${SCREEN_HEIGHT / 4.5 + "px"};
-  /* background-color: red; */
+  flex-direction: row;
 `;
-
-const ProfileEdit = styled.Text`
+const ProfileEdit = styled.TouchableOpacity`
   position: absolute;
-  margin-top: 10px;
-  margin-left: 10px;
+  top: 20px;
+  right: 20px;
 `;
-
+const ImgBox = styled.View``;
 const MyImg = styled.Image`
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   border-radius: 100px;
-  margin-top: 37px;
-  margin-left: 20px;
+  margin: 20px;
 `;
 const MyInfo = styled.View`
-  margin-top: 30px;
+  width: 70%;
+  margin: 10px 0;
 `;
 const MyInfoName = styled.Text`
-  margin-left: 160px;
-  margin-top: 13px;
+  margin: 10px 0;
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
+  color: ${(props) => props.theme.color};
 `;
 const MyInfoComment = styled.Text`
-  width: 190px;
-  height: 100px;
-  margin-bottom: 5px;
-  margin-left: 160px;
+  width: 80%;
+  color: ${(props) => props.theme.color};
+`;
+const CommentContainer = styled.View`
+  align-items: center;
+  margin: 5px 0;
 `;
 
 const MyCommentRow = styled.View`
-  width: 345px;
-  height: 120px;
-  margin-left: 16px;
+  width: 95%;
+  padding: 10px;
   border-radius: 10px;
-  padding-top: 70px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-bottom: 12px;
+  background-color: ${(props) => props.theme.gray};
+`;
+const Box1 = styled.View`
+  flex-direction: row;
+  align-items: center;
 `;
 const MyCommentImg = styled.Image`
   width: 50px;
   height: 50px;
-  margin-top: 10px;
-  margin-left: 13px;
   border-radius: 50px;
 `;
-const MyCommentText = styled.Text`
-  font-size: 15px;
-  margin-bottom: 5px;
-`;
 const MyCommentName = styled.Text`
-  position: absolute;
-  margin-left: 80px;
-  margin-top: 24px;
-  font-size: 17px;
+  margin-left: 10px;
+  font-size: 18px;
   font-weight: 600;
+  color: ${(props) => props.theme.color};
+`;
+const MyCommentText = styled.Text`
+  margin-top: 10px;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: ${(props) => props.theme.color};
 `;
 
-const EditDeleteBtn = styled.View`
+const EditDeleteBtn = styled.TouchableOpacity`
   position: absolute;
-  margin-left: 305px;
-  margin-top: 15px;
+  top: 10px;
+  right: 10px;
 `;
 
 const LogOutText = styled.Text`
-  font-size: 17px;
+  font-size: 18px;
   color: white;
 `;
 
-const LogOutBt = styled.TouchableOpacity`
-  margin-top: 10px;
-  background-color: "black";
+const LogOutBtn = styled.TouchableOpacity`
   width: 30%;
   align-items: center;
   border-radius: 50px;
-  margin-left: 130px;
-  margin-bottom: 20px;
+  padding: 10px 15px;
+  margin: 10px;
+  background-color: ${(props) => props.theme.brandColor};
 `;
