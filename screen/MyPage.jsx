@@ -12,8 +12,12 @@ import { LIGHT_GRAY, DARK_COLOR, LIGHT_COLOR, DARK_GRAY } from "../color";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 import { useColorScheme } from "react-native";
 import { SCREEN_HEIGHT } from "../util";
-
+import { BRAND_COLOR } from "../color";
+import { auth } from "../firebase";
 const MyPage = () => {
+  const onLogOutClick = () => {
+    auth.signOut();
+  };
   const isDark = useColorScheme() === "dark";
   const username = "영화배우 손석구";
   const myInfoComment =
@@ -43,6 +47,16 @@ const MyPage = () => {
           </MyInfoComment>
         </MyInfo>
       </DimensionView>
+      <LogOutBt
+        style={{
+          backgroundColor: BRAND_COLOR,
+          paddingHorizontal: 10,
+          paddingVertical: 15,
+        }}
+        onPress={onLogOutClick}
+      >
+        <LogOutText>로그아웃</LogOutText>
+      </LogOutBt>
       <MyCommentRow
         style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
       >
@@ -135,4 +149,19 @@ const EditDeleteBtn = styled.View`
   position: absolute;
   margin-left: 305px;
   margin-top: 15px;
+`;
+
+const LogOutText = styled.Text`
+  font-size: 17px;
+  color: white;
+`;
+
+const LogOutBt = styled.TouchableOpacity`
+  margin-top: 10px;
+  background-color: "black";
+  width: 30%;
+  align-items: center;
+  border-radius: 50px;
+  margin-left: 130px;
+  margin-bottom: 20px;
 `;
