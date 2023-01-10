@@ -12,7 +12,7 @@ const PostDetail = ({
   },
 }) => {
   return (
-    <>
+    <PostDetailWrapper>
       <DetailContent item={item} />
       <CommentList>
         <Comment />
@@ -31,7 +31,7 @@ const PostDetail = ({
           </CommentInputWrapper>
         </CommentInputContainer>
       </KeyboardAvoidingView>
-    </>
+    </PostDetailWrapper>
   );
 };
 
@@ -45,6 +45,10 @@ const PostDetail = ({
 // `;
 
 //댓글 리스트
+const PostDetailWrapper = styled.View`
+  background-color: ${(props) => props.theme.background};
+  flex: 1;
+`;
 const CommentList = styled.ScrollView`
   height: 0;
 `;

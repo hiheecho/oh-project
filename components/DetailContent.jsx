@@ -26,7 +26,7 @@ const DetailContent = ({ item }) => {
 };
 const DetailContentWrapper = styled.View`
   border-bottom-width: 2px;
-  border-bottom-color: ${LIGHT_GRAY};
+  border-bottom-color: ${(props) => props.theme.gray};
   padding-bottom: 15%;
 `;
 //콘텐츠,코멘트 헤더 (프로필 + 버튼)
@@ -49,9 +49,10 @@ const UserImage = styled.Image`
 `;
 const Nickname = styled.Text`
   font-size: 18px;
+  color: ${(props) => props.theme.color};
 `;
 const EditBtn = styled.Text`
-  color: ${LIGHT_BTN};
+  color: ${(props) => props.theme.btn};
 `;
 
 //콘텐츠 내용
@@ -61,5 +62,6 @@ const ContentText = styled.Text`
   font-size: 18px;
   line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 5%;
+  color: ${(props) => props.theme.color};
 `;
 export default DetailContent;

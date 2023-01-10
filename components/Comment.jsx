@@ -12,7 +12,7 @@ const Comment = () => {
           <Nickname>부드라미</Nickname>
         </UserInfo>
         <MoreBtn>
-          <Feather name="more-horizontal" size={24} color="black" />
+          <Feather name="more-horizontal" size={24} color="#AAAAAA" />
         </MoreBtn>
       </ContentHeader>
       <CommentText>
@@ -44,6 +44,7 @@ const UserImage = styled.Image`
 `;
 const Nickname = styled.Text`
   font-size: 18px;
+  color: ${(props) => props.theme.color};
 `;
 const CommentText = styled.Text`
   width: ${SCREEN_WIDTH / 1.2 + "px"};
@@ -51,9 +52,11 @@ const CommentText = styled.Text`
   font-size: 18px;
   line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 20px;
+  color: ${(props) => props.theme.color};
 `;
 const MoreBtn = styled.TouchableOpacity`
   margin-top: 10px;
+  color: ${(props) => props.theme.color};
 `;
 
 export default Comment;
