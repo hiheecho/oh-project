@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -29,11 +29,16 @@ import {
   DARK_GRAY,
   BRAND_COLOR,
 } from "../color";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome5,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { SCREEN_HEIGHT } from "../util";
 import { async } from "@firebase/util";
 import { dbService, auth } from "../firebase";
+import { updateProfile } from "firebase/auth";
 
 /**-------------------------------postsExample---------------------------------- */
 /** 참고contents 
@@ -85,28 +90,38 @@ const MyPage = () => {
     return unsubscribe;
   }, []);
 
-  /**유저 게시물 수정하기 */
-
-  /**유저 게시물 삭제하기 */
-
   /**---------------------------------Users-------------------------------------- */
 
-  const userText =
-    "안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. ";
+  const [detailItem, setDetailItem] = useState({});
+  const [content, setContent] = useState("");
+  console.log("content", content);
 
-  const [profileText, setProfileText] = useState("");
-  const [profileUser, setProfileUser] = useState([]);
-  const [profileContent, setProfileContent] = useState("");
-  console.log("profileUser", profileUser);
-
-  const NewUser = {
-    profileText,
+  const newUser = {
+    content,
     createdAt: Date.now(),
     isEdit: false,
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
   };
-  console.log("auth.currentUser", auth.currentUser);
+  console.log("newUser", newUser);
+
+  const updateProfile = async () => {
+    await updateDoc(doc(dbService, "users"), {
+      ...newUser,
+    });
+    setDetailItem(newUser);
+    setContent("");
+  };
+
+  const setUser = async () => {
+    await setDoc(doc(dbService, "users"), {
+      content: content,
+      createdAt: Date.now(),
+      isEdit: false,
+      userName: auth.currentUser.displayName,
+      userId: auth.currentUser?.uid,
+    });
+  };
 
   useEffect(() => {
     const q = query(
@@ -115,14 +130,19 @@ const MyPage = () => {
       where("userId", "==", auth.currentUser?.uid)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newUsers = snapshot.docs.map((doc) => ({
+      const newUser = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setProfileUser(newUsers);
+      setDetailItem(newUser);
     });
     return unsubscribe;
   }, []);
+
+  const setEdit = async (detailItem) => {
+    setDetailItem({ ...detailItem, isEdit: !detailItem.isEdit });
+    setContent("");
+  };
 
   /**-----------------------------------Return--------------------------------------- */
   return (
@@ -132,28 +152,57 @@ const MyPage = () => {
           style={StyleSheet.absoluteFill}
           source={require("../assets/testImg.jpg")}
         />
-        <TouchableOpacity>
-          <ProfileEdit>
-            <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
-          </ProfileEdit>
-        </TouchableOpacity>
-
         <>
           <MyInfo>
             <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
               {auth.currentUser.displayName}
             </MyInfoName>
-            <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {/* {user.userText.slice(0, 140)}
-                {user.userText.length > 140 && "..."} */}
-            </MyInfoComment>
+            <UserProfile>
+              {detailItem.isEdit === true ? (
+                <UserInfoInput
+                  value={content}
+                  onChangeText={setContent}
+                  multiline={true}
+                  autoFocus
+                  placeholder="간단하게 자기소개 해주세요"
+                  placeholderTextColor="#aaaaaa"
+                />
+              ) : (
+                <TouchableOpacity onPress={setUser}>
+                  <UserInfoText
+                    style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
+                  >
+                    {detailItem.content}
+                  </UserInfoText>
+                </TouchableOpacity>
+              )}
+
+              {detailItem.isEdit === true ? (
+                <UserCompleteBtn onPress={() => updateProfile(detailItem)}>
+                  <MaterialCommunityIcons
+                    name="account-edit"
+                    size={30}
+                    color="#aaaaaa"
+                  />
+                </UserCompleteBtn>
+              ) : (
+                <UserEditBtn onPress={() => setEdit(detailItem)}>
+                  <MaterialCommunityIcons
+                    name="account-edit-outline"
+                    size={30}
+                    color="#aaaaaa"
+                  />
+                </UserEditBtn>
+              )}
+            </UserProfile>
           </MyInfo>
         </>
       </DimensionView>
-
+      {/* ------------------------------------------------------------------------- */}
       <LogOutBt onPress={onLogOutClick}>
         <LogOutText>로그아웃</LogOutText>
       </LogOutBt>
+      {/* ------------------------------------------------------------------------- */}
       <FlatList
         data={myComments}
         keyExtractor={(item) => item.id}
@@ -199,14 +248,13 @@ export default MyPage;
 
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
-  /* background-color: red; */
 `;
 
-const ProfileEdit = styled.Text`
-  position: absolute;
-  top: 10px;
-  left: 340px;
-`;
+// const ProfileEdit = styled.Text`
+//   position: absolute;
+//   top: 10px;
+//   left: 340px;
+// `;
 
 const MyImg = styled.Image`
   width: 120px;
@@ -225,12 +273,12 @@ const MyInfoName = styled.Text`
   font-weight: 700;
   margin-bottom: 10px;
 `;
-const MyInfoComment = styled.Text`
-  width: 190px;
-  height: 100px;
-  margin-bottom: 5px;
-  margin-left: 160px;
-`;
+// const MyInfoComment = styled.Text`
+//   width: 190px;
+//   height: 100px;
+//   margin-bottom: 5px;
+//   margin-left: 160px;
+// `;
 
 const MyCommentRow = styled.View`
   width: 355px;
@@ -240,7 +288,7 @@ const MyCommentRow = styled.View`
   padding-top: 70px;
   padding-left: 10px;
   padding-right: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 25px;
 `;
 const MyCommentImg = styled.Image`
   width: 50px;
@@ -281,4 +329,31 @@ const LogOutBt = styled.TouchableOpacity`
   width: 40%;
   height: 35px;
   padding: 9px;
+`;
+const UserProfile = styled.View`
+  position: absolute;
+  width: 185px;
+  left: 150px;
+  top: 45px;
+  height: 75px;
+`;
+const UserInfoInput = styled.TextInput`
+  position: absolute;
+  width: 185px;
+  height: 75px;
+  left: 10px;
+`;
+const UserInfoText = styled.Text`
+  position: absolute;
+  width: 185px;
+  height: 75px;
+  left: 13px;
+`;
+const UserEditBtn = styled.TouchableOpacity`
+  left: 182px;
+  bottom: 60px;
+`;
+const UserCompleteBtn = styled.TouchableOpacity`
+  left: 180px;
+  bottom: 60px;
 `;
