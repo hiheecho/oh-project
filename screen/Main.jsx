@@ -36,7 +36,7 @@ const Main = () => {
         itemSeparatorComponent={<View style={{ height: 10 }} />}
         data={contentList}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <CommentList item={item} />}
+        renderItem={({ item }) => <MainList item={item} />}
       />
       <PlusBtn>
         <TouchableOpacity

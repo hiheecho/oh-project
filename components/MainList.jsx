@@ -9,7 +9,7 @@ import { Entypo } from "@expo/vector-icons";
 
 import { useNavigation } from "@react-navigation/native";
 
-const CommentList = ({ item }) => {
+const MainList = ({ item }) => {
   const { navigate } = useNavigation();
   const goToDetail = () => {
     navigate("Stacks", {
@@ -77,4 +77,4 @@ const EditDeleteBtn = styled.View`
   right: 15px;
   top: 10px;
 `;
-export default CommentList;
+export default MainList;
