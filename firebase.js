@@ -3,12 +3,12 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 const firebaseConfig = {
-  apiKey: "AIzaSyA2EbkUCP0-kT1OL5zW2QEqh24euDeUO8E",
-  authDomain: "todolist-a2034.firebaseapp.com",
-  projectId: "todolist-a2034",
-  storageBucket: "todolist-a2034.appspot.com",
-  messagingSenderId: "914656940447",
-  appId: "1:914656940447:web:41684f3d62dfee252dadaa",
+  apiKey: "AIzaSyBaj9DWhPp4rYQNtFdW89FTlg-25szLSMs",
+  authDomain: "gogokongs.firebaseapp.com",
+  projectId: "gogokongs",
+  storageBucket: "gogokongs.appspot.com",
+  messagingSenderId: "52837888582",
+  appId: "1:52837888582:web:469af3f0a56f0c56f25047",
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);

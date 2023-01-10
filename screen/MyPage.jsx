@@ -11,14 +11,17 @@ import {
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
 import styled from "@emotion/native";
-import { StyleSheet } from "react-native";
+import { StyleSheet, useColorScheme } from "react-native";
 import {
   LIGHT_GRAY,
   DARK_COLOR,
@@ -27,12 +30,12 @@ import {
   BRAND_COLOR,
 } from "../color";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import { useColorScheme } from "react-native";
-import { SCREEN_HEIGHT } from "../util";
 import { useNavigation } from "@react-navigation/native";
-import { dbService, auth } from "../firebase";
+import { SCREEN_HEIGHT } from "../util";
 import { async } from "@firebase/util";
+import { dbService, auth } from "../firebase";
 
+/**-------------------------------postsExample---------------------------------- */
 /** 참고contents 
     const newPost = {
     text,
@@ -40,9 +43,7 @@ import { async } from "@firebase/util";
     isEdit: false,
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
-  }; */
-
-/**
+  }; 
    * post항목에   
    * 
    * const newPost = {
@@ -54,7 +55,7 @@ import { async } from "@firebase/util";
   };
     추가 수정하였습니다.
    */
-
+/**---------------------------------Poster------------------------------------- */
 const MyPage = () => {
   const onLogOutClick = () => {
     auth.signOut();
@@ -84,17 +85,46 @@ const MyPage = () => {
     return unsubscribe;
   }, []);
 
-  /**유저 정보 수정하기 */
-
-  /**유저 이미지 수정하기 */
-
   /**유저 게시물 수정하기 */
 
   /**유저 게시물 삭제하기 */
 
-  const userName = "손석구";
+  /**---------------------------------Users-------------------------------------- */
+
   const userText =
-    "안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. 손석구입니다";
+    "안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. ";
+
+  const [profileText, setProfileText] = useState("");
+  const [profileUser, setProfileUser] = useState([]);
+  const [profileContent, setProfileContent] = useState("");
+  console.log("profileUser", profileUser);
+
+  const NewUser = {
+    profileText,
+    createdAt: Date.now(),
+    isEdit: false,
+    userName: auth.currentUser.displayName,
+    userId: auth.currentUser?.uid,
+  };
+  console.log("auth.currentUser", auth.currentUser);
+
+  useEffect(() => {
+    const q = query(
+      collection(dbService, "users"),
+      orderBy("createdAt", "desc"),
+      where("userId", "==", auth.currentUser?.uid)
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const newUsers = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProfileUser(newUsers);
+    });
+    return unsubscribe;
+  }, []);
+
+  /**-----------------------------------Return--------------------------------------- */
   return (
     <>
       <DimensionView>
@@ -107,16 +137,20 @@ const MyPage = () => {
             <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
           </ProfileEdit>
         </TouchableOpacity>
-        <MyInfo>
-          <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-            {userName}
-          </MyInfoName>
-          <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-            {userText.slice(0, 140)}
-            {userText.length > 140 && "..."}
-          </MyInfoComment>
-        </MyInfo>
+
+        <>
+          <MyInfo>
+            <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+              {auth.currentUser.displayName}
+            </MyInfoName>
+            <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+              {/* {user.userText.slice(0, 140)}
+                {user.userText.length > 140 && "..."} */}
+            </MyInfoComment>
+          </MyInfo>
+        </>
       </DimensionView>
+
       <LogOutBt onPress={onLogOutClick}>
         <LogOutText>로그아웃</LogOutText>
       </LogOutBt>
@@ -160,6 +194,8 @@ const MyPage = () => {
   );
 };
 export default MyPage;
+
+/**-----------------------------------Styled--------------------------------------- */
 
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
@@ -237,13 +273,12 @@ const LogOutText = styled.Text`
 `;
 
 const LogOutBt = styled.TouchableOpacity`
-  background-color: "black";
-
+  background-color: #e43434;
   align-items: center;
   border-radius: 50px;
   margin: auto;
   margin-bottom: 20px;
   width: 40%;
-  height: 30px;
-  padding: 7px;
+  height: 35px;
+  padding: 9px;
 `;
