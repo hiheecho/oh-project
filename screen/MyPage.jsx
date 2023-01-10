@@ -18,6 +18,7 @@ const MyPage = () => {
   return (
     <ScrollView>
       <DimensionView>
+
         <ImgBox>
           <MyImg source={require("../assets/testImg.jpg")} />
         </ImgBox>
@@ -77,8 +78,10 @@ const DimensionView = styled.View`
 `;
 const ProfileEdit = styled.TouchableOpacity`
   position: absolute;
+
   top: 20px;
   right: 20px;
+
 `;
 const ImgBox = styled.View``;
 const MyImg = styled.Image`

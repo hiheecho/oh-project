@@ -54,6 +54,7 @@ export default function Tabs() {
               ) : (
                 <Ionicons name="md-home-outline" size={24} color="white" />
               ),
+            headerTitleAlign: "right",
           }}
         />
       ) : (
@@ -78,6 +79,7 @@ export default function Tabs() {
               ) : (
                 <Ionicons name="md-person-outline" size={24} color="white" />
               ),
+            headerTitleAlign: "right",
           }}
         />
       ) : null}

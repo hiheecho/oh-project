@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+
 const firebaseConfig = {
   apiKey: "AIzaSyANXDksNNIobIjLTfBgE2DFcm82ucgQ_7g",
   authDomain: "react-native-prac-56143.firebaseapp.com",
@@ -15,4 +16,5 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const dbService = getFirestore(app);
 const storageService = getStorage(app);
+
 export { app, auth, dbService, storageService };
