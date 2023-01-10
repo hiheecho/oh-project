@@ -1,12 +1,10 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, StyleSheet, Text, View } from "react-native";
 import styled from "@emotion/native";
 import { DARK_COLOR, LIGHT_COLOR } from "../color";
 import { DARK_GRAY, LIGHT_GRAY } from "../color";
 import { useColorScheme } from "react-native";
-
 import { Entypo } from "@expo/vector-icons";
-
 import { useNavigation } from "@react-navigation/native";
 
 const MainList = ({ item }) => {
@@ -18,6 +16,11 @@ const MainList = ({ item }) => {
     });
   };
   const isDark = useColorScheme() === "dark";
+
+  //DropDown
+  const [check, setState] = useState(false);
+  const click = () => setState(!check);
+
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}>
@@ -32,11 +35,38 @@ const MainList = ({ item }) => {
           {item.text.slice(0, 60)}
           {item.text.length > 60 && "..."}
         </CommentText>
-        <EditDeleteBtn>
-          <TouchableOpacity>
-            <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          </TouchableOpacity>
-        </EditDeleteBtn>
+        {item.userId ? (
+          <EditDeleteBtn>
+            <TouchableOpacity onPress={click}>
+              <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
+              <DropDownView
+                style={{
+                  display: check ? "flex" : "none",
+                  backgroundColor: "#888888",
+                }}
+              >
+                <DropDownEdit>
+                  <DropDownText
+                    style={{
+                      color: isDark ? DARK_COLOR : LIGHT_COLOR,
+                    }}
+                  >
+                    글 수정
+                  </DropDownText>
+                </DropDownEdit>
+                <DropDownDelete>
+                  <DropDownText
+                    style={{
+                      color: isDark ? DARK_COLOR : LIGHT_COLOR,
+                    }}
+                  >
+                    글 삭제
+                  </DropDownText>
+                </DropDownDelete>
+              </DropDownView>
+            </TouchableOpacity>
+          </EditDeleteBtn>
+        ) : null}
       </CommentRow>
     </TouchableOpacity>
   );
@@ -77,4 +107,38 @@ const EditDeleteBtn = styled.View`
   right: 15px;
   top: 10px;
 `;
+
+const DropDownView = styled.View`
+  position: absolute;
+  margin-top: 20px;
+  right: 5px;
+  width: 100px;
+  height: 110px;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+`;
+
+const DropDownEdit = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  border-bottom-width: 0.3px;
+  border-color: white;
+`;
+const DropDownDelete = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top-width: 0.3px;
+  border-color: white;
+`;
+
+const DropDownText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+`;
+
 export default MainList;

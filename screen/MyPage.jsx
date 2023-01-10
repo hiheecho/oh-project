@@ -15,10 +15,13 @@ const MyPage = () => {
   const MyComment =
     "이 노래 진짜 좋아요. 저도 영화 촬영 할 때 마다 듣고 하는데 진짜 너무 좋아요! 저는 적극 추천합니다.";
 
+  //dropdown
+  const [check, setState] = useState(false);
+  const click = () => setState(!check);
+
   return (
     <ScrollView>
       <DimensionView>
-
         <ImgBox>
           <MyImg source={require("../assets/testImg.jpg")} />
         </ImgBox>
@@ -42,8 +45,33 @@ const MyPage = () => {
 
             <MyCommentName>{username}</MyCommentName>
 
-            <EditDeleteBtn>
+            <EditDeleteBtn onPress={click}>
               <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
+              <DropDownView
+                style={{
+                  display: check ? "flex" : "none",
+                  backgroundColor: "#888888",
+                }}
+              >
+                <DropDownEdit>
+                  <DropDownText
+                    style={{
+                      color: isDark ? DARK_COLOR : LIGHT_COLOR,
+                    }}
+                  >
+                    글 수정
+                  </DropDownText>
+                </DropDownEdit>
+                <DropDownDelete>
+                  <DropDownText
+                    style={{
+                      color: isDark ? DARK_COLOR : LIGHT_COLOR,
+                    }}
+                  >
+                    글 삭제
+                  </DropDownText>
+                </DropDownDelete>
+              </DropDownView>
             </EditDeleteBtn>
           </Box1>
           <MyCommentText>{MyComment}</MyCommentText>
@@ -81,7 +109,6 @@ const ProfileEdit = styled.TouchableOpacity`
 
   top: 20px;
   right: 20px;
-
 `;
 const ImgBox = styled.View``;
 const MyImg = styled.Image`
