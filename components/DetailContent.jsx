@@ -4,7 +4,7 @@ import styled from "@emotion/native";
 import { LIGHT_GRAY, LIGHT_BTN } from "../color";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
 
-const DetailContent = ({ review }) => {
+const DetailContent = ({ item }) => {
   return (
     <DetailContentWrapper>
       <ContentHeader>
@@ -13,14 +13,14 @@ const DetailContent = ({ review }) => {
             source={require("../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
-          <Nickname>{review.nickname}</Nickname>
+          <Nickname>{item.userName}</Nickname>
         </UserInfo>
         <TouchableOpacity>
           <EditBtn>글 수정</EditBtn>
         </TouchableOpacity>
       </ContentHeader>
       {/* <Youtube /> */}
-      <ContentText>{review.text}</ContentText>
+      <ContentText>{item.text}</ContentText>
     </DetailContentWrapper>
   );
 };

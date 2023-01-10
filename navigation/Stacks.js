@@ -38,6 +38,11 @@ const Stacks = ({ navigation: { goBack } }) => {
         component={SignUp}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="PostDetail"
+        component={PostDetail}
+        options={{ headerShown: true }}
+      />
     </Stack.Navigator>
   );
 };
