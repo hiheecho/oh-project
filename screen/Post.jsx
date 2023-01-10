@@ -20,6 +20,7 @@ const Post = ({ navigation: { goBack } }) => {
     createdAt: Date.now(),
     isEdit: false,
     userName: auth.currentUser.displayName,
+    userID: auth.currentUser.email,
   };
 
   // useMutation()으로 Create 구현한 부분

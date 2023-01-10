@@ -5,6 +5,7 @@ import { LIGHT_GRAY, LIGHT_BTN } from "../color";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
 
 const DetailContent = ({ item }) => {
+  //getdoc 함수를 새로 만들어
   return (
     <DetailContentWrapper>
       <ContentHeader>
