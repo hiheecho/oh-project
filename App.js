@@ -9,6 +9,7 @@ import styled from "@emotion/native";
 import { useColorScheme } from "react-native";
 import Root from "./navigation/Root";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryFirestoreProvider } from "react-query-firestore";
 const queryClient = new QueryClient();
 
 export default function App() {

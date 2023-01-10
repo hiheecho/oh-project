@@ -8,6 +8,7 @@ import SignUp from "../screen/SignUp";
 // import { authService } from "../firebase";
 // import { signOut } from "firebase/auth";
 import PostDetail from "../screen/PostDetail";
+import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +42,16 @@ const Stacks = ({ navigation: { goBack } }) => {
       <Stack.Screen
         name="PostDetail"
         component={PostDetail}
-        options={{ headerShown: true }}
+        options={{
+          headerLeft: () => (
+            <Ionicons
+              name="chevron-back-outline"
+              size={24}
+              color="white"
+              onPress={() => goBack()}
+            />
+          ),
+        }}
       />
     </Stack.Navigator>
   );

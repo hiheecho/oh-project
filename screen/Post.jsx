@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import styled from "@emotion/native";
 import { SCREEN_HEIGHT } from "../util";
 import { Ionicons } from "@expo/vector-icons";
-import { addDoc, collection } from "firebase/firestore";
-import { dbService, auth } from "../firebase";
+import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
+import { BRAND_COLOR } from "../color";
+import { addPost } from "../posts.js";
+import { useMutation } from "react-query";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const Post = ({ navigation: { goBack } }) => {
-  const [text, setText] = useState();
-
+  const [text, setText] = useState("");
   const { navigate } = useNavigation();
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
@@ -22,29 +23,30 @@ const Post = ({ navigation: { goBack } }) => {
     userName: auth.currentUser.displayName,
   };
 
-  // useMutation()으로 Create 구현한 부분
-  // 추후에 사용할 수도 있으므로 주석처리
-  // const onSuccess = () => {
-  //   console.log("작성 완료");
-  // };
+  const { isLoading, mutate: add } = useMutation(
+    ["addPost", newPost],
+    (body) => addPost(body),
+    {
+      onSuccess: () => {
+        console.log("게시글 작성");
+      },
+      onError: (error) => {
+        console.log("error", error);
+      },
+    }
+  );
 
-  // const onError = () => {
-  //   console.log("작성 실패");
-  // };
+  if (isLoading) {
+    return <PostBtnInactive>글쓰기</PostBtnInactive>;
+  }
 
-  // const { data, isLoading } = useNewPostData(onSuccess, onError);
-
-  // const { mutate } = useAddPostData();
-
-  // const addPostSubmit = () => {
-  //   mutate(newPost);
-  //   goBack();
-  // };
-
-  const addBtn = async () => {
-    await addDoc(collection(dbService, "posts"), newPost);
-    // goBack();
-    navigate("Tabs", { screen: "Main" });
+  const onAddPost = async () => {
+    try {
+      await add(newPost);
+      navigate("Tabs", { screen: "Main" });
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   return (
@@ -56,7 +58,12 @@ const Post = ({ navigation: { goBack } }) => {
         {(text && text.length > 150) || !text ? (
           <PostBtnInactive>글쓰기</PostBtnInactive>
         ) : (
-          <PostBtnActive onPress={addBtn}>글쓰기</PostBtnActive>
+          <PostBtnActive
+            disabled={!text || text.length > 150}
+            onPress={onAddPost}
+          >
+            글쓰기
+          </PostBtnActive>
         )}
       </FakeNavi>
       <TextArea
@@ -91,21 +98,24 @@ const Contents = styled.View`
 
 const FakeNavi = styled.View`
   height: ${SCREEN_HEIGHT / 9.3 + "px"};
-  background-color: #e43434;
+  background-color: ${BRAND_COLOR};
   flex-direction: row;
   padding: 0 10px;
 `;
 
 const BackBtn = styled.TouchableOpacity`
-  margin-top: ${SCREEN_HEIGHT / 15 + "px"};
+  position: absolute;
+  top: 57px;
+  left: 8px;
 `;
 
 const PostBtnActive = styled.Text`
   color: white;
   font-weight: bold;
   font-size: 17px;
-  margin-left: auto;
-  margin-top: ${SCREEN_HEIGHT / 13.8 + "px"};
+  position: absolute;
+  top: 62px;
+  right: 13px;
 `;
 
 const PostBtnInactive = styled.Text`
@@ -113,8 +123,9 @@ const PostBtnInactive = styled.Text`
   opacity: 0.6;
   font-weight: bold;
   font-size: 17px;
-  margin-left: auto;
-  margin-top: ${SCREEN_HEIGHT / 13.8 + "px"};
+  position: absolute;
+  top: 62px;
+  right: 13px;
 `;
 
 const TextArea = styled.TextInput`
@@ -136,5 +147,5 @@ const Count = styled.Text`
 `;
 
 const Over = styled.Text`
-  color: #e43434;
+  color: ${BRAND_COLOR};
 `;

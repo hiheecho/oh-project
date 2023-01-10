@@ -33,7 +33,7 @@ const MyPage = () => {
           source={require("../assets/testImg.jpg")}
         />
         <TouchableOpacity>
-          <ProfileEdit style={{ paddingHorizontal: 330 }}>
+          <ProfileEdit>
             <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
           </ProfileEdit>
         </TouchableOpacity>
@@ -88,8 +88,8 @@ const DimensionView = styled.View`
 
 const ProfileEdit = styled.Text`
   position: absolute;
-  margin-top: 10px;
-  margin-left: 10px;
+  top: 10px;
+  right: 10px;
 `;
 
 const MyImg = styled.Image`
