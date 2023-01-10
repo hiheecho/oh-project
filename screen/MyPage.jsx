@@ -8,13 +8,6 @@ import {
   FlatList,
   TextInput,
 } from "react-native";
-import styled from "@emotion/native";
-import { StyleSheet } from "react-native";
-import { LIGHT_GRAY, DARK_COLOR, LIGHT_COLOR, DARK_GRAY } from "../color";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import { useColorScheme } from "react-native";
-import { SCREEN_HEIGHT } from "../util";
-import { useNavigation } from "@react-navigation/native";
 import {
   addDoc,
   collection,
@@ -24,6 +17,19 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import styled from "@emotion/native";
+import { StyleSheet } from "react-native";
+import {
+  LIGHT_GRAY,
+  DARK_COLOR,
+  LIGHT_COLOR,
+  DARK_GRAY,
+  BRAND_COLOR,
+} from "../color";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import { useColorScheme } from "react-native";
+import { SCREEN_HEIGHT } from "../util";
+import { useNavigation } from "@react-navigation/native";
 import { dbService, auth } from "../firebase";
 import { async } from "@firebase/util";
 
@@ -50,7 +56,9 @@ import { async } from "@firebase/util";
    */
 
 const MyPage = () => {
-  /**code시작 */
+  const onLogOutClick = () => {
+    auth.signOut();
+  };
   const isDark = useColorScheme() === "dark";
   const { navigate } = useNavigation();
   const [myComments, setMyComments] = useState([]);
@@ -84,61 +92,71 @@ const MyPage = () => {
 
   /**유저 게시물 삭제하기 */
 
+  const userName = "손석구";
+  const userText =
+    "안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. 손석구입니다,안녕하세요. 손석구입니다";
   return (
-    <FlatList
-      data={myComments}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item }) => (
-        <>
-          <DimensionView>
-            <MyImg
-              style={StyleSheet.absoluteFill}
-              source={require("../assets/testImg.jpg")}
-            />
-            <TouchableOpacity>
-              <ProfileEdit style={{ paddingHorizontal: 330 }}>
-                <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
-              </ProfileEdit>
-            </TouchableOpacity>
-            <MyInfo>
-              <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-                {item.userName}
-              </MyInfoName>
-              <MyInfoComment
+    <>
+      <DimensionView>
+        <MyImg
+          style={StyleSheet.absoluteFill}
+          source={require("../assets/testImg.jpg")}
+        />
+        <TouchableOpacity>
+          <ProfileEdit>
+            <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
+          </ProfileEdit>
+        </TouchableOpacity>
+        <MyInfo>
+          <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+            {userName}
+          </MyInfoName>
+          <MyInfoComment style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
+            {userText.slice(0, 140)}
+            {userText.length > 140 && "..."}
+          </MyInfoComment>
+        </MyInfo>
+      </DimensionView>
+      <LogOutBt onPress={onLogOutClick}>
+        <LogOutText>로그아웃</LogOutText>
+      </LogOutBt>
+      <FlatList
+        data={myComments}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <>
+            <MyCommentRow
+              style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
+            >
+              <MyCommentImg
+                style={StyleSheet.absoluteFill}
+                source={require("../assets/testImg.jpg")}
+              />
+              <MyCommentName
                 style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
               >
-                {item.text.slice(0, 140)}
-                {item.text.length > 140 && "..."}
-              </MyInfoComment>
-            </MyInfo>
-          </DimensionView>
-          <MyCommentRow
-            style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-          >
-            <MyCommentImg
-              style={StyleSheet.absoluteFill}
-              source={require("../assets/testImg.jpg")}
-            />
-            <MyCommentName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {item.userName}
-            </MyCommentName>
-            <MyCommentText style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {item.text.slice(0, 60)}
-              {item.text.length > 60 && "..."}
-            </MyCommentText>
-            <EditDeleteBtn>
-              <TouchableOpacity>
-                <Entypo
-                  name="dots-three-horizontal"
-                  size={17}
-                  color="#AAAAAA"
-                />
-              </TouchableOpacity>
-            </EditDeleteBtn>
-          </MyCommentRow>
-        </>
-      )}
-    />
+                {item.userName}
+              </MyCommentName>
+              <MyCommentText
+                style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
+              >
+                {item.text.slice(0, 60)}
+                {item.text.length > 60 && "..."}
+              </MyCommentText>
+              <EditDeleteBtn>
+                <TouchableOpacity>
+                  <Entypo
+                    name="dots-three-horizontal"
+                    size={17}
+                    color="#AAAAAA"
+                  />
+                </TouchableOpacity>
+              </EditDeleteBtn>
+            </MyCommentRow>
+          </>
+        )}
+      />
+    </>
   );
 };
 export default MyPage;
@@ -150,8 +168,8 @@ const DimensionView = styled.View`
 
 const ProfileEdit = styled.Text`
   position: absolute;
-  margin-top: 10px;
-  margin-left: 10px;
+  top: 10px;
+  left: 340px;
 `;
 
 const MyImg = styled.Image`
@@ -179,9 +197,9 @@ const MyInfoComment = styled.Text`
 `;
 
 const MyCommentRow = styled.View`
-  width: 345px;
+  width: 355px;
   height: 120px;
-  margin-left: 16px;
+  margin: auto;
   border-radius: 10px;
   padding-top: 70px;
   padding-left: 10px;
@@ -211,4 +229,21 @@ const EditDeleteBtn = styled.View`
   position: absolute;
   margin-left: 305px;
   margin-top: 15px;
+`;
+
+const LogOutText = styled.Text`
+  font-size: 17px;
+  color: white;
+`;
+
+const LogOutBt = styled.TouchableOpacity`
+  background-color: "black";
+
+  align-items: center;
+  border-radius: 50px;
+  margin: auto;
+  margin-bottom: 20px;
+  width: 40%;
+  height: 30px;
+  padding: 7px;
 `;

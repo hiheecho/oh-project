@@ -4,7 +4,7 @@ import styled from "@emotion/native";
 import { LIGHT_GRAY, LIGHT_BTN } from "../color";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
 
-const DetailContent = ({ review }) => {
+const DetailContent = ({ item }) => {
   return (
     <DetailContentWrapper>
       <ContentHeader>
@@ -13,20 +13,20 @@ const DetailContent = ({ review }) => {
             source={require("../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
-          <Nickname>{review.nickname}</Nickname>
+          <Nickname>{item.userName}</Nickname>
         </UserInfo>
         <TouchableOpacity>
           <EditBtn>글 수정</EditBtn>
         </TouchableOpacity>
       </ContentHeader>
       {/* <Youtube /> */}
-      <ContentText>{review.text}</ContentText>
+      <ContentText>{item.text}</ContentText>
     </DetailContentWrapper>
   );
 };
 const DetailContentWrapper = styled.View`
   border-bottom-width: 2px;
-  border-bottom-color: ${LIGHT_GRAY};
+  border-bottom-color: ${(props) => props.theme.gray};
   padding-bottom: 15%;
 `;
 //콘텐츠,코멘트 헤더 (프로필 + 버튼)
@@ -49,9 +49,10 @@ const UserImage = styled.Image`
 `;
 const Nickname = styled.Text`
   font-size: 18px;
+  color: ${(props) => props.theme.color};
 `;
 const EditBtn = styled.Text`
-  color: ${LIGHT_BTN};
+  color: ${(props) => props.theme.btn};
 `;
 
 //콘텐츠 내용
@@ -61,5 +62,6 @@ const ContentText = styled.Text`
   font-size: 18px;
   line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 5%;
+  color: ${(props) => props.theme.color};
 `;
 export default DetailContent;
