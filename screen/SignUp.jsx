@@ -126,9 +126,7 @@ const SignUpContainer = styled.View`
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: ${(props) => {
-    props.theme.background;
-  }};
+  background-color: ${(props) => props.theme.background};
 `;
 
 const ImageContainer = styled.View`

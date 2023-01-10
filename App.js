@@ -5,10 +5,10 @@ import {
 } from "@react-navigation/native";
 import { darkTheme, lightTheme } from "./theme";
 import { ThemeProvider } from "@emotion/react";
-import styled from "@emotion/native";
 import { useColorScheme } from "react-native";
 import Root from "./navigation/Root";
 import { QueryClient, QueryClientProvider } from "react-query";
+
 const queryClient = new QueryClient();
 
 export default function App() {

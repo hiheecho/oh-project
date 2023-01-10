@@ -8,6 +8,7 @@ export const DARK_COLOR = "#F5F5F5";
 export const DARK_GRAY = "#555555";
 export const DARK_BTN = "#AAAAAA";
 
-// export const BRAND_COLOR = "#E43434";
-
 export const BRAND_COLOR = "#E43434";
+
+export const DROPDOWN_BACKGROUND_COLOR = "#888888";
+export const DROPDOWN_FONT_COLOR = "#FFFFFF";

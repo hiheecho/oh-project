@@ -20,25 +20,30 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import styled from "@emotion/native";
-import { StyleSheet, useColorScheme } from "react-native";
 import {
   LIGHT_GRAY,
   DARK_COLOR,
   LIGHT_COLOR,
   DARK_GRAY,
   BRAND_COLOR,
+  DROPDOWN_BACKGROUND_COLOR,
+  DARK_BTN,
+  DROPDOWN_FONT_COLOR,
 } from "../color";
 import {
   Entypo,
   FontAwesome5,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import styled from "@emotion/native";
+import { StyleSheet, useColorScheme, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SCREEN_HEIGHT } from "../util";
 import { async } from "@firebase/util";
 import { dbService, auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
+import { useMutation } from "react-query";
+import { deletePost } from "../posts";
 
 /**-------------------------------postsExample---------------------------------- */
 /** 참고contents 
@@ -49,17 +54,6 @@ import { updateProfile } from "firebase/auth";
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
   }; 
-   * post항목에   
-   * 
-   * const newPost = {
-    text,
-    createdAt: Date.now(),
-    isEdit: false,
-    userName: auth.currentUser.displayName,
-    userId: auth.currentUser?.uid,
-  };
-    추가 수정하였습니다.
-   */
 /**---------------------------------Poster------------------------------------- */
 const MyPage = () => {
   const onLogOutClick = () => {
@@ -68,10 +62,6 @@ const MyPage = () => {
   const isDark = useColorScheme() === "dark";
   const { navigate } = useNavigation();
   const [myComments, setMyComments] = useState([]);
-
-  /**console.log("myContents", myContents);
-    에러 문제점 찾기 
-  */
 
   /**작성한 글 불러오기 */
   useEffect(() => {
@@ -94,7 +84,7 @@ const MyPage = () => {
 
   const [detailItem, setDetailItem] = useState({});
   const [content, setContent] = useState("");
-  console.log("content", content);
+  // console.log("content", content);
 
   const newUser = {
     content,
@@ -103,7 +93,7 @@ const MyPage = () => {
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
   };
-  console.log("newUser", newUser);
+  // console.log("newUser", newUser);
 
   const updateProfile = async () => {
     await updateDoc(doc(dbService, "users"), {
@@ -143,6 +133,10 @@ const MyPage = () => {
     setDetailItem({ ...detailItem, isEdit: !detailItem.isEdit });
     setContent("");
   };
+
+  //dropdown
+  const [check, setState] = useState(false);
+  const click = () => setState(!check);
 
   /**-----------------------------------Return--------------------------------------- */
   return (
@@ -198,16 +192,17 @@ const MyPage = () => {
           </MyInfo>
         </>
       </DimensionView>
+
       {/* ------------------------------------------------------------------------- */}
-      <LogOutBt onPress={onLogOutClick}>
+      <LogOutBtn onPress={onLogOutClick}>
         <LogOutText>로그아웃</LogOutText>
-      </LogOutBt>
+      </LogOutBtn>
       {/* ------------------------------------------------------------------------- */}
       <FlatList
         data={myComments}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <>
+          <CommentContainer>
             <MyCommentRow
               style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
             >
@@ -222,21 +217,32 @@ const MyPage = () => {
               </MyCommentName>
               <MyCommentText
                 style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
+                numberOfLines={3}
               >
                 {item.text.slice(0, 60)}
                 {item.text.length > 60 && "..."}
               </MyCommentText>
-              <EditDeleteBtn>
-                <TouchableOpacity>
-                  <Entypo
-                    name="dots-three-horizontal"
-                    size={17}
-                    color="#AAAAAA"
-                  />
-                </TouchableOpacity>
+              <EditDeleteBtn onPress={click}>
+                <Entypo
+                  name="dots-three-horizontal"
+                  size={17}
+                  color="#AAAAAA"
+                />
+                <DropDownView
+                  style={{
+                    display: check ? "flex" : "none",
+                  }}
+                >
+                  <DropDownEdit>
+                    <DropDownText>글 수정</DropDownText>
+                  </DropDownEdit>
+                  <DropDownDelete>
+                    <DropDownText >글 삭제</DropDownText>
+                  </DropDownDelete>
+                </DropDownView>
               </EditDeleteBtn>
             </MyCommentRow>
-          </>
+          </CommentContainer>
         )}
       />
     </>
@@ -246,15 +252,47 @@ export default MyPage;
 
 /**-----------------------------------Styled--------------------------------------- */
 
+const DropDownView = styled.View`
+  position: absolute;
+  margin-top: 20px;
+  right: 5px;
+  width: 100px;
+  height: 110px;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: ${DROPDOWN_BACKGROUND_COLOR};
+`;
+const DropDownEdit = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  border-bottom-width: 0.3px;
+  border-color: ${DARK_BTN};
+`;
+const DropDownDelete = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top-width: 0.3px;
+  border-color: ${DARK_BTN};
+`;
+
+const DropDownText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  color: ${DROPDOWN_FONT_COLOR};
+`;
+
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
 `;
-
-// const ProfileEdit = styled.Text`
-//   position: absolute;
-//   top: 10px;
-//   left: 340px;
-// `;
+const CommentContainer = styled.View`
+  align-items: center;
+  margin: 5px 0;
+`;
 
 const MyImg = styled.Image`
   width: 120px;
@@ -273,12 +311,6 @@ const MyInfoName = styled.Text`
   font-weight: 700;
   margin-bottom: 10px;
 `;
-// const MyInfoComment = styled.Text`
-//   width: 190px;
-//   height: 100px;
-//   margin-bottom: 5px;
-//   margin-left: 160px;
-// `;
 
 const MyCommentRow = styled.View`
   width: 355px;
@@ -309,26 +341,24 @@ const MyCommentName = styled.Text`
   font-weight: 600;
 `;
 
-const EditDeleteBtn = styled.View`
+const EditDeleteBtn = styled.TouchableOpacity`
   position: absolute;
-  margin-left: 305px;
-  margin-top: 15px;
+  top: 10px;
+  right: 8px;
 `;
 
 const LogOutText = styled.Text`
-  font-size: 17px;
+  font-size: 18px;
   color: white;
 `;
 
-const LogOutBt = styled.TouchableOpacity`
-  background-color: #e43434;
+const LogOutBtn = styled.TouchableOpacity`
+  width: 30%;
   align-items: center;
   border-radius: 50px;
-  margin: auto;
-  margin-bottom: 20px;
-  width: 40%;
-  height: 35px;
-  padding: 9px;
+  padding: 10px 15px;
+  margin: 10px;
+  background-color: ${(props) => props.theme.brandColor};
 `;
 const UserProfile = styled.View`
   position: absolute;
