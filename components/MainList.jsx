@@ -6,11 +6,13 @@ import {
   DROPDOWN_FONT_COLOR,
   DROPDOWN_BACKGROUND_COLOR,
 } from "../color";
-
 import { useColorScheme } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../firebase";
+import { deletePost } from "../posts";
+import { useMutation } from "react-query";
+import { Alert } from "react-native";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
@@ -20,11 +22,44 @@ const MainList = ({ item }) => {
       params: { item },
     });
   };
-  const isDark = useColorScheme() === "dark";
 
   //DropDown
   const [check, setState] = useState(false);
   const click = () => setState(!check);
+
+  // 삭제
+  const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
+    ["deletePost", item.id],
+    (body) => deletePost(body),
+    {
+      onSuccess: () => {
+        console.log("삭제 완료");
+      },
+      onError: (error) => {
+        console.log("error", error);
+      },
+    }
+  );
+
+  const onDeletePost = async () => {
+    Alert.alert("포스트 삭제", "정말 삭제하시겠습니까?", [
+      { text: "취소", style: "destructive" },
+      {
+        text: "삭제",
+        onPress: async () => {
+          try {
+            await del(item.id);
+          } catch (error) {
+            console.log("error", error);
+          }
+        },
+      },
+    ]);
+  };
+
+  if (isLoadingDeleting) {
+    return <DropDownText>삭제</DropDownText>;
+  }
 
   return (
     <TouchableOpacity onPress={goToDetail}>
@@ -48,10 +83,10 @@ const MainList = ({ item }) => {
                 }}
               >
                 <DropDownEdit>
-                  <DropDownText>글 수정</DropDownText>
+                  <DropDownText>수정</DropDownText>
                 </DropDownEdit>
-                <DropDownDelete>
-                  <DropDownText>글 삭제</DropDownText>
+                <DropDownDelete onPress={onDeletePost}>
+                  <DropDownText>삭제</DropDownText>
                 </DropDownDelete>
               </DropDownView>
             </TouchableOpacity>
