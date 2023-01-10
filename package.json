@@ -22,8 +22,7 @@
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
     "react-native-use-keyboard-height": "^0.1.1",
-    "react-query": "^3.39.2",
-    "react-query-firestore": "^0.3.2"
+    "react-query": "^3.39.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
