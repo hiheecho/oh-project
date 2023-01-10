@@ -1,23 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { TouchableOpacity, Text } from "react-native";
+import React from "react";
+import { TouchableOpacity, View, ActivityIndicator } from "react-native";
 import styled from "@emotion/native";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
 import { useQuery } from "react-query";
 import { getDetail } from "../posts";
 
 const DetailContent = ({ item }) => {
-  // const [text, setText] = useState("");
-  // const [userName, setUserName] = useState("");
   const postId = item.id;
-  console.log("postId:", postId);
-  // useEffect(() => {
-  //   const getDetail = async () => {
-  //     const content = await getDoc(doc(dbService, "posts", postId));
-  //     setText(content.data().text);
-  //     setUserName(content.data().userName);
-  //   };
-  //   getDetail();
-  // });
 
   const { isLoading, data } = useQuery(["contents", postId], getDetail, {
     onSuccess: () => {
@@ -27,11 +16,15 @@ const DetailContent = ({ item }) => {
       console.log("error : ", error);
     },
   });
-  console.log("data", data);
 
   if (isLoading) {
-    console.log("로딩중입니다.");
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
   }
+
   return (
     <DetailContentWrapper>
       <ContentHeader>
@@ -40,14 +33,14 @@ const DetailContent = ({ item }) => {
             source={require("../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
-          <Nickname>{item.userName}</Nickname>
+          <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
         <TouchableOpacity>
           <EditBtn>글 수정</EditBtn>
         </TouchableOpacity>
       </ContentHeader>
       {/* <Youtube /> */}
-      <ContentText>{item.text}</ContentText>
+      <ContentText>{data?.data().text}</ContentText>
     </DetailContentWrapper>
   );
 };
