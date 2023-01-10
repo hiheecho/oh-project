@@ -1,10 +1,14 @@
 import React from "react";
-import { ScrollView, TouchableOpacity } from "react-native";
+import { ScrollView } from "react-native";
 import styled from "@emotion/native";
-import { StyleSheet } from "react-native";
+import {
+  DARK_BTN,
+  DROPDOWN_FONT_COLOR,
+  DROPDOWN_BACKGROUND_COLOR,
+} from "../color";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import { SCREEN_HEIGHT } from "../util";
 import { auth } from "../firebase";
+import { useState } from "react";
 const MyPage = () => {
   const onLogOutClick = () => {
     auth.signOut();
@@ -50,26 +54,13 @@ const MyPage = () => {
               <DropDownView
                 style={{
                   display: check ? "flex" : "none",
-                  backgroundColor: "#888888",
                 }}
               >
                 <DropDownEdit>
-                  <DropDownText
-                    style={{
-                      color: isDark ? DARK_COLOR : LIGHT_COLOR,
-                    }}
-                  >
-                    글 수정
-                  </DropDownText>
+                  <DropDownText>글 수정</DropDownText>
                 </DropDownEdit>
                 <DropDownDelete>
-                  <DropDownText
-                    style={{
-                      color: isDark ? DARK_COLOR : LIGHT_COLOR,
-                    }}
-                  >
-                    글 삭제
-                  </DropDownText>
+                  <DropDownText>글 삭제</DropDownText>
                 </DropDownDelete>
               </DropDownView>
             </EditDeleteBtn>
@@ -182,4 +173,38 @@ const LogOutBtn = styled.TouchableOpacity`
   padding: 10px 15px;
   margin: 10px;
   background-color: ${(props) => props.theme.brandColor};
+`;
+const DropDownView = styled.View`
+  position: absolute;
+  margin-top: 20px;
+  right: 5px;
+  width: 100px;
+  height: 110px;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: ${DROPDOWN_BACKGROUND_COLOR};
+`;
+
+const DropDownEdit = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  border-bottom-width: 0.3px;
+  border-color: ${DARK_BTN};
+`;
+const DropDownDelete = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top-width: 0.3px;
+  border-color: ${DARK_BTN};
+`;
+
+const DropDownText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  color: ${DROPDOWN_FONT_COLOR};
 `;
