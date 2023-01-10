@@ -1,10 +1,37 @@
-import React from "react";
-import { TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity, Text } from "react-native";
 import styled from "@emotion/native";
-import { LIGHT_GRAY, LIGHT_BTN } from "../color";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
+import { useQuery } from "react-query";
+import { getDetail } from "../posts";
 
 const DetailContent = ({ item }) => {
+  // const [text, setText] = useState("");
+  // const [userName, setUserName] = useState("");
+  const postId = item.id;
+  console.log("postId:", postId);
+  // useEffect(() => {
+  //   const getDetail = async () => {
+  //     const content = await getDoc(doc(dbService, "posts", postId));
+  //     setText(content.data().text);
+  //     setUserName(content.data().userName);
+  //   };
+  //   getDetail();
+  // });
+
+  const { isLoading, data } = useQuery(["contents", postId], getDetail, {
+    onSuccess: () => {
+      console.log("성공!");
+    },
+    onError: (error) => {
+      console.log("error : ", error);
+    },
+  });
+  console.log("data", data);
+
+  if (isLoading) {
+    console.log("로딩중입니다.");
+  }
   return (
     <DetailContentWrapper>
       <ContentHeader>
