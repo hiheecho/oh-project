@@ -14,10 +14,15 @@ import { useColorScheme } from "react-native";
 import { SCREEN_HEIGHT } from "../util";
 import { BRAND_COLOR } from "../color";
 import { auth } from "../firebase";
+import { useState } from "react";
 const MyPage = () => {
   const onLogOutClick = () => {
     auth.signOut();
   };
+  //DropDown
+  const [check, setState] = useState(false);
+  const click = () => setState(!check);
+
   const isDark = useColorScheme() === "dark";
   const username = "영화배우 손석구";
   const myInfoComment =
@@ -33,7 +38,7 @@ const MyPage = () => {
           source={require("../assets/testImg.jpg")}
         />
         <TouchableOpacity>
-          <ProfileEdit style={{ paddingHorizontal: 330 }}>
+          <ProfileEdit>
             <FontAwesome5 name="edit" size={20} color="#AAAAAA" />
           </ProfileEdit>
         </TouchableOpacity>
@@ -72,9 +77,34 @@ const MyPage = () => {
           {MyComment.length > 60 && "..."}
         </MyCommentText>
         <EditDeleteBtn>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={click}>
             <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
           </TouchableOpacity>
+          <DropDownView
+            style={{
+              display: check ? "flex" : "none",
+              backgroundColor: "#888888",
+            }}
+          >
+            <DropDownEdit>
+              <DropDownText
+                style={{
+                  color: isDark ? DARK_COLOR : LIGHT_COLOR,
+                }}
+              >
+                글 수정
+              </DropDownText>
+            </DropDownEdit>
+            <DropDownDelete>
+              <DropDownText
+                style={{
+                  color: isDark ? DARK_COLOR : LIGHT_COLOR,
+                }}
+              >
+                글 삭제
+              </DropDownText>
+            </DropDownDelete>
+          </DropDownView>
         </EditDeleteBtn>
       </MyCommentRow>
     </ScrollView>
@@ -88,8 +118,8 @@ const DimensionView = styled.View`
 
 const ProfileEdit = styled.Text`
   position: absolute;
-  margin-top: 10px;
-  margin-left: 10px;
+  top: 10px;
+  right: 5px;
 `;
 
 const MyImg = styled.Image`
@@ -164,4 +194,36 @@ const LogOutBt = styled.TouchableOpacity`
   border-radius: 50px;
   margin-left: 130px;
   margin-bottom: 20px;
+`;
+
+const DropDownView = styled.View`
+  position: absolute;
+  margin-top: 20px;
+  right: 5px;
+  width: 80px;
+  height: 90px;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+`;
+
+const DropDownEdit = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-bottom: 10px;
+  border-bottom-width: 0.3px;
+  border-color: white;
+`;
+const DropDownDelete = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top-width: 0.3px;
+  border-color: white;
+`;
+
+const DropDownText = styled.Text`
+  text-align: center;
+  font-size: 18px;
 `;
