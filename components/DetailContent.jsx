@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { TouchableOpacity, View, ActivityIndicator } from "react-native";
 import styled from "@emotion/native";
 import {
   DROPDOWN_BACKGROUND_COLOR,
@@ -8,9 +9,29 @@ import {
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
 import { Entypo } from "@expo/vector-icons";
 import { Alert } from "react-native";
-import { deletePost } from "../posts";
+import { deletePost, getDetail } from "../posts";
 import { useNavigation } from "@react-navigation/native";
-import { useMutation } from "react-query";
+import { useQuery, useMutation } from "react-query";
+
+
+const DetailContent = ({ item }) => {
+  const postId = item.id;
+
+  const { isLoading, data } = useQuery(["contents", postId], getDetail, {
+    onSuccess: () => {
+      console.log("성공!");
+    },
+    onError: (error) => {
+      console.log("error : ", error);
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
 
 const DetailContent = ({ item }) => {
   const { navigate } = useNavigation();
@@ -62,7 +83,7 @@ const DetailContent = ({ item }) => {
             source={require("../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
-          <Nickname>{item.userName}</Nickname>
+          <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
         <EditDeleteBtn onPress={click}>
           <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
@@ -81,7 +102,7 @@ const DetailContent = ({ item }) => {
         </EditDeleteBtn>
       </ContentHeader>
       {/* <Youtube /> */}
-      <ContentText>{item.text}</ContentText>
+      <ContentText>{data?.data().text}</ContentText>
     </DetailContentWrapper>
   );
 };
