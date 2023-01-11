@@ -6,7 +6,6 @@ import {
   DROPDOWN_FONT_COLOR,
   DROPDOWN_BACKGROUND_COLOR,
 } from "../color";
-import { useColorScheme } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../firebase";
@@ -16,9 +15,17 @@ import { Alert } from "react-native";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
+
   const goToDetail = () => {
     navigate("Stacks", {
       screen: "PostDetail",
+      params: { item },
+    });
+  };
+
+  const goToPostEditing = () => {
+    navigate("Stacks", {
+      screen: "PostEditing",
       params: { item },
     });
   };
@@ -69,10 +76,7 @@ const MainList = ({ item }) => {
           source={require("../assets/icon.png")}
         />
         <CommentName>{item.userName}</CommentName>
-        <CommentText>
-          {item.text.slice(0, 60)}
-          {item.text.length > 60 && "..."}
-        </CommentText>
+        <CommentText>{item.text}</CommentText>
         {item.userId === auth.currentUser.uid ? (
           <EditDeleteBtn>
             <TouchableOpacity onPress={click}>
@@ -82,7 +86,7 @@ const MainList = ({ item }) => {
                   display: check ? "flex" : "none",
                 }}
               >
-                <DropDownEdit>
+                <DropDownEdit onPress={goToPostEditing}>
                   <DropDownText>수정</DropDownText>
                 </DropDownEdit>
                 <DropDownDelete onPress={onDeletePost}>

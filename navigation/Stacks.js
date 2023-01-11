@@ -5,9 +5,10 @@ import Post from "../screen/Post";
 import { BRAND_COLOR } from "../color";
 import Login from "../screen/Login";
 import SignUp from "../screen/SignUp";
+import PostDetail from "../screen/PostDetail";
+import PostEditing from "../screen/PostEditing";
 // import { authService } from "../firebase";
 // import { signOut } from "firebase/auth";
-import PostDetail from "../screen/PostDetail";
 import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
@@ -52,6 +53,11 @@ const Stacks = ({ navigation: { goBack } }) => {
             />
           ),
         }}
+      />
+      <Stack.Screen
+        name="PostEditing"
+        component={PostEditing}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
