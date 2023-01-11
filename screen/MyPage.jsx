@@ -165,7 +165,7 @@ const MyPage = () => {
                       value={detailItemContent}
                       onChangeText={setDetailItemContent}
                       onSubmitEditing={updateDocProfile}
-                      // multiline={true}
+                      multiline={true}
                       autoFocus
                       placeholder="간단하게 자기소개 해주세요"
                       placeholderTextColor="#AAAAAA"
