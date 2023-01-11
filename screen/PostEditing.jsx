@@ -15,6 +15,7 @@ const PostEditing = ({
   },
 }) => {
   const [text, setText] = useState(item.text);
+  const [videoLink, setVideoLink] = useState(item.videoLink);
   const { navigate } = useNavigation();
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
@@ -43,7 +44,7 @@ const PostEditing = ({
 
   const onUpdatePost = async () => {
     try {
-      await edit({ id: item.id, text });
+      await edit({ id: item.id, text, videoLink });
       navigate("Tabs", { screen: "Main" });
     } catch (error) {
       console.log("error", error);
@@ -67,6 +68,11 @@ const PostEditing = ({
           </PostBtnActive>
         )}
       </FakeNavi>
+      <YoutubeInput
+        value={videoLink}
+        onChangeText={setVideoLink}
+        placeholderTextColor="#a1a1a1"
+      />
       <TextArea
         value={text}
         onChangeText={setText}
@@ -134,7 +140,14 @@ const TextArea = styled.TextInput`
   color: ${(props) => props.theme.color};
   background-color: ${(props) => props.theme.background};
 `;
-
+const YoutubeInput = styled.TextInput`
+  height: ${SCREEN_HEIGHT / 13 + "px"};
+  padding: 20px;
+  font-size: 17px;
+  color: ${(props) => props.theme.color};
+  background-color: ${(props) => props.theme.background};
+  margin-bottom: 2px;
+`;
 const LettersCount = styled.View`
   padding: 15px;
   font-size: 18px;
