@@ -12,7 +12,7 @@ import { auth } from "../firebase";
 import { deletePost } from "../posts";
 import { useMutation } from "react-query";
 import { Alert } from "react-native";
-import DropDown from "./DropDown";
+import Likes from "./Likes";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
@@ -78,6 +78,8 @@ const MainList = ({ item }) => {
         />
         <CommentName>{item.userName}</CommentName>
         <CommentText>{item.text}</CommentText>
+        <Likes item={item} />
+
         {item.userId === auth.currentUser.uid ? (
           <EditDeleteBtn>
             <TouchableOpacity onPress={click}>

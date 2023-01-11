@@ -24,6 +24,10 @@ export const updatePost = async ({ id, text }) => {
   await updateDoc(doc(dbService, "posts", id), { text });
 };
 
+export const updateLikes = async ({ id, likes }) => {
+  await updateDoc(doc(dbService, "posts", id), { likes });
+};
+
 // Delete
 export const deletePost = async (id) => {
   await deleteDoc(doc(dbService, "posts", id));
