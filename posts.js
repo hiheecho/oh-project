@@ -24,7 +24,7 @@ export const getDetail = async ({ queryKey }) => {
 export const updatePost = async ({ id, text }) => {
   await updateDoc(doc(dbService, "posts", id), { text });
 };
-
+//queryClient refetch method
 // Delete
 export const deletePost = async (id) => {
   await deleteDoc(doc(dbService, "posts", id));

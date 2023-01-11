@@ -34,7 +34,7 @@ const DetailContent = ({ item }) => {
   const goToPostEditing = () => {
     navigate("Stacks", {
       screen: "PostEditing",
-      params: { item, from: "Detail" },
+      params: { item },
     });
   };
   const postId = item.id;
