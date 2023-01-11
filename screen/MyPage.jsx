@@ -44,6 +44,7 @@ import { dbService, auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
 import { useMutation } from "react-query";
 import { deletePost } from "../posts";
+import DropDown from "../components/DropDown";
 
 /**-------------------------------postsExample---------------------------------- */
 /** 참고contents 
@@ -134,10 +135,6 @@ const MyPage = () => {
     setContent("");
   };
 
-  //dropdown
-  const [check, setState] = useState(false);
-  const click = () => setState(!check);
-
   /**-----------------------------------Return--------------------------------------- */
   return (
     <>
@@ -222,25 +219,7 @@ const MyPage = () => {
                 {item.text.slice(0, 60)}
                 {item.text.length > 60 && "..."}
               </MyCommentText>
-              <EditDeleteBtn onPress={click}>
-                <Entypo
-                  name="dots-three-horizontal"
-                  size={17}
-                  color="#AAAAAA"
-                />
-                <DropDownView
-                  style={{
-                    display: check ? "flex" : "none",
-                  }}
-                >
-                  <DropDownEdit>
-                    <DropDownText>글 수정</DropDownText>
-                  </DropDownEdit>
-                  <DropDownDelete>
-                    <DropDownText >글 삭제</DropDownText>
-                  </DropDownDelete>
-                </DropDownView>
-              </EditDeleteBtn>
+              <DropDown />
             </MyCommentRow>
           </CommentContainer>
         )}
@@ -251,40 +230,6 @@ const MyPage = () => {
 export default MyPage;
 
 /**-----------------------------------Styled--------------------------------------- */
-
-const DropDownView = styled.View`
-  position: absolute;
-  margin-top: 20px;
-  right: 5px;
-  width: 100px;
-  height: 110px;
-  border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: ${DROPDOWN_BACKGROUND_COLOR};
-`;
-const DropDownEdit = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 8px;
-  padding-bottom: 10px;
-  border-bottom-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-const DropDownDelete = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-
-const DropDownText = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  color: ${DROPDOWN_FONT_COLOR};
-`;
 
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
@@ -339,12 +284,6 @@ const MyCommentName = styled.Text`
   margin-top: 24px;
   font-size: 17px;
   font-weight: 600;
-`;
-
-const EditDeleteBtn = styled.TouchableOpacity`
-  position: absolute;
-  top: 10px;
-  right: 8px;
 `;
 
 const LogOutText = styled.Text`
