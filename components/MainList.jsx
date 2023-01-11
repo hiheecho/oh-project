@@ -54,10 +54,6 @@ const MainList = ({ item }) => {
     ]);
   };
 
-  if (isLoadingDeleting) {
-    return <DropDownText>삭제</DropDownText>;
-  }
-
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow>
@@ -65,13 +61,21 @@ const MainList = ({ item }) => {
           style={StyleSheet.absoluteFill}
           source={require("../assets/icon.png")}
         />
-        <CommentName>{item.userName}</CommentName>
+        <CommentName>
+          {auth.currentUser.uid === item.userId
+            ? auth.currentUser.displayName
+            : item.userName}
+        </CommentName>
         <CommentText>
           {item.text.slice(0, 60)}
           {item.text.length > 60 && "..."}
         </CommentText>
+        {auth.currentUser.uid === item.userid ? item.content : null}
         {item.userId === auth.currentUser.uid ? (
-          <DropDown onDeletePost={onDeletePost} />
+          <DropDown
+            onDeletePost={onDeletePost}
+            isLoadingDeleting={isLoadingDeleting}
+          />
         ) : null}
       </CommentRow>
     </TouchableOpacity>

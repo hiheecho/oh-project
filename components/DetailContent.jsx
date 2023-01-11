@@ -12,12 +12,9 @@ import { Alert } from "react-native";
 import { deletePost, getDetail } from "../posts";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
+import DropDown from "./DropDown";
 
 const DetailContent = ({ item }) => {
-  //dropdown
-  const [check, setCheck] = useState(false);
-  const click = () => setCheck(!check);
-
   // 삭제
   const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
     ["deletePost", item.id],
@@ -69,10 +66,6 @@ const DetailContent = ({ item }) => {
     ]);
   };
 
-  if (isLoadingDeleting) {
-    return <DropDownText>삭제</DropDownText>;
-  }
-
   return (
     <DetailContentWrapper>
       <ContentHeader>
@@ -83,7 +76,10 @@ const DetailContent = ({ item }) => {
           />
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
-        <DropDown onDeletePost={onDeletePost} />
+        <DropDown
+          onDeletePost={onDeletePost}
+          isLoadingDeleting={isLoadingDeleting}
+        />
       </ContentHeader>
       {/* <Youtube /> */}
       <ContentText>{data?.data().text}</ContentText>

@@ -10,7 +10,7 @@ import { TouchableOpacity } from "react-native";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-const DropDown = ({ onDeletePost }) => {
+const DropDown = ({ onDeletePost, isLoadingDeleting }) => {
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -20,6 +20,10 @@ const DropDown = ({ onDeletePost }) => {
   );
 
   const [check, setCheck] = useState(false);
+
+  if (isLoadingDeleting) {
+    return <DropDownText>삭제</DropDownText>;
+  }
 
   return (
     <EditDeleteBtn>

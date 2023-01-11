@@ -45,16 +45,15 @@ import { updateProfile } from "firebase/auth";
 import { useMutation } from "react-query";
 import { deletePost } from "../posts";
 import DropDown from "../components/DropDown";
-
 /**-------------------------------postsExample---------------------------------- */
-/** 참고contents 
+/** 참고contents
     const newPost = {
     text,
     createdAt: Date.now(),
     isEdit: false,
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
-  }; 
+  };
 /**---------------------------------Poster------------------------------------- */
 const MyPage = () => {
   const onLogOutClick = () => {
@@ -80,57 +79,61 @@ const MyPage = () => {
     });
     return unsubscribe;
   }, []);
-
   /**---------------------------------Users-------------------------------------- */
+  /** 닉네임 */
+  const [userName, setUserName] = useState(auth.currentUser.displayName);
+  const [disPlayName, setDisPlayName] = useState("");
 
+  const ChangeNickName = async () => {
+    await updateProfile(auth.currentUser, {
+      displayName: disPlayName,
+    }).catch((error) => alert(error.message));
+    setUserName(disPlayName);
+  };
+
+  /** 자기소개 */
   const [detailItem, setDetailItem] = useState({});
-  const [content, setContent] = useState("");
-  console.log("content", content);
-  console.log("detailItem", detailItem);
-  console.log("detailItem.content", detailItem.content);
-  console.log("newUser", newUser);
+  const [detailItemContent, setDetailItemContent] = useState("");
 
-  const newUser = {
-    content,
-    createdAt: Date.now(),
-    isEdit: false,
-    userName: auth.currentUser.displayName,
-    userId: auth.currentUser?.uid,
-  };
+  const updateDocProfile = async () => {
+    const newDetailItem = {
+      ...detailItem,
+      content: detailItemContent,
+    };
 
-  const updateDocProfile = async (detailItem) => {
-    await updateDoc(doc(dbService, "users", detailItem), {
-      ...newUser,
-    });
-    setDetailItem(newUser);
-    setContent("");
-  };
-
-  const addUser = async () => {
-    await addDoc(collection(dbService, "users"), newUser);
-    setContent("");
-  };
-
-  useEffect(() => {
-    const q = query(
-      collection(dbService, "users"),
-      where("userId", "==", auth.currentUser?.uid)
+    await updateDoc(
+      doc(dbService, "users", auth.currentUser.uid),
+      newDetailItem
     );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newDetailItem = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setDetailItem(newDetailItem);
-    });
-    return unsubscribe;
+
+    setDetailItem(newDetailItem);
+    setEdit(newDetailItem);
+  };
+
+  /**데이터 불러오기 */
+  useEffect(() => {
+    const getData = async () => {
+      const docRef = doc(dbService, "users", auth.currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      setDetailItemContent(docSnap.data().content);
+      setDetailItem({
+        id: docSnap.id,
+        ...docSnap.data(),
+      });
+    };
+
+    const getUserData = () => {
+      setDisPlayName(auth.currentUser.displayName);
+    };
+
+    getData();
+    getUserData();
   }, []);
 
   const setEdit = async (detailItem) => {
     setDetailItem({ ...detailItem, isEdit: !detailItem.isEdit });
-    setContent("");
   };
-
   /**-----------------------------------Return--------------------------------------- */
   return (
     <>
@@ -141,36 +144,48 @@ const MyPage = () => {
         />
         <>
           <MyInfo>
-            <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {auth.currentUser.displayName}
-            </MyInfoName>
             <UserProfile>
               {detailItem.isEdit === true ? (
-                <UserInfoInput
-                  value={content}
-                  onChangeText={setContent}
-                  onSubmitEditing={addUser}
-                  multiline={true}
-                  autoFocus
-                  placeholder="간단하게 자기소개 해주세요"
-                  placeholderTextColor="#aaaaaa"
-                />
+                <View>
+                  <NickNameView>
+                    <NickNameInput
+                      placeholder="닉네임을 변경하세요"
+                      placeholderTextColor="#AAAAAA"
+                      value={disPlayName}
+                      onChangeText={(text) => setDisPlayName(text)}
+                      onSubmitEditing={ChangeNickName}
+                    />
+                  </NickNameView>
+                  <UserInfoView>
+                    <UserInfoInput
+                      value={detailItemContent}
+                      onChangeText={setDetailItemContent}
+                      onSubmitEditing={updateDocProfile}
+                      multiline={true}
+                      autoFocus
+                      placeholder="간단하게 자기소개 해주세요"
+                      placeholderTextColor="#AAAAAA"
+                    />
+                  </UserInfoView>
+                </View>
               ) : (
-                <TouchableOpacity>
-                  <UserInfoText
+                <>
+                  <MyInfoName
                     style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
                   >
-                    {detailItem.content}
-                  </UserInfoText>
-                </TouchableOpacity>
+                    {userName}
+                  </MyInfoName>
+                  <MyIntroView>
+                    <MyInfoText>{detailItemContent}</MyInfoText>
+                  </MyIntroView>
+                </>
               )}
-
               {detailItem.isEdit === true ? (
-                <UserCompleteBtn onPress={() => updateDocProfile(detailItem)}>
+                <UserCompleteBtn onPress={() => updateDocProfile()}>
                   <MaterialCommunityIcons
                     name="account-edit"
                     size={30}
-                    color="#aaaaaa"
+                    color="#AAAAAA"
                   />
                 </UserCompleteBtn>
               ) : (
@@ -178,7 +193,7 @@ const MyPage = () => {
                   <MaterialCommunityIcons
                     name="account-edit-outline"
                     size={30}
-                    color="#aaaaaa"
+                    color="#AAAAAA"
                   />
                 </UserEditBtn>
               )}
@@ -187,11 +202,10 @@ const MyPage = () => {
         </>
       </DimensionView>
 
-      {/* ------------------------------------------------------------------------- */}
       <LogOutBtn onPress={onLogOutClick}>
         <LogOutText>로그아웃</LogOutText>
       </LogOutBtn>
-      {/* ------------------------------------------------------------------------- */}
+
       <FlatList
         data={myComments}
         keyExtractor={(item) => item.id}
@@ -207,7 +221,7 @@ const MyPage = () => {
               <MyCommentName
                 style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
               >
-                {item.userName}
+                {auth.currentUser.displayName}
               </MyCommentName>
               <MyCommentText
                 style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
@@ -216,25 +230,6 @@ const MyPage = () => {
                 {item.text.slice(0, 60)}
                 {item.text.length > 60 && "..."}
               </MyCommentText>
-              <EditDeleteBtn onPress={click}>
-                <Entypo
-                  name="dots-three-horizontal"
-                  size={17}
-                  color="#AAAAAA"
-                />
-                <DropDownView
-                  style={{
-                    display: check ? "flex" : "none",
-                  }}
-                >
-                  <DropDownEdit>
-                    <DropDownText>글 수정</DropDownText>
-                  </DropDownEdit>
-                  <DropDownDelete>
-                    <DropDownText>글 삭제</DropDownText>
-                  </DropDownDelete>
-                </DropDownView>
-              </EditDeleteBtn>
               <DropDown />
             </MyCommentRow>
           </CommentContainer>
@@ -244,9 +239,7 @@ const MyPage = () => {
   );
 };
 export default MyPage;
-
 /**-----------------------------------Styled--------------------------------------- */
-
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
 `;
@@ -254,7 +247,6 @@ const CommentContainer = styled.View`
   align-items: center;
   margin: 5px 0;
 `;
-
 const MyImg = styled.Image`
   width: 120px;
   height: 120px;
@@ -266,13 +258,13 @@ const MyInfo = styled.View`
   margin-top: 30px;
 `;
 const MyInfoName = styled.Text`
-  margin-left: 160px;
-  margin-top: 13px;
+  left: 15px;
+  bottom: 50px;
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
+  width: 180px;
+  height: 140px;
 `;
-
 const MyCommentRow = styled.View`
   width: 355px;
   height: 120px;
@@ -301,12 +293,10 @@ const MyCommentName = styled.Text`
   font-size: 17px;
   font-weight: 600;
 `;
-
 const LogOutText = styled.Text`
   font-size: 18px;
   color: white;
 `;
-
 const LogOutBtn = styled.TouchableOpacity`
   width: 30%;
   align-items: center;
@@ -320,25 +310,43 @@ const UserProfile = styled.View`
   width: 185px;
   left: 150px;
   top: 45px;
-  height: 75px;
+  height: 30px;
 `;
 const UserInfoInput = styled.TextInput`
-  position: absolute;
   width: 185px;
   height: 75px;
   left: 10px;
+  bottom: 30px;
+  padding: 8px;
+  padding-bottom: 50px;
+  color: ${DARK_BTN};
 `;
-const UserInfoText = styled.Text`
-  position: absolute;
-  width: 185px;
-  height: 75px;
-  left: 13px;
-`;
+
 const UserEditBtn = styled.TouchableOpacity`
-  left: 182px;
-  bottom: 60px;
+  left: 180px;
+  bottom: 290px;
 `;
 const UserCompleteBtn = styled.TouchableOpacity`
-  left: 180px;
-  bottom: 60px;
+  left: 175px;
+  bottom: 165px;
+`;
+const NickNameView = styled.View``;
+const UserInfoView = styled.View``;
+const NickNameInput = styled.TextInput`
+  width: 185px;
+  height: 30px;
+  left: 10px;
+  bottom: 50px;
+  padding: 8px;
+  color: ${DARK_BTN};
+`;
+const MyIntroView = styled.View`
+  width: 90%;
+  height: 300%;
+  bottom: 150px;
+  left: 10px;
+`;
+const MyInfoText = styled.Text`
+  color: ${DARK_BTN};
+  font-size: 15px;
 `;
