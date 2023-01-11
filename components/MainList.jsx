@@ -79,23 +79,11 @@ const MainList = ({ item }) => {
         <CommentName>{item.userName}</CommentName>
         <CommentText>{item.text}</CommentText>
         {item.userId === auth.currentUser.uid ? (
-          <EditDeleteBtn>
-            <TouchableOpacity onPress={click}>
-              <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-              <DropDownView
-                style={{
-                  display: check ? "flex" : "none",
-                }}
-              >
-                <DropDownEdit onPress={goToPostEditing}>
-                  <DropDownText>수정</DropDownText>
-                </DropDownEdit>
-                <DropDownDelete onPress={onDeletePost}>
-                  <DropDownText>삭제</DropDownText>
-                </DropDownDelete>
-              </DropDownView>
-            </TouchableOpacity>
-          </EditDeleteBtn>
+          <DropDown
+            onDeletePost={onDeletePost}
+            item={item}
+            goToPostEditing={goToPostEditing}
+          />
         ) : null}
       </CommentRow>
     </TouchableOpacity>
