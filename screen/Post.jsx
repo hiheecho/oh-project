@@ -7,10 +7,12 @@ import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { addPost } from "../posts.js";
 import { useMutation } from "react-query";
+import { TextInput } from "react-native";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const Post = ({ navigation: { goBack } }) => {
   const [text, setText] = useState("");
+  const [videoLink, setVideoLink] = useState("");
   const { navigate } = useNavigation();
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
@@ -21,6 +23,7 @@ const Post = ({ navigation: { goBack } }) => {
     createdAt: Date.now(),
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
+    videoLink,
   };
 
   const { isLoading, mutate: add } = useMutation(
@@ -66,6 +69,12 @@ const Post = ({ navigation: { goBack } }) => {
           </PostBtnActive>
         )}
       </FakeNavi>
+      <YoutubeInput
+        value={videoLink}
+        onChangeText={setVideoLink}
+        placeholder="추천곡 유튜브링크를 입력해주세요."
+        placeholderTextColor="#a1a1a1"
+      />
       <TextArea
         value={text}
         onChangeText={setText}
@@ -75,6 +84,7 @@ const Post = ({ navigation: { goBack } }) => {
         textAlignVertical="top"
         autoFocus
       />
+
       {/* 글자수 */}
       <LettersCount>
         {text && text.length <= 150 ? (
@@ -129,11 +139,19 @@ const PostBtnInactive = styled.Text`
 `;
 
 const TextArea = styled.TextInput`
-  height: ${SCREEN_HEIGHT / 2.3 + "px"};
+  height: ${SCREEN_HEIGHT / 2.5 + "px"};
   padding: 20px;
   font-size: 17px;
   color: ${(props) => props.theme.color};
   background-color: ${(props) => props.theme.background};
+`;
+const YoutubeInput = styled.TextInput`
+  height: ${SCREEN_HEIGHT / 13 + "px"};
+  padding: 20px;
+  font-size: 17px;
+  color: ${(props) => props.theme.color};
+  background-color: ${(props) => props.theme.background};
+  margin-bottom: 2px;
 `;
 
 const LettersCount = styled.View`
