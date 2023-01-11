@@ -5,14 +5,14 @@ import {
   DROPDOWN_BACKGROUND_COLOR,
   DARK_BTN,
   DROPDOWN_FONT_COLOR,
-} from "../color";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
+} from "../../color";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
 import { Entypo } from "@expo/vector-icons";
 import { Alert } from "react-native";
-import { deletePost, getDetail } from "../posts";
+import { deletePost, getDetail } from "../../posts";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
-import DropDown from "./DropDown";
+import DropDown from "../DropDown";
 
 const DetailContent = ({ item }) => {
   // 삭제
@@ -75,7 +75,7 @@ const DetailContent = ({ item }) => {
       <ContentHeader>
         <UserInfo>
           <UserImage
-            source={require("../assets/icon.png")}
+            source={require("../../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
           <Nickname>{data?.data().userName}</Nickname>
@@ -114,9 +114,6 @@ const Nickname = styled.Text`
   font-size: 18px;
   color: ${(props) => props.theme.color};
 `;
-const EditBtn = styled.Text`
-  color: ${(props) => props.theme.btn};
-`;
 
 //콘텐츠 내용
 const ContentText = styled.Text`
@@ -126,6 +123,12 @@ const ContentText = styled.Text`
   line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 5%;
   color: ${(props) => props.theme.color};
+`;
+
+const DropDownText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  color: ${DROPDOWN_FONT_COLOR};
 `;
 
 export default DetailContent;

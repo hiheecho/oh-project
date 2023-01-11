@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { query, onSnapshot, orderBy } from "@firebase/firestore";
 import { dbService } from "../firebase";
 import { collection } from "@firebase/firestore";
-import MainList from "../components/MainList";
+import MainList from "../components/main/MainList";
 
 const Main = () => {
   const { navigate } = useNavigation();

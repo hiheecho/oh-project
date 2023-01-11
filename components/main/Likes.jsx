@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { updateLikes } from "../posts";
+import { updateLikes } from "../../posts";
 import styled from "@emotion/native";
 import { AntDesign } from "@expo/vector-icons";
 import { useMutation } from "react-query";

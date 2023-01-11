@@ -5,11 +5,11 @@ import {
   DARK_BTN,
   DROPDOWN_FONT_COLOR,
   DROPDOWN_BACKGROUND_COLOR,
-} from "../color";
+} from "../../color";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../firebase";
-import { deletePost } from "../posts";
+import { auth } from "../../firebase";
+import { deletePost } from "../../posts";
 import { useMutation } from "react-query";
 import { Alert } from "react-native";
 import Likes from "./Likes";
@@ -74,12 +74,10 @@ const MainList = ({ item }) => {
       <CommentRow>
         <UserImg
           style={StyleSheet.absoluteFill}
-          source={require("../assets/icon.png")}
+          source={require("../../assets/icon.png")}
         />
         <CommentName>{item.userName}</CommentName>
         <CommentText>{item.text}</CommentText>
-        <Likes item={item} />
-
         {item.userId === auth.currentUser.uid ? (
           <EditDeleteBtn>
             <TouchableOpacity onPress={click}>
@@ -100,6 +98,7 @@ const MainList = ({ item }) => {
           </EditDeleteBtn>
         ) : null}
       </CommentRow>
+      <Likes item={item} />
     </TouchableOpacity>
   );
 };
