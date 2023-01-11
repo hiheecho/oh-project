@@ -63,6 +63,8 @@ const MyPage = () => {
   const { navigate } = useNavigation();
   const [myComments, setMyComments] = useState([]);
 
+  // const test = auth.currentUser.uid;
+
   /**작성한 글 불러오기 */
   useEffect(() => {
     const q = query(
@@ -101,10 +103,8 @@ const MyPage = () => {
       content: detailItemContent,
     };
 
-    await updateDoc(
-      doc(dbService, "users", auth.currentUser.uid),
-      newDetailItem
-    );
+    // await updateDoc(doc(dbService, "users", test.toString()), newDetailItem);
+    await setDoc(doc(dbService, "users", auth.currentUser.uid), newDetailItem);
 
     setDetailItem(newDetailItem);
     setEdit(newDetailItem);
@@ -116,7 +116,11 @@ const MyPage = () => {
       const docRef = doc(dbService, "users", auth.currentUser.uid);
       const docSnap = await getDoc(docRef);
 
+      if (docSnap.data() === undefined) {
+        return;
+      }
       setDetailItemContent(docSnap.data().content);
+
       setDetailItem({
         id: docSnap.id,
         ...docSnap.data(),
@@ -161,7 +165,7 @@ const MyPage = () => {
                       value={detailItemContent}
                       onChangeText={setDetailItemContent}
                       onSubmitEditing={updateDocProfile}
-                      multiline={true}
+                      // multiline={true}
                       autoFocus
                       placeholder="간단하게 자기소개 해주세요"
                       placeholderTextColor="#AAAAAA"
