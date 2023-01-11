@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { updatePost } from "../posts.js";
-import { useMutation } from "react-query";
+import { QueryClient, useMutation } from "react-query";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const PostEditing = ({
@@ -26,6 +26,10 @@ const PostEditing = ({
     {
       onSuccess: () => {
         console.log("게시글 수정");
+        //"contents"라는 쿼리키를 가진 쿼리를 리패치 하라는 명령이 실행되는 부분
+        // QueryClient.refetchQueries(["contents", 1], {
+        //   active: true,
+        // });
       },
       onError: (error) => {
         console.log("error", error);
