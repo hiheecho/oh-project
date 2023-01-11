@@ -5,6 +5,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
+
 import { dbService } from "./firebase";
 
 // Create
@@ -13,7 +14,10 @@ export const addPost = async (newPost) => {
 };
 
 // Read
-
+export const getDetail = async ({ queryKey }) => {
+  const [_, postId] = queryKey;
+  return await getDoc(doc(dbService, "posts", postId));
+};
 // Update
 export const updatePost = async ({ id, text }) => {
   await updateDoc(doc(dbService, "posts", id), { text });

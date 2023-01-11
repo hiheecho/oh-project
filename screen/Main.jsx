@@ -42,15 +42,7 @@ const Main = () => {
         <TouchableOpacity
           onPress={() => navigate("Stacks", { screen: "Post" })}
         >
-          <AntDesign
-            name="plus"
-            size={50}
-            color="white"
-            style={{
-              backgroundColor: BRAND_COLOR,
-              borderRadius: 50,
-            }}
-          />
+          <AntDesign name="pluscircle" size={50} color={BRAND_COLOR} />
         </TouchableOpacity>
       </PlusBtn>
     </>
@@ -63,8 +55,6 @@ const PlusBtn = styled.View`
   right: 10px;
   height: 50px;
   width: 50px;
-  overflow: hidden;
-  border-radius: 50px;
 `;
 
 export default Main;

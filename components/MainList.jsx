@@ -12,6 +12,7 @@ import { auth } from "../firebase";
 import { deletePost } from "../posts";
 import { useMutation } from "react-query";
 import { Alert } from "react-native";
+import DropDown from "./DropDown";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
@@ -33,6 +34,7 @@ const MainList = ({ item }) => {
   //DropDown
   const [check, setState] = useState(false);
   const click = () => setState(!check);
+
 
   // 삭제
   const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
@@ -78,6 +80,7 @@ const MainList = ({ item }) => {
         <CommentName>{item.userName}</CommentName>
         <CommentText>{item.text}</CommentText>
         {item.userId === auth.currentUser.uid ? (
+
           <EditDeleteBtn>
             <TouchableOpacity onPress={click}>
               <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
@@ -95,6 +98,8 @@ const MainList = ({ item }) => {
               </DropDownView>
             </TouchableOpacity>
           </EditDeleteBtn>
+
+          <DropDown onDeletePost={onDeletePost} />
         ) : null}
       </CommentRow>
     </TouchableOpacity>
@@ -133,47 +138,6 @@ const CommentName = styled.Text`
   font-size: 17px;
   font-weight: 600;
   color: ${(props) => props.theme.color};
-`;
-
-const EditDeleteBtn = styled.View`
-  position: absolute;
-  right: 15px;
-  top: 10px;
-`;
-
-const DropDownView = styled.View`
-  position: absolute;
-  margin-top: 20px;
-  right: 5px;
-  width: 100px;
-  height: 110px;
-  border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: ${DROPDOWN_BACKGROUND_COLOR};
-`;
-
-const DropDownEdit = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 8px;
-  padding-bottom: 10px;
-  border-bottom-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-const DropDownDelete = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-
-const DropDownText = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  color: ${DROPDOWN_FONT_COLOR};
 `;
 
 export default MainList;
