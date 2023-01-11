@@ -20,6 +20,15 @@ const PostEditing = ({
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
   // const keyboardHeight = useKeyboardHeight();
 
+  const onUpdatePost = async () => {
+    try {
+      await edit({ id: item.id, text });
+      navigate("Tabs", { screen: "Main" });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
   const { isLoading, mutate: edit } = useMutation(
     ["update", item.id],
     (body) => updatePost(body),
@@ -36,15 +45,6 @@ const PostEditing = ({
   if (isLoading) {
     return <PostBtnInactive>수정</PostBtnInactive>;
   }
-
-  const onUpdatePost = async () => {
-    try {
-      await edit({ id: item.id, text });
-      navigate("Tabs", { screen: "Main" });
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
 
   return (
     <Contents>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import styled from "@emotion/native";
 import {
   DARK_BTN,
@@ -77,7 +77,10 @@ const MainList = ({ item }) => {
           source={require("../../assets/icon.png")}
         />
         <CommentName>{item.userName}</CommentName>
-        <CommentText>{item.text}</CommentText>
+        <View>
+          <CommentText>{item.text}</CommentText>
+          <Likes item={item} />
+        </View>
         {item.userId === auth.currentUser.uid ? (
           <EditDeleteBtn>
             <TouchableOpacity onPress={click}>
@@ -98,7 +101,6 @@ const MainList = ({ item }) => {
           </EditDeleteBtn>
         ) : null}
       </CommentRow>
-      <Likes item={item} />
     </TouchableOpacity>
   );
 };
@@ -127,6 +129,7 @@ const CommentText = styled.Text`
   font-size: 15px;
   margin-bottom: 20px;
   color: ${(props) => props.theme.color};
+  width: 100%;
 `;
 const CommentName = styled.Text`
   position: absolute;
