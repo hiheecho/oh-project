@@ -13,29 +13,7 @@ import { deletePost, getDetail } from "../posts";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
 
-
 const DetailContent = ({ item }) => {
-  const postId = item.id;
-
-  const { isLoading, data } = useQuery(["contents", postId], getDetail, {
-    onSuccess: () => {
-      console.log("성공!");
-    },
-    onError: (error) => {
-      console.log("error : ", error);
-    },
-  });
-
-  if (isLoading) {
-    return (
-      <View>
-        <ActivityIndicator />
-      </View>
-    );
-
-const DetailContent = ({ item }) => {
-  const { navigate } = useNavigation();
-
   //dropdown
   const [check, setCheck] = useState(false);
   const click = () => setCheck(!check);
@@ -53,6 +31,26 @@ const DetailContent = ({ item }) => {
       },
     }
   );
+
+  const { navigate } = useNavigation();
+  const postId = item.id;
+
+  const { isLoading, data } = useQuery(["contents", postId], getDetail, {
+    onSuccess: () => {
+      console.log("성공!");
+    },
+    onError: (error) => {
+      console.log("error : ", error);
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   const onDeletePost = async () => {
     Alert.alert("포스트 삭제", "정말 삭제하시겠습니까?", [

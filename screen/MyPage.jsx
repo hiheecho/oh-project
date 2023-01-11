@@ -71,11 +71,11 @@ const MyPage = () => {
       where("userId", "==", auth.currentUser?.uid)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newPosts = snapshot.docs.map((doc) => ({
+      const newUsers = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setMyComments(newPosts);
+      setMyComments(newUsers);
     });
     return unsubscribe;
   }, []);
@@ -84,7 +84,10 @@ const MyPage = () => {
 
   const [detailItem, setDetailItem] = useState({});
   const [content, setContent] = useState("");
-  // console.log("content", content);
+  console.log("content", content);
+  console.log("detailItem", detailItem);
+  console.log("detailItem.content", detailItem.content);
+  console.log("newUser", newUser);
 
   const newUser = {
     content,
@@ -93,38 +96,31 @@ const MyPage = () => {
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
   };
-  // console.log("newUser", newUser);
 
-  const updateProfile = async () => {
-    await updateDoc(doc(dbService, "users"), {
+  const updateDocProfile = async (detailItem) => {
+    await updateDoc(doc(dbService, "users", detailItem), {
       ...newUser,
     });
     setDetailItem(newUser);
     setContent("");
   };
 
-  const setUser = async () => {
-    await setDoc(doc(dbService, "users"), {
-      content: content,
-      createdAt: Date.now(),
-      isEdit: false,
-      userName: auth.currentUser.displayName,
-      userId: auth.currentUser?.uid,
-    });
+  const addUser = async () => {
+    await addDoc(collection(dbService, "users"), newUser);
+    setContent("");
   };
 
   useEffect(() => {
     const q = query(
       collection(dbService, "users"),
-      orderBy("createdAt", "desc"),
       where("userId", "==", auth.currentUser?.uid)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newUser = snapshot.docs.map((doc) => ({
+      const newDetailItem = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setDetailItem(newUser);
+      setDetailItem(newDetailItem);
     });
     return unsubscribe;
   }, []);
@@ -156,13 +152,14 @@ const MyPage = () => {
                 <UserInfoInput
                   value={content}
                   onChangeText={setContent}
+                  onSubmitEditing={addUser}
                   multiline={true}
                   autoFocus
                   placeholder="간단하게 자기소개 해주세요"
                   placeholderTextColor="#aaaaaa"
                 />
               ) : (
-                <TouchableOpacity onPress={setUser}>
+                <TouchableOpacity>
                   <UserInfoText
                     style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
                   >
@@ -172,7 +169,7 @@ const MyPage = () => {
               )}
 
               {detailItem.isEdit === true ? (
-                <UserCompleteBtn onPress={() => updateProfile(detailItem)}>
+                <UserCompleteBtn onPress={() => updateDocProfile(detailItem)}>
                   <MaterialCommunityIcons
                     name="account-edit"
                     size={30}
@@ -237,7 +234,7 @@ const MyPage = () => {
                     <DropDownText>글 수정</DropDownText>
                   </DropDownEdit>
                   <DropDownDelete>
-                    <DropDownText >글 삭제</DropDownText>
+                    <DropDownText>글 삭제</DropDownText>
                   </DropDownDelete>
                 </DropDownView>
               </EditDeleteBtn>
