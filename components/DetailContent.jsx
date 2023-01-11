@@ -83,21 +83,7 @@ const DetailContent = ({ item }) => {
           />
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
-        <EditDeleteBtn onPress={click}>
-          <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
-          <DropDownView
-            style={{
-              display: check ? "flex" : "none",
-            }}
-          >
-            <DropDownEdit>
-              <DropDownText>수정</DropDownText>
-            </DropDownEdit>
-            <DropDownDelete onPress={onDeletePost}>
-              <DropDownText>삭제</DropDownText>
-            </DropDownDelete>
-          </DropDownView>
-        </EditDeleteBtn>
+        <DropDown onDeletePost={onDeletePost} />
       </ContentHeader>
       {/* <Youtube /> */}
       <ContentText>{data?.data().text}</ContentText>
@@ -143,48 +129,6 @@ const ContentText = styled.Text`
   line-height: ${SCREEN_HEIGHT / 30 + "px"};
   margin-top: 5%;
   color: ${(props) => props.theme.color};
-`;
-
-// 수정 & 삭제 드롭다운
-const EditDeleteBtn = styled.TouchableOpacity`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
-
-const DropDownView = styled.View`
-  position: absolute;
-  margin-top: 20px;
-  right: 5px;
-  width: 100px;
-  height: 110px;
-  border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: ${DROPDOWN_BACKGROUND_COLOR};
-`;
-
-const DropDownEdit = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 8px;
-  padding-bottom: 10px;
-  border-bottom-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-const DropDownDelete = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-
-const DropDownText = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  color: ${DROPDOWN_FONT_COLOR};
 `;
 
 export default DetailContent;
