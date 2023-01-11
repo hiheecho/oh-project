@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styled from "@emotion/native";
 import { SCREEN_HEIGHT } from "../util";
 import { Ionicons } from "@expo/vector-icons";
-import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { updatePost } from "../posts.js";
@@ -41,10 +40,7 @@ const PostEditing = ({
   const onUpdatePost = async () => {
     try {
       await edit({ id: item.id, text });
-      navigate("Stacks", {
-        screen: "PostDetail",
-        params: { item },
-      });
+      navigate("Tabs", { screen: "Main" });
     } catch (error) {
       console.log("error", error);
     }
