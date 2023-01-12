@@ -4,6 +4,8 @@ import styled from "@emotion/native";
 import { AntDesign } from "@expo/vector-icons";
 import { useMutation } from "react-query";
 import { BRAND_COLOR } from "../../color";
+import { useColorScheme } from "react-native";
+import { DARK_COLOR, LIGHT_COLOR } from "../../color";
 
 const Likes = ({ item }) => {
   const likesArray = item.userLikes;
@@ -39,13 +41,15 @@ const Likes = ({ item }) => {
     }
   );
 
+  const isDark = useColorScheme() === "dark";
+
   return (
     <LikesArea>
-      {likesArray.length === 0 ? (
+      {likesArray?.length === 0 ? (
         <AntDesign
-          name="hearto"
+          name="heart"
           size={15}
-          color={BRAND_COLOR}
+          color={isDark ? DARK_COLOR : LIGHT_COLOR}
           onPress={onCountLikes}
         />
       ) : (
@@ -56,7 +60,7 @@ const Likes = ({ item }) => {
             color={BRAND_COLOR}
             onPress={onCountLikes}
           />
-          <LikesCount>{likesArray.length}</LikesCount>
+          <LikesCount>{likesArray?.length}</LikesCount>
         </>
       )}
     </LikesArea>
@@ -73,6 +77,6 @@ const LikesArea = styled.View`
 const LikesCount = styled.Text`
   font-size: 15px;
   font-weight: bold;
-  margin-left: 1%;
+  margin: -1% 0 0 1%;
   color: ${(props) => props.theme.color};
 `;
