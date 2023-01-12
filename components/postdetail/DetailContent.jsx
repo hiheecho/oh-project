@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import DropDown from "../DropDown";
 import { auth } from "../../firebase";
 import YoutubePlayer from "react-native-youtube-iframe";
+import Likes from "../main/Likes";
 
 const DetailContent = ({ item }) => {
   const [playing, setPlaying] = useState(false);
@@ -64,6 +65,10 @@ const DetailContent = ({ item }) => {
           />
         </YoutubeWrapper>
       ) : null}
+      <LikesBox>
+        <Likes item={item} />
+      </LikesBox>
+      <Line />
 
       <ContentText>{data?.data().text}</ContentText>
     </DetailContainer>
@@ -79,10 +84,14 @@ const ContentHeader = styled.View`
   justify-content: space-between;
   width: ${SCREEN_WIDTH / 1.15 + "px"};
 `;
+
+const LikesBox = styled.View`
+  margin: 0 10px 0 auto;
+`;
 const Line = styled.View`
   width: 98%;
   height: 0.5px;
-  margin: 30px auto;
+  margin: 20px auto;
   background-color: ${(props) => props.theme.color};
 `;
 
@@ -113,6 +122,6 @@ const ContentText = styled.Text`
 const YoutubeWrapper = styled.View`
   width: 100%;
   height: ${SCREEN_HEIGHT / 3 + "px"};
-  margin: auto;
+  margin-bottom: 10px;
 `;
 export default DetailContent;
