@@ -162,10 +162,13 @@ const SignUpContainer = styled.View`
 const ImageContainer = styled.View`
   width: ${SCREEN_WIDTH / 2 + "px"};
   height: ${SCREEN_HEIGHT / 7 + "px"};
+  position: absolute;
+  right: 32%;
+  top: 24%;
 `;
 
 const ImageBox = styled.Image`
-  width: 100%;
+  width: 130%;
   height: 100%;
 `;
 
@@ -194,6 +197,8 @@ const LoginButton = styled.TouchableOpacity`
   align-items: center;
 
   background-color: ${BRAND_COLOR};
+  position: absolute;
+  bottom: 24.5%;
 `;
 
 const SignUpButton = styled.TouchableOpacity`
@@ -207,6 +212,8 @@ const SignUpButton = styled.TouchableOpacity`
   align-items: center;
 
   background-color: ${BRAND_COLOR};
+  position: absolute;
+  bottom: 30%;
 `;
 
 const TextBox = styled.Text`

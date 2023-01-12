@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+
+import React, { useEffect, useState,useCallback } from "react";
 import { FlatList, View } from "react-native";
 import styled from "@emotion/native";
 import { Feather } from "@expo/vector-icons";
@@ -13,21 +14,23 @@ const Main = () => {
   const [contentList, setContentList] = useState([]);
 
   //불러오기
-  useEffect(() => {
-    const q = query(
-      collection(dbService, "posts"),
-      orderBy("createdAt", "desc")
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newContent = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+  useFocusEffect(
+    useCallback(() => {
+      const q = query(
+        collection(dbService, "posts"),
+        orderBy("createdAt", "desc")
+      );
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const newContent = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setContentList(newContent);
-    });
-    return unsubscribe;
-  }, []);
+        setContentList(newContent);
+      });
+      return unsubscribe;
+    }, [])
+  );
 
   return (
     <>

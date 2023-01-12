@@ -63,17 +63,19 @@ const DropDown = ({ item }) => {
       params: { item },
     });
   };
-
   const [check, setCheck] = useState(false);
-
   return (
     <EditDeleteBtn>
-      <TouchableOpacity
+      <DropDownBtn
+        style={{
+          paddingLeft: check ? 360 : 50,
+          paddingBottom: check ? SCREEN_HEIGHT : 50,
+        }}
         onPress={() => {
           setCheck(!check);
         }}
       >
-        <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
+        <Entypo name="dots-three-horizontal" size={20} color="#AAAAAA" />
         {check === true ? (
           <DropDownView>
             <DropDownEdit onPress={goToPostEditing}>
@@ -84,21 +86,27 @@ const DropDown = ({ item }) => {
             </DropDownDelete>
           </DropDownView>
         ) : null}
-      </TouchableOpacity>
+      </DropDownBtn>
     </EditDeleteBtn>
   );
 };
 
+const DropDownBtn = styled.TouchableOpacity`
+  padding-top: 20px;
+  padding-right: 30px;
+`;
+
 const EditDeleteBtn = styled.View`
   position: absolute;
-  right: 20px;
-  top: 15px;
+  right: 0;
+  top: 0;
 `;
 
 const DropDownView = styled.View`
   position: absolute;
   margin-top: 20px;
-  right: 5px;
+  right: 55px;
+  top: 5px;
   width: 100px;
   height: 100px;
   border-radius: 10px;

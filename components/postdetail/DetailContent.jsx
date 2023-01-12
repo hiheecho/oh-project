@@ -5,11 +5,13 @@ import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
 import { deletePost, getDetail } from "../../posts";
 import { useQuery, useMutation } from "react-query";
 import DropDown from "../DropDown";
-import YoutubePlayer from "react-native-youtube-iframe";
 import { auth } from "../../firebase";
+import YoutubePlayer from "react-native-youtube-iframe";
 
 const DetailContent = ({ item }) => {
-  // youtube
+  const { navigate } = useNavigation();
+
+  // youtube 업로드
   const [playing, setPlaying] = useState(false);
 
   const onStateChange = useCallback((state) => {
@@ -19,9 +21,6 @@ const DetailContent = ({ item }) => {
     }
   }, []);
 
-  // const youtubeLink = "https://www.youtube.com/watch?v=c9zX5VYSNSc";
-  // let result = youtubeLink.slice(-11);
-  // console.log(result);
 
   const postId = item.id;
 
@@ -57,7 +56,7 @@ const DetailContent = ({ item }) => {
       {item.videoLink ? (
         <YoutubeWrapper>
           <YoutubePlayer
-            height={SCREEN_HEIGHT / 3.5}
+            height={"100%"}
             play={playing}
             videoId={data?.data().videoLink?.slice(-11)}
             onChangeState={onStateChange}
@@ -68,11 +67,7 @@ const DetailContent = ({ item }) => {
     </View>
   );
 };
-// const DetailContentWrapper = styled.View`
-//   /* border-bottom-width: 2px;
-//   border-bottom-color: ${(props) => props.theme.gray}; */
-//   padding-bottom: 15%;
-// `;
+
 //콘텐츠,코멘트 헤더 (프로필 + 버튼)
 const ContentHeader = styled.View`
   flex-direction: row;
@@ -83,6 +78,7 @@ const ContentHeader = styled.View`
 const UserInfo = styled.View`
   flex-direction: row;
   align-items: center;
+  margin-bottom: 25px;
 `;
 const UserImage = styled.Image`
   width: 70px;
@@ -99,15 +95,17 @@ const Nickname = styled.Text`
 //콘텐츠 내용
 const ContentText = styled.Text`
   width: 85%;
-  margin: auto;
   font-size: 18px;
-  line-height: ${SCREEN_HEIGHT / 50 + "px"};
-
+  line-height: 27px;
   color: ${(props) => props.theme.color};
+  margin: auto;
 `;
 
+// 콘텐츠 내용 ( 유튜브영상 )
 const YoutubeWrapper = styled.View`
   width: 98%;
-  margin: 40px auto 40px auto;
+  height: ${SCREEN_HEIGHT / 3 + "px"};
+  margin: auto;
+  padding-top: 20px;
 `;
 export default DetailContent;
