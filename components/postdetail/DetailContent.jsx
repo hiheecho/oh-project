@@ -50,7 +50,7 @@ const DetailContent = ({ item }) => {
       <ContentHeader>
         <UserInfo>
           {_maybeRenderImage(item)}
-          <Nickname>{item.userName}</Nickname>
+          <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
       </ContentHeader>
       <Line />
