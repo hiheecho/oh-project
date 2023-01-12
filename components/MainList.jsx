@@ -18,6 +18,7 @@ const MainList = ({ item }) => {
   const { navigate } = useNavigation();
 
   const goToDetail = () => {
+    setCheck(false);
     navigate("Stacks", {
       screen: "PostDetail",
       params: { item },
@@ -32,8 +33,8 @@ const MainList = ({ item }) => {
   };
 
   //DropDown
-  const [check, setState] = useState(false);
-  const click = () => setState(!check);
+  const [check, setCheck] = useState(false);
+  const click = () => setCheck(!check);
 
   // 삭제
   const { isLoading: isLoadingDeleting, mutate: del } = useMutation(

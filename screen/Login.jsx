@@ -56,9 +56,14 @@ const Login = () => {
         behavior={Platform.OS === "ios" ? "padding" : ""}
         keyboardVerticalOffset={92}
       >
-        <IdInputBox placeholder="아이디 (이메일)" onChangeText={setIdValue} />
+        <IdInputBox
+          placeholder="아이디 (이메일)"
+          placeholderTextColor="#a1a1a1"
+          onChangeText={setIdValue}
+        />
         <PasswordInputBox
           placeholder="비밀번호"
+          placeholderTextColor="#a1a1a1"
           onChangeText={setPasswordValue}
           onSubmitEditting={() => {
             handleLogin();

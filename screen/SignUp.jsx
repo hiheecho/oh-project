@@ -76,18 +76,20 @@ const SignUp = () => {
           <ImageBox source={require("../assets/mainLogoLight.png")} />
         )}
       </ImageContainer>
-      <KeyboardAvoidingView
+      <SigninContainer
         behavior={Platform.OS === "ios" ? "padding" : ""}
         keyboardVerticalOffset={92}
       >
         <InputContainer>
           <InputBox
             placeholder="아이디를 입력해주세요. (이메일)"
+            placeholderTextColor="#a1a1a1"
             value={userId}
             onChangeText={setUserId}
           />
           <InputBox
             placeholder="닉네임을 입력해주세요."
+            placeholderTextColor="#a1a1a1"
             value={userName}
             onChangeText={setUserName}
           />
@@ -95,11 +97,13 @@ const SignUp = () => {
         <InputContainer>
           <InputBox
             placeholder="비밀번호를 입력해주세요"
+            placeholderTextColor="#a1a1a1"
             value={userPassword}
             onChangeText={setUserPassword}
           />
           <InputBox
             placeholder="비밀번호를 한번 더 입력해주세요"
+            placeholderTextColor="#a1a1a1"
             value={userPasswordCheck}
             onChangeText={setUserPasswordCheck}
             onSubmitEditing={() => {
@@ -107,7 +111,7 @@ const SignUp = () => {
             }}
           />
         </InputContainer>
-      </KeyboardAvoidingView>
+      </SigninContainer>
       <SignUpButton
         onPress={() => {
           handleSignUp();
@@ -132,10 +136,13 @@ const SignUpContainer = styled.View`
 const ImageContainer = styled.View`
   width: ${SCREEN_WIDTH / 2 + "px"};
   height: ${SCREEN_HEIGHT / 7 + "px"};
+  position: absolute;
+  right: 32%;
+  top: 24%;
 `;
 
 const ImageBox = styled.Image`
-  width: 100%;
+  width: 130%;
   height: 100%;
 `;
 
@@ -164,6 +171,8 @@ const LoginButton = styled.TouchableOpacity`
   align-items: center;
 
   background-color: ${BRAND_COLOR};
+  position: absolute;
+  bottom: 24.5%;
 `;
 
 const SignUpButton = styled.TouchableOpacity`
@@ -177,6 +186,8 @@ const SignUpButton = styled.TouchableOpacity`
   align-items: center;
 
   background-color: ${BRAND_COLOR};
+  position: absolute;
+  bottom: 30%;
 `;
 
 const TextBox = styled.Text`
@@ -184,5 +195,8 @@ const TextBox = styled.Text`
   font-weight: bold;
   font-size: 16px;
 `;
-
+const SigninContainer = styled.KeyboardAvoidingView`
+  position: absolute;
+  top: 39%;
+`;
 export default SignUp;
