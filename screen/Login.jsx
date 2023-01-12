@@ -9,12 +9,17 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
 
+import { Feather } from "@expo/vector-icons";
+
 const Login = () => {
   const { navigate } = useNavigation();
   const isDark = useColorScheme() === "dark";
 
   const [idValue, setIdValue] = useState();
   const [passwordValue, setPasswordValue] = useState();
+
+  const [pwShow, setPwShow] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, idValue, passwordValue)
@@ -60,10 +65,22 @@ const Login = () => {
         <PasswordInputBox
           placeholder="비밀번호"
           onChangeText={setPasswordValue}
+          secureTextEntry={visible}
           onSubmitEditting={() => {
             handleLogin();
           }}
         />
+        <PwHideTouch
+          onPress={() => {
+            setVisible(!visible), setPwShow(!pwShow);
+          }}
+        >
+          <Feather
+            name={pwShow === false ? "eye-off" : "eye"}
+            size={24}
+            color={"#6b6b6b79"}
+          />
+        </PwHideTouch>
       </KeyboardAvoidingView>
       <ButtonBox>
         <LoginButton
@@ -154,6 +171,10 @@ const TextBox = styled.Text`
   color: #fff;
   font-weight: bold;
   font-size: 16px;
+`;
+const PwHideTouch = styled.TouchableOpacity`
+  bottom: 40%;
+  left: 265px;
 `;
 
 export default Login;

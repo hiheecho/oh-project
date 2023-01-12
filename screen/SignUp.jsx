@@ -9,6 +9,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
 
+import { Feather } from "@expo/vector-icons";
+
 const SignUp = () => {
   const { navigate } = useNavigation();
   const isDark = useColorScheme() === "dark";
@@ -16,6 +18,9 @@ const SignUp = () => {
   const [userName, setUserName] = useState();
   const [userPassword, setUserPassword] = useState();
   const [userPasswordCheck, setUserPasswordCheck] = useState();
+
+  const [pwShow, setPwShow] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   const handleSignUp = async () => {
     if (!userId) {
@@ -96,16 +101,41 @@ const SignUp = () => {
           <InputBox
             placeholder="비밀번호를 입력해주세요"
             value={userPassword}
+            secureTextEntry={visible}
             onChangeText={setUserPassword}
           />
+
           <InputBox
             placeholder="비밀번호를 한번 더 입력해주세요"
             value={userPasswordCheck}
+            secureTextEntry={visible}
             onChangeText={setUserPasswordCheck}
             onSubmitEditing={() => {
               handleSignUp();
             }}
           />
+          <PwHideTouchInput
+            onPress={() => {
+              setVisible(!visible), setPwShow(!pwShow);
+            }}
+          >
+            <Feather
+              name={pwShow === false ? "eye-off" : "eye"}
+              size={24}
+              color={"#6b6b6b79"}
+            />
+          </PwHideTouchInput>
+          <PwHideTouchCheck
+            onPress={() => {
+              setVisible(!visible), setPwShow(!pwShow);
+            }}
+          >
+            <Feather
+              name={pwShow === false ? "eye-off" : "eye"}
+              size={24}
+              color={"#6b6b6b79"}
+            />
+          </PwHideTouchCheck>
         </InputContainer>
       </KeyboardAvoidingView>
       <SignUpButton
@@ -183,6 +213,14 @@ const TextBox = styled.Text`
   color: #fff;
   font-weight: bold;
   font-size: 16px;
+`;
+const PwHideTouchInput = styled.TouchableOpacity`
+  bottom: 63%;
+  left: 265px;
+`;
+const PwHideTouchCheck = styled.TouchableOpacity`
+  bottom: 45%;
+  left: 265px;
 `;
 
 export default SignUp;
