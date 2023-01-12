@@ -34,7 +34,7 @@ const DetailContent = ({ item }) => {
     },
   });
 
-  if (isLoading || isLoadingDeleting) {
+  if (isLoading) {
     return (
       <View>
         <ActivityIndicator />
