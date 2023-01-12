@@ -61,9 +61,14 @@ const Login = () => {
         behavior={Platform.OS === "ios" ? "padding" : ""}
         keyboardVerticalOffset={92}
       >
-        <IdInputBox placeholder="아이디 (이메일)" onChangeText={setIdValue} />
+        <IdInputBox
+          placeholder="아이디 (이메일)"
+          onChangeText={setIdValue}
+          placeholderTextColor="#a1a1a1"
+        />
         <PasswordInputBox
           placeholder="비밀번호"
+          placeholderTextColor="#a1a1a1"
           onChangeText={setPasswordValue}
           secureTextEntry={visible}
           onSubmitEditting={() => {
@@ -173,8 +178,8 @@ const TextBox = styled.Text`
   font-size: 16px;
 `;
 const PwHideTouch = styled.TouchableOpacity`
-  bottom: 40%;
-  left: 265px;
+  bottom: 39%;
+  left: 70%;
 `;
 
 export default Login;

@@ -60,6 +60,7 @@ const SignUp = () => {
           .then(() => {
             console.log(auth.currentUser);
             console.log(userCredential);
+            Alert.alert("회원가입 성공!");
           })
           .catch((error) => {
             Alert.alert(error);
@@ -81,18 +82,17 @@ const SignUp = () => {
           <ImageBox source={require("../assets/mainLogoLight.png")} />
         )}
       </ImageContainer>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : ""}
-        keyboardVerticalOffset={92}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
         <InputContainer>
           <InputBox
             placeholder="아이디를 입력해주세요. (이메일)"
+            placeholderTextColor="#a1a1a1"
             value={userId}
             onChangeText={setUserId}
           />
           <InputBox
             placeholder="닉네임을 입력해주세요."
+            placeholderTextColor="#a1a1a1"
             value={userName}
             onChangeText={setUserName}
           />
@@ -100,6 +100,7 @@ const SignUp = () => {
         <InputContainer>
           <InputBox
             placeholder="비밀번호를 입력해주세요"
+            placeholderTextColor="#a1a1a1"
             value={userPassword}
             secureTextEntry={visible}
             onChangeText={setUserPassword}
@@ -107,6 +108,7 @@ const SignUp = () => {
 
           <InputBox
             placeholder="비밀번호를 한번 더 입력해주세요"
+            placeholderTextColor="#a1a1a1"
             value={userPasswordCheck}
             secureTextEntry={visible}
             onChangeText={setUserPasswordCheck}
@@ -186,6 +188,7 @@ const InputBox = styled.TextInput`
 const InputContainer = styled.View`
   margin-bottom: 10px;
   width: 80%;
+  top: 12%;
 `;
 
 const LoginButton = styled.TouchableOpacity`
@@ -222,12 +225,12 @@ const TextBox = styled.Text`
   font-size: 16px;
 `;
 const PwHideTouchInput = styled.TouchableOpacity`
-  bottom: 63%;
-  left: 265px;
+  bottom: 62%;
+  left: 87%;
 `;
 const PwHideTouchCheck = styled.TouchableOpacity`
   bottom: 45%;
-  left: 265px;
+  left: 87%;
 `;
 
 export default SignUp;

@@ -1,5 +1,11 @@
-import React from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+
+import React, { useState } from "react";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import styled from "@emotion/native";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
@@ -51,7 +57,7 @@ const MainList = ({ item }) => {
           {" "}
           {auth.currentUser.uid === item.userId
             ? auth.currentUser.displayName
-            : item.userId}
+            : item.userName}
         </CommentName>
         <CommentText>{item.text}</CommentText>
         <Likes item={item} />
@@ -70,6 +76,7 @@ const CommentRow = styled.View`
   padding-top: 20%;
   padding-left: 2%;
   padding-right: 2%;
+  padding-bottom: 3%;
   background-color: ${(props) => props.theme.gray};
 `;
 const UserImg = styled.Image`
@@ -85,6 +92,7 @@ const CommentText = styled.Text`
   font-size: 15px;
   margin-bottom: 20px;
   color: ${(props) => props.theme.color};
+  width: 100%;
 `;
 const CommentName = styled.Text`
   position: absolute;
