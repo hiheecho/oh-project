@@ -2,33 +2,34 @@ import React, { useState } from "react";
 import styled from "@emotion/native";
 import { SCREEN_HEIGHT } from "../util";
 import { Ionicons } from "@expo/vector-icons";
-import { auth } from "../firebase";
 import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
-import { addPost } from "../posts.js";
-import { useMutation } from "react-query";
+import { updatePost } from "../posts.js";
+import { QueryClient, useMutation } from "react-query";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
-const Post = ({ navigation: { goBack } }) => {
-  const [text, setText] = useState("");
+const PostEditing = ({
+  navigation: { goBack },
+  route: {
+    params: { item },
+  },
+}) => {
+  const [text, setText] = useState(item.text);
   const { navigate } = useNavigation();
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
   // const keyboardHeight = useKeyboardHeight();
 
-  const newPost = {
-    text,
-    createdAt: Date.now(),
-    userName: auth.currentUser.displayName,
-    userId: auth.currentUser?.uid,
-  };
-
-  const { isLoading, mutate: add } = useMutation(
-    ["addPost", newPost],
-    (body) => addPost(body),
+  const { isLoading, mutate: edit } = useMutation(
+    ["update", item.id],
+    (body) => updatePost(body),
     {
       onSuccess: () => {
-        console.log("게시글 작성");
+        console.log("게시글 수정");
+        //"contents"라는 쿼리키를 가진 쿼리를 리패치 하라는 명령이 실행되는 부분
+        // QueryClient.refetchQueries(["contents", 1], {
+        //   active: true,
+        // });
       },
       onError: (error) => {
         console.log("error", error);
@@ -37,12 +38,12 @@ const Post = ({ navigation: { goBack } }) => {
   );
 
   if (isLoading) {
-    return <PostBtnInactive>글쓰기</PostBtnInactive>;
+    return <PostBtnInactive>수정</PostBtnInactive>;
   }
 
-  const onAddPost = async () => {
+  const onUpdatePost = async () => {
     try {
-      await add(newPost);
+      await edit({ id: item.id, text });
       navigate("Tabs", { screen: "Main" });
     } catch (error) {
       console.log("error", error);
@@ -56,21 +57,19 @@ const Post = ({ navigation: { goBack } }) => {
           <Ionicons name="chevron-back-outline" size={24} color="white" />
         </BackBtn>
         {(text && text.length > 150) || !text ? (
-          <PostBtnInactive>글쓰기</PostBtnInactive>
+          <PostBtnInactive>수정</PostBtnInactive>
         ) : (
           <PostBtnActive
             disabled={!text || text.length > 150}
-            onPress={onAddPost}
+            onPress={onUpdatePost}
           >
-            글쓰기
+            수정
           </PostBtnActive>
         )}
       </FakeNavi>
       <TextArea
         value={text}
         onChangeText={setText}
-        placeholder="추천곡을 입력해주세요."
-        placeholderTextColor="#a1a1a1"
         multiline={true}
         textAlignVertical="top"
         autoFocus
@@ -89,7 +88,7 @@ const Post = ({ navigation: { goBack } }) => {
   );
 };
 
-export default Post;
+export default PostEditing;
 
 const Contents = styled.View`
   flex: 1;

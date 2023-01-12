@@ -10,7 +10,8 @@ import { TouchableOpacity } from "react-native";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-const DropDown = ({ onDeletePost, isLoadingDeleting }) => {
+const DropDown = ({ onDeletePost, goToPostEditing }) => {
+
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -35,7 +36,7 @@ const DropDown = ({ onDeletePost, isLoadingDeleting }) => {
         <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
         {check === true ? (
           <DropDownView>
-            <DropDownEdit>
+            <DropDownEdit onPress={goToPostEditing}>
               <DropDownText>글 수정</DropDownText>
             </DropDownEdit>
             <DropDownDelete onPress={onDeletePost}>

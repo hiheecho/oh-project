@@ -13,6 +13,7 @@ import { deletePost, getDetail } from "../posts";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
 import DropDown from "./DropDown";
+import { auth } from "../firebase";
 
 const DetailContent = ({ item }) => {
   // 삭제
@@ -30,18 +31,24 @@ const DetailContent = ({ item }) => {
   );
 
   const { navigate } = useNavigation();
+  const goToPostEditing = () => {
+    navigate("Stacks", {
+      screen: "PostEditing",
+      params: { item },
+    });
+  };
   const postId = item.id;
 
   const { isLoading, data } = useQuery(["contents", postId], getDetail, {
     onSuccess: () => {
-      console.log("성공!");
+      console.log("로딩되었습니다!");
     },
     onError: (error) => {
       console.log("error : ", error);
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isLoadingDeleting) {
     return (
       <View>
         <ActivityIndicator />
@@ -76,10 +83,15 @@ const DetailContent = ({ item }) => {
           />
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
-        <DropDown
-          onDeletePost={onDeletePost}
-          isLoadingDeleting={isLoadingDeleting}
-        />
+
+        {item.userId === auth.currentUser.uid ? (
+          <DropDown
+            onDeletePost={onDeletePost}
+            item={item}
+            goToPostEditing={goToPostEditing}
+          />
+        ) : null}
+
       </ContentHeader>
       {/* <Youtube /> */}
       <ContentText>{data?.data().text}</ContentText>

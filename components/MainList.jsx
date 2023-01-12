@@ -6,7 +6,6 @@ import {
   DROPDOWN_FONT_COLOR,
   DROPDOWN_BACKGROUND_COLOR,
 } from "../color";
-import { useColorScheme } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../firebase";
@@ -17,12 +16,24 @@ import DropDown from "./DropDown";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
+
   const goToDetail = () => {
     navigate("Stacks", {
       screen: "PostDetail",
       params: { item },
     });
   };
+
+  const goToPostEditing = () => {
+    navigate("Stacks", {
+      screen: "PostEditing",
+      params: { item },
+    });
+  };
+
+  //DropDown
+  const [check, setState] = useState(false);
+  const click = () => setState(!check);
 
   // 삭제
   const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
@@ -61,20 +72,15 @@ const MainList = ({ item }) => {
           style={StyleSheet.absoluteFill}
           source={require("../assets/icon.png")}
         />
-        <CommentName>
-          {auth.currentUser.uid === item.userId
-            ? auth.currentUser.displayName
-            : item.userName}
-        </CommentName>
-        <CommentText>
-          {item.text.slice(0, 60)}
-          {item.text.length > 60 && "..."}
-        </CommentText>
-        {auth.currentUser.uid === item.userid ? item.content : null}
+
+        <CommentName>{item.userName}</CommentName>
+        <CommentText>{item.text}</CommentText>
         {item.userId === auth.currentUser.uid ? (
           <DropDown
             onDeletePost={onDeletePost}
-            isLoadingDeleting={isLoadingDeleting}
+            item={item}
+            goToPostEditing={goToPostEditing}
+
           />
         ) : null}
       </CommentRow>
@@ -114,6 +120,48 @@ const CommentName = styled.Text`
   font-size: 17px;
   font-weight: 600;
   color: ${(props) => props.theme.color};
+`;
+
+// 수정 & 삭제 드롭다운
+const EditDeleteBtn = styled.TouchableOpacity`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
+
+const DropDownView = styled.View`
+  position: absolute;
+  margin-top: 20px;
+  right: 5px;
+  width: 100px;
+  height: 110px;
+  border-radius: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  background-color: ${DROPDOWN_BACKGROUND_COLOR};
+`;
+
+const DropDownEdit = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 8px;
+  padding-bottom: 10px;
+  border-bottom-width: 0.3px;
+  border-color: ${DARK_BTN};
+`;
+const DropDownDelete = styled.TouchableOpacity`
+  margin-left: 15px;
+  margin-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top-width: 0.3px;
+  border-color: ${DARK_BTN};
+`;
+
+const DropDownText = styled.Text`
+  text-align: center;
+  font-size: 18px;
+  color: ${DROPDOWN_FONT_COLOR};
 `;
 
 export default MainList;
