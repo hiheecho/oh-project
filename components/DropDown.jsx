@@ -8,7 +8,7 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { SCREEN_HEIGHT } from "../util";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
 
 const DropDown = ({ onDeletePost, goToPostEditing }) => {
   useFocusEffect(
@@ -23,14 +23,16 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
     <EditDeleteBtn>
       <DropDownBtn
         style={{
-          paddingLeft: check ? 360 : 50,
+          paddingLeft: check ? SCREEN_WIDTH : 50,
           paddingBottom: check ? SCREEN_HEIGHT : 50,
         }}
         onPress={() => {
           setCheck(!check);
         }}
       >
-        <Entypo name="dots-three-horizontal" size={20} color="#AAAAAA" />
+        <DropDownIcon>
+          <Entypo name="dots-three-horizontal" size={20} color="#AAAAAA" />
+        </DropDownIcon>
         {check === true ? (
           <DropDownView>
             <DropDownEdit onPress={goToPostEditing}>
@@ -47,10 +49,13 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
 };
 
 const DropDownBtn = styled.TouchableOpacity`
-  padding-top: 20px;
-  padding-right: 30px;
+  padding-top: 5%;
+  padding-right: 5%;
 `;
-
+const DropDownIcon = styled.View`
+  justify-content: right;
+  padding-top: 10px;
+`;
 const EditDeleteBtn = styled.View`
   position: absolute;
   right: 0;
@@ -59,10 +64,9 @@ const EditDeleteBtn = styled.View`
 
 const DropDownView = styled.View`
   position: absolute;
-  margin-top: 20px;
-  right: 55px;
-  top: 5px;
-  width: 100px;
+  right: 40px;
+  top: 20px;
+  width: 80px;
   height: 100px;
   border-radius: 10px;
   justify-content: center;
