@@ -1,5 +1,4 @@
-
-import React, { useEffect, useState,useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { FlatList, View } from "react-native";
 import styled from "@emotion/native";
 import { Feather } from "@expo/vector-icons";
@@ -8,6 +7,7 @@ import { query, onSnapshot, orderBy } from "@firebase/firestore";
 import { dbService } from "../firebase";
 import { collection } from "@firebase/firestore";
 import MainList from "../components/main/MainList";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Main = () => {
   const { navigate } = useNavigation();

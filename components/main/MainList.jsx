@@ -40,14 +40,6 @@ const MainList = ({ item }) => {
     );
   };
 
-  if (isLoadingDeleting) {
-    return (
-      <View>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow>
