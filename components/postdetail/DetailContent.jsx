@@ -9,8 +9,6 @@ import { auth } from "../../firebase";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 const DetailContent = ({ item }) => {
-  const { navigate } = useNavigation();
-
   // youtube 업로드
   const [playing, setPlaying] = useState(false);
 
@@ -20,7 +18,6 @@ const DetailContent = ({ item }) => {
       Alert.alert("video has finished playing!");
     }
   }, []);
-
 
   const postId = item.id;
 

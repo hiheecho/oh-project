@@ -6,7 +6,7 @@ import {
   DROPDOWN_BACKGROUND_COLOR,
 } from "../color";
 import { Entypo } from "@expo/vector-icons";
-import { Alert, TouchableOpacity } from "react-native";
+import { Alert } from "react-native";
 import { useState, useCallback } from "react";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -82,10 +82,10 @@ const DropDown = ({ item }) => {
         {check === true ? (
           <DropDownView>
             <DropDownEdit onPress={goToPostEditing}>
-              <DropDownText>글 수정</DropDownText>
+              <DropDownText>수정</DropDownText>
             </DropDownEdit>
             <DropDownDelete onPress={onDeletePost}>
-              <DropDownText>글 삭제</DropDownText>
+              <DropDownText>삭제</DropDownText>
             </DropDownDelete>
           </DropDownView>
         ) : null}
