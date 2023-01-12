@@ -23,9 +23,7 @@ const DropDown = ({ item }) => {
     ["deletePost", item.id],
     (body) => deletePost(body),
     {
-      onSuccess: () => {
-        console.log("삭제 완료");
-      },
+      onSuccess: () => {},
       onError: (error) => {
         console.log("error", error);
       },

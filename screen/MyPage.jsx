@@ -124,7 +124,6 @@ const MyPage = () => {
       allowsEditing: true,
       aspect: [1, 1],
     });
-    console.log("_pickImage 동작 확인");
     _handleImagePicked(pickerResult);
   };
 
