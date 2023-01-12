@@ -9,6 +9,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+firebase.js
+package.json
 
 # macOS
 .DS_Store
