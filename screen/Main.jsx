@@ -1,9 +1,8 @@
-import React, { useCallback, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { FlatList, TouchableOpacity, View } from "react-native";
+
+import React, { useEffect, useState,useCallback } from "react";
+import { FlatList, View } from "react-native";
 import styled from "@emotion/native";
-import { BRAND_COLOR } from "../color";
-import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { query, onSnapshot, orderBy } from "@firebase/firestore";
 import { dbService } from "../firebase";
@@ -41,23 +40,29 @@ const Main = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <MainList item={item} />}
       />
-      <PlusBtn>
-        <TouchableOpacity
-          onPress={() => navigate("Stacks", { screen: "Post" })}
-        >
-          <AntDesign name="pluscircle" size={50} color={BRAND_COLOR} />
-        </TouchableOpacity>
-      </PlusBtn>
+      <PlusBtnView>
+        <PlusBtn onPress={() => navigate("Stacks", { screen: "Post" })}>
+          <Feather name="plus" size={40} color="white" />
+        </PlusBtn>
+      </PlusBtnView>
     </>
   );
 };
-
-const PlusBtn = styled.View`
+const PlusBtnView = styled.View`
   position: absolute;
+  border-radius: 50px;
   bottom: 10px;
   right: 10px;
   height: 50px;
   width: 50px;
+`;
+const PlusBtn = styled.TouchableOpacity`
+  background-color: ${(props) => props.theme.brandColor};
+  border-radius: 50px;
+  width: 50px;
+  height: 50px;
+  justify-content: center;
+  align-items: center;
 `;
 
 export default Main;

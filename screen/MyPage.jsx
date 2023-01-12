@@ -7,9 +7,9 @@ import {
   Dimensions,
   FlatList,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import {
-  addDoc,
   collection,
   doc,
   getDoc,
@@ -17,7 +17,6 @@ import {
   orderBy,
   query,
   setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import {
@@ -25,26 +24,19 @@ import {
   DARK_COLOR,
   LIGHT_COLOR,
   DARK_GRAY,
-  BRAND_COLOR,
-  DROPDOWN_BACKGROUND_COLOR,
   DARK_BTN,
-  DROPDOWN_FONT_COLOR,
 } from "../color";
-import {
-  Entypo,
-  FontAwesome5,
-  MaterialCommunityIcons,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styled from "@emotion/native";
 import { StyleSheet, useColorScheme, Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SCREEN_HEIGHT } from "../util";
-import { async } from "@firebase/util";
 import { dbService, auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
-import { useMutation } from "react-query";
-import { deletePost } from "../posts";
 import DropDown from "../components/DropDown";
+import { launchImageLibraryAsync } from "expo-image-picker";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Likes from "../components/main/Likes";
 /**-------------------------------postsExample---------------------------------- */
 /** 참고contents
     const newPost = {
@@ -62,6 +54,7 @@ const MyPage = () => {
   const isDark = useColorScheme() === "dark";
   const { navigate } = useNavigation();
   const [myComments, setMyComments] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
 
   // const test = auth.currentUser.uid;
 
@@ -86,13 +79,6 @@ const MyPage = () => {
   const [userName, setUserName] = useState(auth.currentUser.displayName);
   const [disPlayName, setDisPlayName] = useState("");
 
-  const ChangeNickName = async () => {
-    await updateProfile(auth.currentUser, {
-      displayName: disPlayName,
-    }).catch((error) => alert(error.message));
-    setUserName(disPlayName);
-  };
-
   /** 자기소개 */
   const [detailItem, setDetailItem] = useState({});
   const [detailItemContent, setDetailItemContent] = useState("");
@@ -103,11 +89,17 @@ const MyPage = () => {
       content: detailItemContent,
     };
 
+    await updateProfile(auth.currentUser, {
+      displayName: disPlayName,
+    }).catch((error) => alert(error.message));
+    setUserName(disPlayName);
+
     // await updateDoc(doc(dbService, "users", test.toString()), newDetailItem);
     await setDoc(doc(dbService, "users", auth.currentUser.uid), newDetailItem);
 
     setDetailItem(newDetailItem);
     setEdit(newDetailItem);
+    setIsEdit(false);
   };
 
   /**데이터 불러오기 */
@@ -136,74 +128,161 @@ const MyPage = () => {
   }, []);
 
   const setEdit = async (detailItem) => {
-    setDetailItem({ ...detailItem, isEdit: !detailItem.isEdit });
+    setDetailItem({ ...detailItem });
+    setIsEdit(true);
   };
+
+  /**-----------------------------------IMAGE PICK--------------------------------------- */
+  const [image, setImage] = useState();
+  const [uploading, setUploading] = useState();
+
+  const _maybeRenderUploadingOverlay = () => {
+    if (uploading) {
+      return (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: "rgba(0,0,0,0.4)",
+              alignItems: "center",
+              justifyContent: "center",
+            },
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      );
+    }
+  };
+
+  const _maybeRenderImage = () => {
+    if (!auth.currentUser.photoURL) {
+      return <MyImg source={require("../assets/icon.png")} />;
+    }
+
+    return <MyImg source={{ uri: auth.currentUser.photoURL }} />;
+  };
+
+  const _pickImage = async () => {
+    let pickerResult = await launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+    });
+    console.log("_pickImage 동작 확인");
+    _handleImagePicked(pickerResult);
+  };
+
+  const _handleImagePicked = async (pickerResult) => {
+    try {
+      setUploading(true);
+
+      if (!pickerResult.cancelled) {
+        const uploadUrl = await uploadImageAsync(pickerResult.uri);
+        setImage(uploadUrl);
+        updateProfile(auth.currentUser, {
+          displayName: auth.currentUser.displayName,
+          photoURL: uploadUrl,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      alert("이런! 사진을 선택하는 중에 문제가 발생했네요!");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const uploadImageAsync = async (uri) => {
+    // Why are we using XMLHttpRequest? See:
+    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", uri, true);
+      xhr.send(null);
+    });
+
+    const fileRef = ref(getStorage(), auth.currentUser.uid);
+    const result = await uploadBytes(fileRef, blob);
+
+    // We're done with the blob, close and release it
+    blob.close();
+
+    return await getDownloadURL(fileRef);
+  };
+
   /**-----------------------------------Return--------------------------------------- */
   return (
     <>
       <DimensionView>
-        <MyImg
-          style={StyleSheet.absoluteFill}
-          source={require("../assets/testImg.jpg")}
-        />
-        <>
-          <MyInfo>
-            <UserProfile>
-              {detailItem.isEdit === true ? (
-                <View>
-                  <NickNameView>
-                    <NickNameInput
-                      placeholder="닉네임을 변경하세요"
-                      placeholderTextColor="#AAAAAA"
-                      value={disPlayName}
-                      onChangeText={(text) => setDisPlayName(text)}
-                      onSubmitEditing={ChangeNickName}
-                    />
-                  </NickNameView>
-                  <UserInfoView>
-                    <UserInfoInput
-                      value={detailItemContent}
-                      onChangeText={setDetailItemContent}
-                      onSubmitEditing={updateDocProfile}
-                      multiline={true}
-                      autoFocus
-                      placeholder="간단하게 자기소개 해주세요"
-                      placeholderTextColor="#AAAAAA"
-                    />
-                  </UserInfoView>
-                </View>
-              ) : (
-                <>
-                  <MyInfoName
-                    style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
-                  >
-                    {userName}
-                  </MyInfoName>
-                  <MyIntroView>
-                    <MyInfoText>{detailItemContent}</MyInfoText>
-                  </MyIntroView>
-                </>
-              )}
-              {detailItem.isEdit === true ? (
-                <UserCompleteBtn onPress={() => updateDocProfile()}>
-                  <MaterialCommunityIcons
-                    name="account-edit"
-                    size={30}
-                    color="#AAAAAA"
-                  />
-                </UserCompleteBtn>
-              ) : (
-                <UserEditBtn onPress={() => setEdit(detailItem)}>
-                  <MaterialCommunityIcons
-                    name="account-edit-outline"
-                    size={30}
-                    color="#AAAAAA"
-                  />
-                </UserEditBtn>
-              )}
-            </UserProfile>
-          </MyInfo>
-        </>
+        <ImgBox
+          onPress={() => {
+            _pickImage();
+          }}
+        >
+          {_maybeRenderImage()}
+          {_maybeRenderUploadingOverlay()}
+        </ImgBox>
+
+        {isEdit ? (
+          <ProfileEdit
+            onPress={() => {
+              updateDocProfile();
+            }}
+          >
+            <MaterialCommunityIcons
+              name="account-edit"
+              size={30}
+              color="#AAAAAA"
+            />
+          </ProfileEdit>
+        ) : (
+          <ProfileEdit onPress={() => setEdit(detailItem)}>
+            <MaterialCommunityIcons
+              name="account-edit-outline"
+              size={30}
+              color="#AAAAAA"
+            />
+          </ProfileEdit>
+        )}
+        <MyInfo>
+          {isEdit ? (
+            <>
+              <NickNameInput
+                placeholder="닉네임을 변경하세요"
+                placeholderTextColor="#AAA"
+                value={disPlayName}
+                onChangeText={(text) => setDisPlayName(text)}
+                onSubmitEditing={() => {
+                  updateDocProfile();
+                }}
+              />
+              <UserInfoInput
+                value={detailItemContent}
+                onChangeText={setDetailItemContent}
+                onSubmitEditing={() => {
+                  updateDocProfile();
+                }}
+                multiline={true}
+                autoFocus
+                placeholder="간단하게 자기소개 해주세요"
+                placeholderTextColor="#AAA"
+              />
+            </>
+          ) : (
+            <>
+              <MyInfoName>{userName}</MyInfoName>
+              <MyInfoText>{detailItemContent}</MyInfoText>
+            </>
+          )}
+        </MyInfo>
       </DimensionView>
 
       <LogOutBtn onPress={onLogOutClick}>
@@ -215,26 +294,16 @@ const MyPage = () => {
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <CommentContainer>
-            <MyCommentRow
-              style={{ backgroundColor: isDark ? DARK_GRAY : LIGHT_GRAY }}
-            >
-              <MyCommentImg
-                style={StyleSheet.absoluteFill}
-                source={require("../assets/testImg.jpg")}
-              />
-              <MyCommentName
-                style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
-              >
-                {auth.currentUser.displayName}
-              </MyCommentName>
-              <MyCommentText
-                style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
-                numberOfLines={3}
-              >
-                {item.text.slice(0, 60)}
-                {item.text.length > 60 && "..."}
-              </MyCommentText>
-              <DropDown />
+            <MyCommentRow>
+              <MyCommentHeader>
+                <MyCommentImg source={{ uri: item.userImage }} />
+                <MyCommentName>{item.userName}</MyCommentName>
+              </MyCommentHeader>
+              <MyCommentText numberOfLines={3}>{item.text}</MyCommentText>
+              <DropDown item={item} />
+              <LikesBox>
+                <Likes item={item} />
+              </LikesBox>
             </MyCommentRow>
           </CommentContainer>
         )}
@@ -246,111 +315,97 @@ export default MyPage;
 /**-----------------------------------Styled--------------------------------------- */
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
+  flex-direction: row;
 `;
 const CommentContainer = styled.View`
   align-items: center;
   margin: 5px 0;
 `;
+
+const ImgBox = styled.TouchableOpacity``;
 const MyImg = styled.Image`
   width: 120px;
   height: 120px;
   border-radius: 100px;
-  margin-top: 37px;
-  margin-left: 20px;
+  margin: 20px;
 `;
+
+const ProfileEdit = styled.TouchableOpacity`
+  position: absolute;
+
+  top: 30px;
+  right: 20px;
+  z-index: 100;
+`;
+
 const MyInfo = styled.View`
-  margin-top: 30px;
+  width: 70%;
+  margin: 20px 0;
 `;
 const MyInfoName = styled.Text`
-  left: 15px;
-  bottom: 50px;
+  margin: 10px 0;
   font-size: 22px;
   font-weight: 700;
-  width: 180px;
-  height: 140px;
+  color: ${(props) => props.theme.color};
 `;
 const MyCommentRow = styled.View`
-  width: 355px;
-  height: 120px;
+  background-color: ${(props) => props.theme.gray};
   margin: auto;
+  width: 95%;
   border-radius: 10px;
-  padding-top: 70px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-bottom: 25px;
+  margin: 5px 0;
+  padding: 10px 15px 40px 15px;
+`;
+const MyCommentHeader = styled.View`
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
 `;
 const MyCommentImg = styled.Image`
   width: 50px;
   height: 50px;
-  margin-top: 10px;
-  margin-left: 13px;
   border-radius: 50px;
 `;
+const MyCommentName = styled.Text`
+  margin-left: 10px;
+  font-size: 17px;
+  font-weight: 600;
+  color: ${(props) => props.theme.color};
+`;
 const MyCommentText = styled.Text`
+  color: ${(props) => props.theme.color};
   font-size: 15px;
   margin-bottom: 5px;
 `;
-const MyCommentName = styled.Text`
-  position: absolute;
-  margin-left: 80px;
-  margin-top: 24px;
-  font-size: 17px;
-  font-weight: 600;
-`;
 const LogOutText = styled.Text`
-  font-size: 18px;
+  font-size: 12px;
   color: white;
 `;
 const LogOutBtn = styled.TouchableOpacity`
-  width: 30%;
+  width: 95%;
   align-items: center;
-  border-radius: 50px;
+  border-radius: 5px;
   padding: 10px 15px;
-  margin: 10px;
+  margin: 10px auto;
   background-color: ${(props) => props.theme.brandColor};
-`;
-const UserProfile = styled.View`
-  position: absolute;
-  width: 185px;
-  left: 150px;
-  top: 45px;
-  height: 30px;
 `;
 const UserInfoInput = styled.TextInput`
   width: 185px;
   height: 75px;
-  left: 10px;
-  bottom: 30px;
-  padding: 8px;
-  padding-bottom: 50px;
   color: ${DARK_BTN};
 `;
-
-const UserEditBtn = styled.TouchableOpacity`
-  left: 180px;
-  bottom: 290px;
-`;
-const UserCompleteBtn = styled.TouchableOpacity`
-  left: 175px;
-  bottom: 165px;
-`;
-const NickNameView = styled.View``;
-const UserInfoView = styled.View``;
 const NickNameInput = styled.TextInput`
   width: 185px;
   height: 30px;
-  left: 10px;
-  bottom: 50px;
-  padding: 8px;
   color: ${DARK_BTN};
-`;
-const MyIntroView = styled.View`
-  width: 90%;
-  height: 300%;
-  bottom: 150px;
-  left: 10px;
 `;
 const MyInfoText = styled.Text`
-  color: ${DARK_BTN};
-  font-size: 15px;
+  width: 80%;
+  color: ${(props) => props.theme.color};
+`;
+
+const LikesBox = styled.View`
+  position: absolute;
+  bottom: 10px;
+  left: 15px;
 `;

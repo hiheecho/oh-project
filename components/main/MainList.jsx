@@ -1,11 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import styled from "@emotion/native";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
-import { deletePost } from "../../posts";
-import { useMutation } from "react-query";
-import { Alert } from "react-native";
 import Likes from "./Likes";
 import DropDown from "../DropDown";
 
@@ -19,41 +16,22 @@ const MainList = ({ item }) => {
     });
   };
 
-  const goToPostEditing = () => {
-    navigate("Stacks", {
-      screen: "PostEditing",
-      params: { item },
-    });
-  };
-
-  // 삭제
-  const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
-    ["deletePost", item.id],
-    (body) => deletePost(body),
-    {
-      onSuccess: () => {
-        console.log("삭제 완료");
-      },
-      onError: (error) => {
-        console.log("error", error);
-      },
+  const _maybeRenderImage = (item) => {
+    if (!auth.currentUser.photoURL) {
+      return (
+        <UserImg
+          style={StyleSheet.absoluteFill}
+          source={require("../../assets/icon.png")}
+        />
+      );
     }
-  );
 
-  const onDeletePost = async () => {
-    Alert.alert("포스트 삭제", "정말 삭제하시겠습니까?", [
-      { text: "취소", style: "destructive" },
-      {
-        text: "삭제",
-        onPress: async () => {
-          try {
-            await del(item.id);
-          } catch (error) {
-            console.log("error", error);
-          }
-        },
-      },
-    ]);
+    return (
+      <UserImg
+        style={StyleSheet.absoluteFill}
+        source={{ uri: item.userImage }}
+      />
+    );
   };
 
   if (isLoadingDeleting) {
@@ -67,10 +45,7 @@ const MainList = ({ item }) => {
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow>
-        <UserImg
-          style={StyleSheet.absoluteFill}
-          source={require("../../assets/icon.png")}
-        />
+        {_maybeRenderImage(item)}
 
         <CommentName>
           {" "}
@@ -80,13 +55,7 @@ const MainList = ({ item }) => {
         </CommentName>
         <CommentText>{item.text}</CommentText>
         <Likes item={item} />
-        {item.userId === auth.currentUser.uid ? (
-          <DropDown
-            onDeletePost={onDeletePost}
-            item={item}
-            goToPostEditing={goToPostEditing}
-          />
-        ) : null}
+        {item.userId === auth.currentUser.uid ? <DropDown item={item} /> : null}
       </CommentRow>
     </TouchableOpacity>
   );

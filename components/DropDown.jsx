@@ -6,11 +6,15 @@ import {
   DROPDOWN_BACKGROUND_COLOR,
 } from "../color";
 import { Entypo } from "@expo/vector-icons";
+import { Alert, TouchableOpacity } from "react-native";
 import { useState, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { SCREEN_HEIGHT } from "../util";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { deletePost } from "../posts";
+import { useMutation } from "react-query";
 
-const DropDown = ({ onDeletePost, goToPostEditing }) => {
+const DropDown = ({ item }) => {
+  const { navigate } = useNavigation();
+
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -18,6 +22,47 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
       };
     }, [])
   );
+
+  // 삭제
+  const { mutate: del } = useMutation(
+    ["deletePost", item.id],
+    (body) => deletePost(body),
+    {
+      onSuccess: () => {
+        console.log("삭제 완료");
+      },
+      onError: (error) => {
+        console.log("error", error);
+      },
+    }
+  );
+
+  const onDeletePost = async () => {
+    Alert.alert("포스트 삭제", "정말 삭제하시겠습니까?", [
+      { text: "취소", style: "destructive" },
+      {
+        text: "삭제",
+        onPress: async () => {
+          try {
+            await del(item.id);
+
+            navigate("Tabs", {
+              screen: "Main",
+            });
+          } catch (error) {
+            console.log("error", error);
+          }
+        },
+      },
+    ]);
+  };
+
+  const goToPostEditing = () => {
+    navigate("Stacks", {
+      screen: "PostEditing",
+      params: { item },
+    });
+  };
   const [check, setCheck] = useState(false);
   return (
     <EditDeleteBtn>
@@ -34,10 +79,10 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
         {check === true ? (
           <DropDownView>
             <DropDownEdit onPress={goToPostEditing}>
-              <DropDownText>수정</DropDownText>
+              <DropDownText>글 수정</DropDownText>
             </DropDownEdit>
             <DropDownDelete onPress={onDeletePost}>
-              <DropDownText>삭제</DropDownText>
+              <DropDownText>글 삭제</DropDownText>
             </DropDownDelete>
           </DropDownView>
         ) : null}
