@@ -9,7 +9,6 @@ import {
   DARK_BACKGROUNDCOLOR,
   LIGHT_BACKGROUNDCOLOR,
   BRAND_COLOR,
-  LIGHT_COLOR,
 } from "../color";
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";

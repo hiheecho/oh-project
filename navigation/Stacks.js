@@ -1,21 +1,16 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { useColorScheme } from "react-native";
 import Post from "../screen/Post";
 import { BRAND_COLOR } from "../color";
 import Login from "../screen/Login";
 import SignUp from "../screen/SignUp";
 import PostDetail from "../screen/PostDetail";
 import PostEditing from "../screen/PostEditing";
-// import { authService } from "../firebase";
-// import { signOut } from "firebase/auth";
 import { Ionicons } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
 const Stacks = ({ navigation: { goBack } }) => {
-  const isDark = useColorScheme() === "dark";
-
   return (
     <Stack.Navigator
       screenOptions={{
