@@ -2,8 +2,8 @@ import React, { useState, useCallback } from "react";
 import { View, ActivityIndicator, Alert } from "react-native";
 import styled from "@emotion/native";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
-import { deletePost, getDetail } from "../../posts";
-import { useQuery, useMutation } from "react-query";
+import { getDetail } from "../../posts";
+import { useQuery } from "react-query";
 import DropDown from "../DropDown";
 import { auth } from "../../firebase";
 import YoutubePlayer from "react-native-youtube-iframe";
@@ -38,18 +38,25 @@ const DetailContent = ({ item }) => {
     );
   }
 
+  const _maybeRenderImage = (item) => {
+    if (!auth.currentUser.photoURL) {
+      return <UserImage source={require("../../assets/icon.png")} />;
+    }
+    return <UserImage source={{ uri: item.userImage }} />;
+  };
+
   return (
-    <View>
+    <DetailContainer>
       <ContentHeader>
         <UserInfo>
-          <UserImage
-            source={require("../../assets/icon.png")}
-            style={{ width: 70, height: 70 }}
-          />
-          <Nickname>{data?.data().userName}</Nickname>
+          {_maybeRenderImage(item)}
+          <Nickname>{item.userName}</Nickname>
         </UserInfo>
       </ContentHeader>
+      <Line />
+
       {item.userId === auth.currentUser.uid ? <DropDown item={item} /> : null}
+
       {item.videoLink ? (
         <YoutubeWrapper>
           <YoutubePlayer
@@ -60,49 +67,59 @@ const DetailContent = ({ item }) => {
           />
         </YoutubeWrapper>
       ) : null}
+
       <ContentText>{data?.data().text}</ContentText>
-    </View>
+    </DetailContainer>
   );
 };
 
 //콘텐츠,코멘트 헤더 (프로필 + 버튼)
+
+const DetailContainer = styled.View`
+  padding: 10px;
+`;
 const ContentHeader = styled.View`
+  margin-top: 20px;
   flex-direction: row;
   justify-content: space-between;
   width: ${SCREEN_WIDTH / 1.15 + "px"};
-  margin: 10% auto 0 auto;
 `;
+const Line = styled.View`
+  width: 98%;
+  height: 0.5px;
+  margin: 30px auto;
+  background-color: ${(props) => props.theme.color};
+`;
+
 const UserInfo = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 25px;
 `;
 const UserImage = styled.Image`
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
   border-radius: 70px;
   overflow: hidden;
-  margin-right: 10%;
 `;
 const Nickname = styled.Text`
+  margin-left: 10px;
   font-size: 18px;
   color: ${(props) => props.theme.color};
 `;
 
 //콘텐츠 내용
 const ContentText = styled.Text`
-  width: 85%;
+  width: 100%;
   font-size: 18px;
   line-height: 27px;
   color: ${(props) => props.theme.color};
-  margin: auto;
+  margin: 10px;
 `;
 
 // 콘텐츠 내용 ( 유튜브영상 )
 const YoutubeWrapper = styled.View`
-  width: 98%;
+  width: 100%;
   height: ${SCREEN_HEIGHT / 3 + "px"};
   margin: auto;
-  padding-top: 20px;
 `;
 export default DetailContent;

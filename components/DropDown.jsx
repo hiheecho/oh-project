@@ -1,14 +1,8 @@
-import react from "react";
 import styled from "@emotion/native";
-import {
-  DARK_BTN,
-  DROPDOWN_FONT_COLOR,
-  DROPDOWN_BACKGROUND_COLOR,
-} from "../color";
+import { DROPDOWN_FONT_COLOR, DROPDOWN_BACKGROUND_COLOR } from "../color";
 import { Entypo } from "@expo/vector-icons";
 import { Alert } from "react-native";
 import { useState, useCallback } from "react";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { deletePost } from "../posts";
 import { useMutation } from "react-query";
@@ -66,75 +60,50 @@ const DropDown = ({ item }) => {
   };
   const [check, setCheck] = useState(false);
   return (
-    <EditDeleteBtn>
-      <DropDownBtn
-        style={{
-          paddingLeft: check ? SCREEN_WIDTH : 50,
-          paddingBottom: check ? SCREEN_HEIGHT : 50,
-        }}
-        onPress={() => {
-          setCheck(!check);
-        }}
-      >
-        <DropDownIcon>
-          <Entypo name="dots-three-horizontal" size={20} color="#AAAAAA" />
-        </DropDownIcon>
-        {check === true ? (
-          <DropDownView>
-            <DropDownEdit onPress={goToPostEditing}>
-              <DropDownText>수정</DropDownText>
-            </DropDownEdit>
-            <DropDownDelete onPress={onDeletePost}>
-              <DropDownText>삭제</DropDownText>
-            </DropDownDelete>
-          </DropDownView>
-        ) : null}
-      </DropDownBtn>
-    </EditDeleteBtn>
+    <DropDownBtn
+      onPress={() => {
+        setCheck(!check);
+      }}
+    >
+      <Entypo name="dots-three-horizontal" size={25} color="#AAAAAA" />
+
+      {check === true ? (
+        <DropDownView>
+          <DropDownbox onPress={goToPostEditing}>
+            <DropDownText>수정</DropDownText>
+          </DropDownbox>
+          <DropDownbox onPress={onDeletePost}>
+            <DropDownText>삭제</DropDownText>
+          </DropDownbox>
+        </DropDownView>
+      ) : null}
+    </DropDownBtn>
   );
 };
 
 const DropDownBtn = styled.TouchableOpacity`
-  padding-top: 5%;
-  padding-right: 5%;
-`;
-const DropDownIcon = styled.View`
-  justify-content: right;
-  padding-top: 10px;
-`;
-const EditDeleteBtn = styled.View`
   position: absolute;
-  right: 0;
-  top: 0;
+  right: 20px;
+  top: 15px;
+  z-index: 300;
 `;
 
 const DropDownView = styled.View`
   position: absolute;
-  right: 40px;
-  top: 20px;
+  top: 30px;
+  right: 0;
   width: 80px;
-  height: 100px;
   border-radius: 10px;
   justify-content: center;
   align-items: center;
   background-color: ${DROPDOWN_BACKGROUND_COLOR};
 `;
 
-const DropDownEdit = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 8px;
-  padding-bottom: 10px;
+const DropDownbox = styled.TouchableOpacity`
+  margin: 0 15px;
+  padding: 10px 0;
   border-bottom-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-const DropDownDelete = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top-width: 0.3px;
-  border-color: ${DARK_BTN};
+  border-color: ${(props) => props.theme.btn};
 `;
 
 const DropDownText = styled.Text`

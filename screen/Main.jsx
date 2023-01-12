@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from "react";
+
+import React, { useState, useEffect } from "react";
 import { FlatList, View } from "react-native";
 import styled from "@emotion/native";
 import { Feather } from "@expo/vector-icons";
@@ -14,32 +15,32 @@ const Main = () => {
   const [contentList, setContentList] = useState([]);
 
   //불러오기
-  useFocusEffect(
-    useCallback(() => {
-      const q = query(
-        collection(dbService, "posts"),
-        orderBy("createdAt", "desc")
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const newContent = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+  useEffect(() => {
+    const q = query(
+      collection(dbService, "posts"),
+      orderBy("createdAt", "desc")
+    );
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const newContent = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-        setContentList(newContent);
-      });
-      return unsubscribe;
-    }, [])
-  );
+      setContentList(newContent);
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <>
-      <FlatList
-        itemSeparatorComponent={<View style={{ height: 10 }} />}
-        data={contentList}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <MainList item={item} />}
-      />
+      <ContentBox>
+        <FlatList
+          itemSeparatorComponent={<View style={{ height: 10 }} />}
+          data={contentList}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <MainList item={item} />}
+        />
+      </ContentBox>
       <PlusBtnView>
         <PlusBtn onPress={() => navigate("Stacks", { screen: "Post" })}>
           <Feather name="plus" size={40} color="white" />
@@ -48,6 +49,11 @@ const Main = () => {
     </>
   );
 };
+
+const ContentBox = styled.View`
+  margin: 5px 0;
+`;
+
 const PlusBtnView = styled.View`
   position: absolute;
   border-radius: 50px;
