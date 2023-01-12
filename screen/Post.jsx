@@ -21,8 +21,7 @@ const Post = ({ navigation: { goBack } }) => {
     createdAt: Date.now(),
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
-    likes: 0,
-    liked: false,
+    userLikes: [],
   };
 
   const { isLoading, mutate: add } = useMutation(

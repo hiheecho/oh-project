@@ -77,10 +77,8 @@ const MainList = ({ item }) => {
           source={require("../../assets/icon.png")}
         />
         <CommentName>{item.userName}</CommentName>
-        <View>
-          <CommentText>{item.text}</CommentText>
-          <Likes item={item} />
-        </View>
+        <CommentText>{item.text}</CommentText>
+        <Likes item={item} />
         {item.userId === auth.currentUser.uid ? (
           <EditDeleteBtn>
             <TouchableOpacity onPress={click}>
@@ -114,6 +112,7 @@ const CommentRow = styled.View`
   padding-top: 20%;
   padding-left: 2%;
   padding-right: 2%;
+  padding-bottom: 3%;
   background-color: ${(props) => props.theme.gray};
 `;
 const UserImg = styled.Image`

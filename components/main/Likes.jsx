@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { updateLikes } from "../../posts";
 import styled from "@emotion/native";
 import { AntDesign } from "@expo/vector-icons";
@@ -6,77 +6,21 @@ import { useMutation } from "react-query";
 import { BRAND_COLOR } from "../../color";
 
 const Likes = ({ item }) => {
-  const [likes, setLikes] = useState(item.likes);
-  const [liked, setLiked] = useState(item.liked);
+  const likesArray = item.userLikes;
 
-  const changeLikes = () => {
-    if (!item.liked) {
-      setLikes((prev) => prev + 1);
-    }
-    if (item.liked && item.likes > 0) {
-      setLikes((prev) => prev - 1);
-    }
-  };
-
-  const changeLiked = () => {
-    if (!item.liked) {
-      setLiked(true);
-    }
-    if (item.liked && item.likes > 0) {
-      setLiked(false);
+  const countLikes = () => {
+    if (!likesArray.includes(item.userId)) {
+      likesArray.push(item.userId);
+    } else if (likesArray.includes(item.userId)) {
+      const idx = likesArray.indexOf(item.userId);
+      likesArray.splice(idx, 1);
     }
   };
 
-  // const plusLikes = () => {
-  //   if (!item.liked) {
-  //     setLikes((prev) => prev + 1);
-  //     setLiked(true);
-  //   }
-  // };
-
-  // const falseLiked = () => {
-  //   if (!item.liked) {
-  //     setLiked(true);
-  //   }
-  // };
-
-  // const minusLikes = () => {
-  //   if (item.liked && item.likes > 0) {
-  //     setLikes((prev) => prev - 1);
-  //   }
-  // };
-
-  // const trueLiked = () => {
-  //   if (item.liked && item.likes > 0) {
-  //     setLiked(false);
-  //   }
-  // };
-
-  // const onPlusLikes = async () => {
-  //   try {
-  //     plusLikes();
-  //     falseLiked();
-  //     await calculate({ id: item.id, likes, liked });
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // };
-  // const onMinusLikes = async () => {
-  //   try {
-  //     minusLikes();
-  //     trueLiked();
-  //     await calculate({ id: item.id, likes, liked });
-  //   } catch (error) {
-  //     console.log("error", error);
-  //   }
-  // };
-
-  const onChangeLikes = async () => {
+  const onCountLikes = async () => {
     try {
-      changeLiked();
-      changeLikes();
-      console.log(likes, liked);
-      await calculate({ id: item.id, likes, liked });
+      countLikes();
+      await calculate({ id: item.id, userLikes: likesArray });
     } catch (error) {
       console.log("error", error);
     }
@@ -97,44 +41,12 @@ const Likes = ({ item }) => {
 
   return (
     <LikesArea>
-      {/* {!item.likes ? (
+      {likesArray.length === 0 ? (
         <AntDesign
           name="hearto"
           size={15}
           color={BRAND_COLOR}
-          value={likes}
-          onPress={onPlusLikes}
-        />
-      ) : !item.liked ? (
-        <>
-          <AntDesign
-            name="heart"
-            size={15}
-            color="blue"
-            value={likes}
-            onPress={onPlusLikes}
-          />
-          <LikesCount>{item.likes}</LikesCount>
-        </>
-      ) : (
-        <>
-          <AntDesign
-            name="heart"
-            size={15}
-            color={BRAND_COLOR}
-            value={likes}
-            onPress={onMinusLikes}
-          />
-          <LikesCount>{item.likes}</LikesCount>
-        </>
-      )} */}
-      {!item.likes ? (
-        <AntDesign
-          name="hearto"
-          size={15}
-          color={BRAND_COLOR}
-          value={likes}
-          onPress={onChangeLikes}
+          onPress={onCountLikes}
         />
       ) : (
         <>
@@ -142,10 +54,9 @@ const Likes = ({ item }) => {
             name="heart"
             size={15}
             color={BRAND_COLOR}
-            value={likes}
-            onPress={onChangeLikes}
+            onPress={onCountLikes}
           />
-          <LikesCount>{item.likes}</LikesCount>
+          <LikesCount>{likesArray.length}</LikesCount>
         </>
       )}
     </LikesArea>
@@ -155,14 +66,13 @@ const Likes = ({ item }) => {
 export default Likes;
 
 const LikesArea = styled.View`
-  position: absolute;
-  bottom: 10px;
-  right: 0;
   flex-direction: row;
+  margin-left: 3%;
 `;
 
 const LikesCount = styled.Text`
   font-size: 15px;
-  margin-left: 5px;
+  font-weight: bold;
+  margin-left: 1%;
   color: ${(props) => props.theme.color};
 `;
