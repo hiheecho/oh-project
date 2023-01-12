@@ -26,10 +26,6 @@ const MainList = ({ item }) => {
     });
   };
 
-  //DropDown
-  const [check, setState] = useState(false);
-  const click = () => setState(!check);
-
   // 삭제
   const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
     ["deletePost", item.id],
@@ -76,7 +72,12 @@ const MainList = ({ item }) => {
           source={require("../../assets/icon.png")}
         />
 
-        <CommentName>{item.userName}</CommentName>
+        <CommentName>
+          {" "}
+          {auth.currentUser.uid === item.userId
+            ? auth.currentUser.displayName
+            : item.userId}
+        </CommentName>
         <CommentText>{item.text}</CommentText>
         <Likes item={item} />
         {item.userId === auth.currentUser.uid ? (

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { FlatList, TouchableOpacity, View } from "react-native";
 import styled from "@emotion/native";
 import { BRAND_COLOR } from "../color";
@@ -14,21 +15,23 @@ const Main = () => {
   const [contentList, setContentList] = useState([]);
 
   //불러오기
-  useEffect(() => {
-    const q = query(
-      collection(dbService, "posts"),
-      orderBy("createdAt", "desc")
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newContent = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+  useFocusEffect(
+    useCallback(() => {
+      const q = query(
+        collection(dbService, "posts"),
+        orderBy("createdAt", "desc")
+      );
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const newContent = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setContentList(newContent);
-    });
-    return unsubscribe;
-  }, []);
+        setContentList(newContent);
+      });
+      return unsubscribe;
+    }, [])
+  );
 
   return (
     <>
