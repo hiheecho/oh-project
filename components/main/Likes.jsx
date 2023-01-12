@@ -34,9 +34,7 @@ const Likes = ({ item }) => {
     ["update", item.id],
     (body) => updateLikes(body),
     {
-      onSuccess: () => {
-        console.log("좋아요 반영");
-      },
+      onSuccess: () => {},
       onError: (error) => {
         console.log("error", error);
       },
@@ -76,6 +74,5 @@ const LikesCount = styled.Text`
   font-size: 18px;
   font-weight: bold;
   margin-left: 10px;
-  margin-top: -3px;
   color: ${(props) => props.theme.color};
 `;

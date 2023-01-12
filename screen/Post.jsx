@@ -6,7 +6,6 @@ import { auth } from "../firebase";
 import { BRAND_COLOR } from "../color";
 import { addPost } from "../posts.js";
 import { useMutation } from "react-query";
-import { Alert } from "react-native";
 
 const Post = ({ navigation: { goBack, navigate } }) => {
   const [text, setText] = useState("");
@@ -26,9 +25,7 @@ const Post = ({ navigation: { goBack, navigate } }) => {
     ["addPost", newPost],
     (body) => addPost(body),
     {
-      onSuccess: () => {
-        console.log("게시글 작성 완료!");
-      },
+      onSuccess: () => {},
       onError: (error) => {
         console.log("error", error);
       },

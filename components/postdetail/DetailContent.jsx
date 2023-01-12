@@ -21,9 +21,7 @@ const DetailContent = ({ item }) => {
   const postId = item.id;
 
   const { isLoading, data } = useQuery(["contents", postId], getDetail, {
-    onSuccess: () => {
-      console.log("로딩되었습니다!");
-    },
+    onSuccess: () => {},
     onError: (error) => {
       console.log("error : ", error);
     },

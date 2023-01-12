@@ -25,7 +25,6 @@ const Login = () => {
     signInWithEmailAndPassword(auth, idValue, passwordValue)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log("로그인 성공!");
         navigate("Tabs", { screen: "Main" });
       })
       .catch((error) => {
