@@ -6,15 +6,17 @@ import { useMutation } from "react-query";
 import { BRAND_COLOR } from "../../color";
 import { useColorScheme } from "react-native";
 import { DARK_COLOR, LIGHT_COLOR } from "../../color";
+import { auth } from "../../firebase";
 
 const Likes = ({ item }) => {
   const likesArray = item.userLikes;
+  const currentId = auth.currentUser.uid;
 
   const countLikes = () => {
-    if (!likesArray.includes(item.userId)) {
-      likesArray.push(item.userId);
-    } else if (likesArray.includes(item.userId)) {
-      const idx = likesArray.indexOf(item.userId);
+    if (!likesArray.includes(currentId)) {
+      likesArray.push(currentId);
+    } else if (likesArray.includes(currentId)) {
+      const idx = likesArray.indexOf(currentId);
       likesArray.splice(idx, 1);
     }
   };
