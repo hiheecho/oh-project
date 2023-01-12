@@ -51,8 +51,8 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
 
 const EditDeleteBtn = styled.View`
   position: absolute;
-  right: 15px;
-  top: 10px;
+  right: 20px;
+  top: 15px;
 `;
 
 const DropDownView = styled.View`
@@ -60,10 +60,10 @@ const DropDownView = styled.View`
   margin-top: 20px;
   right: 5px;
   width: 100px;
-  height: 110px;
+  height: 100px;
   border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  justify-content: center;
+  align-items: center;
   background-color: ${DROPDOWN_BACKGROUND_COLOR};
 `;
 
