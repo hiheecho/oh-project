@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import styled from "@emotion/native";
-import {
-  DARK_BTN,
-  DROPDOWN_FONT_COLOR,
-  DROPDOWN_BACKGROUND_COLOR,
-} from "../../color";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import { deletePost } from "../../posts";
@@ -65,6 +60,14 @@ const MainList = ({ item }) => {
     ]);
   };
 
+  if (isLoadingDeleting) {
+    return (
+      <View>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow>
@@ -97,7 +100,6 @@ const CommentRow = styled.View`
   padding-top: 20%;
   padding-left: 2%;
   padding-right: 2%;
-  padding-bottom: 3%;
   background-color: ${(props) => props.theme.gray};
 `;
 const UserImg = styled.Image`
@@ -113,7 +115,6 @@ const CommentText = styled.Text`
   font-size: 15px;
   margin-bottom: 20px;
   color: ${(props) => props.theme.color};
-  width: 95%;
 `;
 const CommentName = styled.Text`
   position: absolute;

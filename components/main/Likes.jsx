@@ -41,7 +41,7 @@ const Likes = ({ item }) => {
 
   return (
     <LikesArea>
-      {likesArray.length === 0 ? (
+      {likesArray?.length === 0 ? (
         <AntDesign
           name="hearto"
           size={15}
@@ -56,7 +56,7 @@ const Likes = ({ item }) => {
             color={BRAND_COLOR}
             onPress={onCountLikes}
           />
-          <LikesCount>{likesArray.length}</LikesCount>
+          <LikesCount>{likesArray?.length}</LikesCount>
         </>
       )}
     </LikesArea>
