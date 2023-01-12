@@ -21,15 +21,23 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import MainList from "../components/main/MainList";
 
 const MyPage = () => {
+  const [userName, setUserName] = useState(auth.currentUser.displayName);
+  const [disPlayName, setDisPlayName] = useState("");
+
+  const [detailItem, setDetailItem] = useState({});
+  const [detailItemContent, setDetailItemContent] = useState("");
+
   const [image, setImage] = useState();
+
+  const [myComments, setMyComments] = useState([]);
+  const [isEdit, setIsEdit] = useState(false);
+
+  const [uploading, setUploading] = useState();
 
   const onLogOutClick = () => {
     auth.signOut();
   };
-  const [myComments, setMyComments] = useState([]);
-  const [isEdit, setIsEdit] = useState(false);
 
-  /**작성한 글 불러오기 */
   useEffect(() => {
     const q = query(
       collection(dbService, "posts"),
@@ -43,38 +51,7 @@ const MyPage = () => {
       }));
       setMyComments(newUsers);
     });
-    return unsubscribe;
-  }, []);
-  /**---------------------------------Users-------------------------------------- */
-  /** 닉네임 */
-  const [userName, setUserName] = useState(auth.currentUser.displayName);
-  const [disPlayName, setDisPlayName] = useState("");
 
-  /** 자기소개 */
-  const [detailItem, setDetailItem] = useState({});
-  const [detailItemContent, setDetailItemContent] = useState("");
-
-  const updateDocProfile = async () => {
-    const newDetailItem = {
-      ...detailItem,
-      content: detailItemContent,
-    };
-
-    await updateProfile(auth.currentUser, {
-      displayName: disPlayName,
-    }).catch((error) => alert(error.message));
-    setUserName(disPlayName);
-
-    // await updateDoc(doc(dbService, "users", test.toString()), newDetailItem);
-    await setDoc(doc(dbService, "users", auth.currentUser.uid), newDetailItem);
-
-    setDetailItem(newDetailItem);
-    setEdit(newDetailItem);
-    setIsEdit(false);
-  };
-
-  /**데이터 불러오기 */
-  useEffect(() => {
     const getData = async () => {
       const docRef = doc(dbService, "users", auth.currentUser.uid);
       const docSnap = await getDoc(docRef);
@@ -97,14 +74,32 @@ const MyPage = () => {
 
     getData();
     getUserData();
+
+    return unsubscribe;
   }, []);
+
+  const updateDocProfile = async () => {
+    const newDetailItem = {
+      ...detailItem,
+      content: detailItemContent,
+    };
+
+    await updateProfile(auth.currentUser, {
+      displayName: disPlayName,
+    }).catch((error) => alert(error.message));
+    setUserName(disPlayName);
+
+    await setDoc(doc(dbService, "users", auth.currentUser.uid), newDetailItem);
+
+    setDetailItem(newDetailItem);
+    setEdit(newDetailItem);
+    setIsEdit(false);
+  };
 
   const setEdit = async (detailItem) => {
     setDetailItem({ ...detailItem });
     setIsEdit(true);
   };
-
-  const [uploading, setUploading] = useState();
 
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
@@ -156,8 +151,6 @@ const MyPage = () => {
   };
 
   const uploadImageAsync = async (uri) => {
-    // Why are we using XMLHttpRequest? See:
-    // https://github.com/expo/expo/issues/2402#issuecomment-443726662
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -175,7 +168,6 @@ const MyPage = () => {
     const fileRef = ref(getStorage(), auth.currentUser.uid);
     const result = await uploadBytes(fileRef, blob);
 
-    // We're done with the blob, close and release it
     blob.close();
 
     return await getDownloadURL(fileRef);
@@ -259,7 +251,6 @@ const MyPage = () => {
     </>
   );
 };
-export default MyPage;
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
   flex-direction: row;
@@ -329,3 +320,5 @@ const MyInfoText = styled.Text`
   width: 80%;
   color: ${(props) => props.theme.color};
 `;
+
+export default MyPage;

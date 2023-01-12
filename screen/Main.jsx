@@ -49,7 +49,7 @@ const Main = () => {
 };
 
 const ContentBox = styled.View`
-  margin: 5px 0;
+  margin: 10px 0;
 `;
 
 const PlusBtnView = styled.View`

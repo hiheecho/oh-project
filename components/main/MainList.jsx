@@ -16,7 +16,7 @@ const MainList = ({ item }) => {
   };
 
   const _maybeRenderImage = (item) => {
-    if (!auth.currentUser.photoURL) {
+    if (!item.userImage) {
       return <UserImg source={require("../../assets/icon.png")} />;
     }
 
@@ -28,12 +28,7 @@ const MainList = ({ item }) => {
       <CommentRow>
         <CommentHeader>
           {_maybeRenderImage(item)}
-          <CommentName>
-            {" "}
-            {auth.currentUser.uid === item.userId
-              ? auth.currentUser.displayName
-              : item.userName}
-          </CommentName>
+          <CommentName>{item.userName}</CommentName>
         </CommentHeader>
         {item.userId === auth.currentUser.uid ? <DropDown item={item} /> : null}
 

@@ -3,14 +3,14 @@ import { updateLikes } from "../../posts";
 import styled from "@emotion/native";
 import { AntDesign } from "@expo/vector-icons";
 import { useMutation } from "react-query";
-import { BRAND_COLOR } from "../../color";
 import { useColorScheme } from "react-native";
-import { DARK_COLOR, LIGHT_COLOR } from "../../color";
+import { DARK_COLOR, LIGHT_COLOR, BRAND_COLOR } from "../../color";
 import { auth } from "../../firebase";
 
 const Likes = ({ item }) => {
   const likesArray = item.userLikes;
   const currentId = auth.currentUser.uid;
+  const isDark = useColorScheme() === "dark";
 
   const countLikes = () => {
     if (!likesArray.includes(currentId)) {
@@ -21,10 +21,10 @@ const Likes = ({ item }) => {
     }
   };
 
-  const onCountLikes = async () => {
+  const onCountLikes = () => {
     try {
       countLikes();
-      await calculate({ id: item.id, userLikes: likesArray });
+      calculate({ id: item.id, userLikes: likesArray });
     } catch (error) {
       console.log("error", error);
     }
@@ -43,11 +43,9 @@ const Likes = ({ item }) => {
     }
   );
 
-  const isDark = useColorScheme() === "dark";
-
   return (
     <LikesArea>
-      {likesArray?.length === 0 ? (
+      {!likesArray?.includes(currentId) ? (
         <AntDesign
           name="heart"
           size={20}
@@ -55,16 +53,14 @@ const Likes = ({ item }) => {
           onPress={onCountLikes}
         />
       ) : (
-        <>
-          <AntDesign
-            name="heart"
-            size={20}
-            color={BRAND_COLOR}
-            onPress={onCountLikes}
-          />
-          <LikesCount>{likesArray?.length}</LikesCount>
-        </>
+        <AntDesign
+          name="heart"
+          size={20}
+          color={BRAND_COLOR}
+          onPress={onCountLikes}
+        />
       )}
+      <LikesCount>{likesArray?.length ? likesArray.length : null}</LikesCount>
     </LikesArea>
   );
 };
