@@ -134,7 +134,7 @@ const MyPage = () => {
       if (!pickerResult.cancelled) {
         const uploadUrl = await uploadImageAsync(pickerResult.uri);
 
-        updateProfile(auth.currentUser, {
+        await updateProfile(auth.currentUser, {
           displayName: auth.currentUser.displayName,
           photoURL: uploadUrl,
         });

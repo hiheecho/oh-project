@@ -59,7 +59,7 @@ const SignUp = () => {
               {
                 text: "확인",
                 onPress: () => {
-                  navigate("Stacks", { screen: "Login" });
+                  navigate("Tabs", { screen: "Main" });
                 },
               },
             ]);
