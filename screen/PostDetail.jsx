@@ -2,8 +2,8 @@ import React from "react";
 import { TouchableOpacity, Text, KeyboardAvoidingView } from "react-native";
 import styled from "@emotion/native";
 import { LIGHT_GRAY } from "../color";
-import Comment from "../components/Comment";
-import DetailContent from "../components/DetailContent";
+import Comment from "../components/postdetail/Comment";
+import DetailContent from "../components/postdetail/DetailContent";
 import { SCREEN_HEIGHT } from "../util";
 
 const PostDetail = ({

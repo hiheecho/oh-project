@@ -1,13 +1,13 @@
-import React, { useState, useCallback, useRef } from "react";
-import { View, ActivityIndicator, Button, Alert } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, ActivityIndicator, Alert } from "react-native";
 import styled from "@emotion/native";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
-import { deletePost, getDetail } from "../posts";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
+import { deletePost, getDetail } from "../../posts";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
-import DropDown from "./DropDown";
-import { auth } from "../firebase";
+import DropDown from "../DropDown";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { auth } from "../../firebase";
 
 const DetailContent = ({ item }) => {
   // youtube
@@ -86,12 +86,11 @@ const DetailContent = ({ item }) => {
       <ContentHeader>
         <UserInfo>
           <UserImage
-            source={require("../assets/icon.png")}
+            source={require("../../assets/icon.png")}
             style={{ width: 70, height: 70 }}
           />
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
-
       </ContentHeader>
       {item.userId === auth.currentUser.uid ? (
         <DropDown
@@ -157,4 +156,3 @@ const YoutubeWrapper = styled.View`
   margin: 40px auto 40px auto;
 `;
 export default DetailContent;
-

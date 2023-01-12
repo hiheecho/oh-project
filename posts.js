@@ -24,7 +24,11 @@ export const getDetail = async ({ queryKey }) => {
 export const updatePost = async ({ id, text, videoLink }) => {
   await updateDoc(doc(dbService, "posts", id), { text, videoLink });
 };
-//queryClient refetch method
+
+export const updateLikes = async ({ id, userLikes }) => {
+  await updateDoc(doc(dbService, "posts", id), { userLikes });
+};
+
 // Delete
 export const deletePost = async (id) => {
   await deleteDoc(doc(dbService, "posts", id));

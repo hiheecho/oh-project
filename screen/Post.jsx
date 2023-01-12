@@ -23,6 +23,7 @@ const Post = ({ navigation: { goBack } }) => {
     createdAt: Date.now(),
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
+    userLikes: [],
     videoLink,
   };
 

@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { TouchableOpacity, StyleSheet } from "react-native";
+import { View, TouchableOpacity, StyleSheet } from "react-native";
 import styled from "@emotion/native";
 import {
   DARK_BTN,
   DROPDOWN_FONT_COLOR,
   DROPDOWN_BACKGROUND_COLOR,
-} from "../color";
+} from "../../color";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../firebase";
-import { deletePost } from "../posts";
+import { auth } from "../../firebase";
+import { deletePost } from "../../posts";
 import { useMutation } from "react-query";
 import { Alert } from "react-native";
-import DropDown from "./DropDown";
+import Likes from "./Likes";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
@@ -70,11 +70,12 @@ const MainList = ({ item }) => {
       <CommentRow>
         <UserImg
           style={StyleSheet.absoluteFill}
-          source={require("../assets/icon.png")}
+          source={require("../../assets/icon.png")}
         />
 
         <CommentName>{item.userName}</CommentName>
         <CommentText>{item.text}</CommentText>
+        <Likes item={item} />
         {item.userId === auth.currentUser.uid ? (
           <DropDown
             onDeletePost={onDeletePost}
@@ -97,6 +98,7 @@ const CommentRow = styled.View`
   padding-top: 20%;
   padding-left: 2%;
   padding-right: 2%;
+  padding-bottom: 3%;
   background-color: ${(props) => props.theme.gray};
 `;
 const UserImg = styled.Image`
@@ -112,6 +114,7 @@ const CommentText = styled.Text`
   font-size: 15px;
   margin-bottom: 20px;
   color: ${(props) => props.theme.color};
+  width: 100%;
 `;
 const CommentName = styled.Text`
   position: absolute;

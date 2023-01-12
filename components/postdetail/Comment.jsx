@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "@emotion/native";
 import { Feather } from "@expo/vector-icons";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../util";
+import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
 
 const Comment = () => {
   return (
     <CommentWrapper>
       <ContentHeader>
         <UserInfo>
-          <UserImage source={require("../assets/icon.png")} />
+          <UserImage source={require("../../assets/icon.png")} />
           <Nickname>부드라미</Nickname>
         </UserInfo>
         <MoreBtn>
