@@ -74,7 +74,7 @@ const CommentText = styled.Text`
   margin-left: 10px;
   font-size: 16px;
   color: ${(props) => props.theme.color};
-  width: 100%;
+  width: 96%;
 `;
 
 const LikeBox = styled.View`

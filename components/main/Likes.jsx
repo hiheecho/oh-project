@@ -15,7 +15,7 @@ const Likes = ({ item }) => {
   const countLikes = () => {
     if (!likesArray.includes(currentId)) {
       likesArray.push(currentId);
-    } else if (likesArray.includes(currentId)) {
+    } else {
       const idx = likesArray.indexOf(currentId);
       likesArray.splice(idx, 1);
     }

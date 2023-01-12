@@ -6,7 +6,6 @@ import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { updatePost } from "../posts.js";
 import { useMutation } from "react-query";
-// import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const PostEditing = ({
   navigation: { goBack },

@@ -68,13 +68,13 @@ const Post = ({ navigation: { goBack, navigate } }) => {
       <YoutubeInput
         value={videoLink}
         onChangeText={setVideoLink}
-        placeholder="추천곡 유튜브링크를 입력해주세요."
+        placeholder="추천곡 유튜브 링크를 입력해주세요."
         placeholderTextColor="#a1a1a1"
       />
       <TextArea
         value={text}
         onChangeText={setText}
-        placeholder="추천곡을 입력해주세요."
+        placeholder="추천곡을 소개해주세요."
         placeholderTextColor="#a1a1a1"
         multiline={true}
         textAlignVertical="top"
