@@ -99,7 +99,7 @@ const DetailContent = ({ item }) => {
       {item.videoLink ? (
         <YoutubeWrapper>
           <YoutubePlayer
-            height={SCREEN_HEIGHT / 3.3}
+            height={"100%"}
             play={playing}
             videoId={data?.data().videoLink?.slice(-11)}
             onChangeState={onStateChange}
@@ -121,7 +121,7 @@ const ContentHeader = styled.View`
 const UserInfo = styled.View`
   flex-direction: row;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
 `;
 const UserImage = styled.Image`
   width: 70px;
@@ -138,16 +138,17 @@ const Nickname = styled.Text`
 //콘텐츠 내용
 const ContentText = styled.Text`
   width: 85%;
-  margin: auto;
   font-size: 18px;
-  line-height: ${SCREEN_HEIGHT / 50 + "px"};
-
+  line-height: 27px;
   color: ${(props) => props.theme.color};
+  margin: auto;
 `;
 
 // 콘텐츠 내용 ( 유튜브영상 )
 const YoutubeWrapper = styled.View`
   width: 98%;
-  margin: 20px auto 40px auto;
+  height: ${SCREEN_HEIGHT / 3 + "px"};
+  margin: auto;
+  padding-top: 20px;
 `;
 export default DetailContent;

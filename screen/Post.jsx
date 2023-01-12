@@ -107,16 +107,15 @@ const Contents = styled.View`
 `;
 
 const FakeNavi = styled.View`
-  height: ${SCREEN_HEIGHT / 9.3 + "px"};
+  height: ${SCREEN_HEIGHT / 9.6 + "px"};
   background-color: ${BRAND_COLOR};
   flex-direction: row;
-  padding: 0 10px;
 `;
 
 const BackBtn = styled.TouchableOpacity`
   position: absolute;
-  top: 57px;
-  left: 8px;
+  bottom: 15%;
+  left: 4%;
 `;
 
 const PostBtnActive = styled.Text`
@@ -124,8 +123,8 @@ const PostBtnActive = styled.Text`
   font-weight: bold;
   font-size: 17px;
   position: absolute;
-  top: 62px;
-  right: 13px;
+  bottom: 20%;
+  right: 4%;
 `;
 
 const PostBtnInactive = styled.Text`
@@ -134,20 +133,20 @@ const PostBtnInactive = styled.Text`
   font-weight: bold;
   font-size: 17px;
   position: absolute;
-  top: 62px;
-  right: 13px;
+  bottom: 20%;
+  right: 4%;
 `;
 
 const TextArea = styled.TextInput`
   height: ${SCREEN_HEIGHT / 2.5 + "px"};
-  padding: 20px;
+  padding: 25px 20px;
   font-size: 17px;
   color: ${(props) => props.theme.color};
   background-color: ${(props) => props.theme.background};
 `;
 const YoutubeInput = styled.TextInput`
   height: ${SCREEN_HEIGHT / 13 + "px"};
-  padding: 20px;
+  padding: 0px 20px;
   font-size: 17px;
   color: ${(props) => props.theme.color};
   background-color: ${(props) => props.theme.background};
