@@ -34,14 +34,6 @@ const MainList = ({ item }) => {
     );
   };
 
-  if (isLoadingDeleting) {
-    return (
-      <View>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow>
@@ -51,7 +43,7 @@ const MainList = ({ item }) => {
           {" "}
           {auth.currentUser.uid === item.userId
             ? auth.currentUser.displayName
-            : item.userId}
+            : item.userName}
         </CommentName>
         <CommentText>{item.text}</CommentText>
         <Likes item={item} />
