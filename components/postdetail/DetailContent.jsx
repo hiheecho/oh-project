@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { View, ActivityIndicator, Alert } from "react-native";
 import styled from "@emotion/native";
-import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
+import { SCREEN_WIDTH } from "../../util";
 import { getDetail } from "../../posts";
 import { useQuery } from "react-query";
 import DropDown from "../DropDown";
@@ -112,7 +112,7 @@ const Nickname = styled.Text`
 `;
 
 const ContentText = styled.Text`
-  width: 100%;
+  width: 95%;
   font-size: 18px;
   line-height: 27px;
   color: ${(props) => props.theme.color};
@@ -121,7 +121,7 @@ const ContentText = styled.Text`
 
 const YoutubeWrapper = styled.View`
   width: 100%;
-  height: ${SCREEN_HEIGHT / 3 + "px"};
+  height: ${SCREEN_WIDTH / 1.8 + "px"};
   margin-bottom: 10px;
 `;
 export default DetailContent;
