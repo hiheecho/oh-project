@@ -3,19 +3,14 @@ import styled from "@emotion/native";
 import { SCREEN_HEIGHT } from "../util";
 import { Ionicons } from "@expo/vector-icons";
 import { auth } from "../firebase";
-import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { addPost } from "../posts.js";
 import { useMutation } from "react-query";
-// import useKeyboardHeight from "react-native-use-keyboard-height";
+import { Alert } from "react-native";
 
-const Post = ({ navigation: { goBack } }) => {
+const Post = ({ navigation: { goBack, navigate } }) => {
   const [text, setText] = useState("");
   const [videoLink, setVideoLink] = useState("");
-  const { navigate } = useNavigation();
-
-  // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
-  // const keyboardHeight = useKeyboardHeight();
 
   const newPost = {
     text,
@@ -32,7 +27,7 @@ const Post = ({ navigation: { goBack } }) => {
     (body) => addPost(body),
     {
       onSuccess: () => {
-        console.log("게시글 작성");
+        console.log("게시글 작성 완료!");
       },
       onError: (error) => {
         console.log("error", error);
@@ -44,9 +39,9 @@ const Post = ({ navigation: { goBack } }) => {
     return <PostBtnInactive>글쓰기</PostBtnInactive>;
   }
 
-  const onAddPost = async () => {
+  const onAddPost = () => {
     try {
-      await add(newPost);
+      add(newPost);
       navigate("Tabs", { screen: "Main" });
     } catch (error) {
       console.log("error", error);
@@ -86,7 +81,6 @@ const Post = ({ navigation: { goBack } }) => {
         autoFocus
       />
 
-      {/* 글자수 */}
       <LettersCount>
         {text && text.length <= 150 ? (
           <Count enabled>{150 - text.length}</Count>

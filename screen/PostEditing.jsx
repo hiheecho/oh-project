@@ -18,19 +18,12 @@ const PostEditing = ({
   const [videoLink, setVideoLink] = useState(item.videoLink);
   const { navigate } = useNavigation();
 
-  // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
-  // const keyboardHeight = useKeyboardHeight();
-
   const { isLoading, mutate: edit } = useMutation(
     ["update", item.id],
     (body) => updatePost(body),
     {
       onSuccess: () => {
-        console.log("게시글 수정");
-        //"contents"라는 쿼리키를 가진 쿼리를 리패치 하라는 명령이 실행되는 부분
-        // QueryClient.refetchQueries(["contents", 1], {
-        //   active: true,
-        // });
+        navigate("Tabs", { screen: "Main" });
       },
       onError: (error) => {
         console.log("error", error);
@@ -42,10 +35,9 @@ const PostEditing = ({
     return <PostBtnInactive>수정</PostBtnInactive>;
   }
 
-  const onUpdatePost = async () => {
+  const onUpdatePost = () => {
     try {
-      await edit({ id: item.id, text, videoLink });
-      navigate("Tabs", { screen: "Main" });
+      edit({ id: item.id, text, videoLink });
     } catch (error) {
       console.log("error", error);
     }
@@ -80,7 +72,7 @@ const PostEditing = ({
         textAlignVertical="top"
         autoFocus
       />
-      {/* 글자수 */}
+
       <LettersCount>
         {text && text.length <= 150 ? (
           <Count enabled>{150 - text.length}</Count>
@@ -93,8 +85,6 @@ const PostEditing = ({
     </Contents>
   );
 };
-
-export default PostEditing;
 
 const Contents = styled.View`
   flex: 1;
@@ -160,3 +150,5 @@ const Count = styled.Text`
 const Over = styled.Text`
   color: ${BRAND_COLOR};
 `;
+
+export default PostEditing;

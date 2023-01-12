@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { FlatList, View } from "react-native";
 import styled from "@emotion/native";
@@ -8,7 +7,6 @@ import { query, onSnapshot, orderBy } from "@firebase/firestore";
 import { dbService } from "../firebase";
 import { collection } from "@firebase/firestore";
 import MainList from "../components/main/MainList";
-import { useFocusEffect } from "@react-navigation/native";
 
 const Main = () => {
   const { navigate } = useNavigation();
@@ -51,7 +49,7 @@ const Main = () => {
 };
 
 const ContentBox = styled.View`
-  margin: 5px 0;
+  margin: 10px 0;
 `;
 
 const PlusBtnView = styled.View`

@@ -4,7 +4,6 @@ import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import Likes from "./Likes";
 import DropDown from "../DropDown";
-import { SCREEN_HEIGHT } from "../../util";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
@@ -17,7 +16,7 @@ const MainList = ({ item }) => {
   };
 
   const _maybeRenderImage = (item) => {
-    if (!auth.currentUser.photoURL) {
+    if (!item.userImage) {
       return <UserImg source={require("../../assets/icon.png")} />;
     }
 
@@ -29,12 +28,7 @@ const MainList = ({ item }) => {
       <CommentRow>
         <CommentHeader>
           {_maybeRenderImage(item)}
-          <CommentName>
-            {" "}
-            {auth.currentUser.uid === item.userId
-              ? auth.currentUser.displayName
-              : item.userName}
-          </CommentName>
+          <CommentName>{item.userName}</CommentName>
         </CommentHeader>
         {item.userId === auth.currentUser.uid ? <DropDown item={item} /> : null}
 

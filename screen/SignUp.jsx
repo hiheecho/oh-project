@@ -27,11 +27,7 @@ const SignUp = () => {
       Alert.alert("아이디를 입력해주세요");
       return;
     }
-    if (userId.indexOf("@") == -1) {
-      Alert.alert("아이디는 이메일 형식으로 입력해주세요");
-      return;
-    }
-    if (userId.indexOf(".") == -1) {
+    if (userId.indexOf("@") == -1 || userId.indexOf(".") == -1) {
       Alert.alert("아이디는 이메일 형식으로 입력해주세요");
       return;
     }
@@ -47,7 +43,6 @@ const SignUp = () => {
       Alert.alert("비밀번호 확인을 입력해주세요");
       return;
     }
-
     if (userPassword != userPasswordCheck) {
       Alert.alert("비밀번호를 확인해주세요");
       return;
@@ -60,7 +55,14 @@ const SignUp = () => {
           .then(() => {
             console.log(auth.currentUser);
             console.log(userCredential);
-            Alert.alert("회원가입 성공!");
+            Alert.alert("회원가입 성공!", "회원가입에 성공했어요!", [
+              {
+                text: "확인",
+                onPress: () => {
+                  navigate("Stacks", { screen: "Login" });
+                },
+              },
+            ]);
           })
           .catch((error) => {
             Alert.alert(error);
@@ -188,6 +190,7 @@ const InputBox = styled.TextInput`
   margin-bottom: 10px;
 
   background-color: ${(props) => props.theme.gray};
+  color: ${(props) => props.theme.color};
 `;
 const PasswordBox = styled.View`
   flex-direction: row;

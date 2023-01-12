@@ -9,7 +9,6 @@ import { auth } from "../../firebase";
 import YoutubePlayer from "react-native-youtube-iframe";
 
 const DetailContent = ({ item }) => {
-  // youtube 업로드
   const [playing, setPlaying] = useState(false);
 
   const onStateChange = useCallback((state) => {
@@ -73,8 +72,6 @@ const DetailContent = ({ item }) => {
   );
 };
 
-//콘텐츠,코멘트 헤더 (프로필 + 버튼)
-
 const DetailContainer = styled.View`
   padding: 10px;
 `;
@@ -107,7 +104,6 @@ const Nickname = styled.Text`
   color: ${(props) => props.theme.color};
 `;
 
-//콘텐츠 내용
 const ContentText = styled.Text`
   width: 100%;
   font-size: 18px;
@@ -116,7 +112,6 @@ const ContentText = styled.Text`
   margin: 10px;
 `;
 
-// 콘텐츠 내용 ( 유튜브영상 )
 const YoutubeWrapper = styled.View`
   width: 100%;
   height: ${SCREEN_HEIGHT / 3 + "px"};
