@@ -3,7 +3,6 @@ import { View, ActivityIndicator, Alert } from "react-native";
 import styled from "@emotion/native";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
 import { deletePost, getDetail } from "../../posts";
-import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
 import DropDown from "../DropDown";
 import YoutubePlayer from "react-native-youtube-iframe";
@@ -24,27 +23,6 @@ const DetailContent = ({ item }) => {
   // let result = youtubeLink.slice(-11);
   // console.log(result);
 
-  // 삭제
-  const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
-    ["deletePost", item.id],
-    (body) => deletePost(body),
-    {
-      onSuccess: () => {
-        console.log("삭제 완료");
-      },
-      onError: (error) => {
-        console.log("error", error);
-      },
-    }
-  );
-
-  const { navigate } = useNavigation();
-  const goToPostEditing = () => {
-    navigate("Stacks", {
-      screen: "PostEditing",
-      params: { item },
-    });
-  };
   const postId = item.id;
 
   const { isLoading, data } = useQuery(["contents", postId], getDetail, {
@@ -64,23 +42,6 @@ const DetailContent = ({ item }) => {
     );
   }
 
-  const onDeletePost = async () => {
-    Alert.alert("포스트 삭제", "정말 삭제하시겠습니까?", [
-      { text: "취소", style: "destructive" },
-      {
-        text: "삭제",
-        onPress: async () => {
-          try {
-            await del(item.id);
-            navigate("Tabs", { screen: "Main" });
-          } catch (error) {
-            console.log("error", error);
-          }
-        },
-      },
-    ]);
-  };
-
   return (
     <View>
       <ContentHeader>
@@ -92,13 +53,7 @@ const DetailContent = ({ item }) => {
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
       </ContentHeader>
-      {item.userId === auth.currentUser.uid ? (
-        <DropDown
-          onDeletePost={onDeletePost}
-          item={item}
-          goToPostEditing={goToPostEditing}
-        />
-      ) : null}
+      {item.userId === auth.currentUser.uid ? <DropDown item={item} /> : null}
       {item.videoLink ? (
         <YoutubeWrapper>
           <YoutubePlayer
