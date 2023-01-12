@@ -10,7 +10,8 @@ import { TouchableOpacity } from "react-native";
 import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-const DropDown = ({ onDeletePost }) => {
+const DropDown = ({ onDeletePost, goToPostEditing }) => {
+
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -20,6 +21,10 @@ const DropDown = ({ onDeletePost }) => {
   );
 
   const [check, setCheck] = useState(false);
+
+  if (isLoadingDeleting) {
+    return <DropDownText>삭제</DropDownText>;
+  }
 
   return (
     <EditDeleteBtn>
@@ -31,7 +36,7 @@ const DropDown = ({ onDeletePost }) => {
         <Entypo name="dots-three-horizontal" size={17} color="#AAAAAA" />
         {check === true ? (
           <DropDownView>
-            <DropDownEdit>
+            <DropDownEdit onPress={goToPostEditing}>
               <DropDownText>글 수정</DropDownText>
             </DropDownEdit>
             <DropDownDelete onPress={onDeletePost}>
@@ -46,8 +51,8 @@ const DropDown = ({ onDeletePost }) => {
 
 const EditDeleteBtn = styled.View`
   position: absolute;
-  right: 15px;
-  top: 10px;
+  right: 20px;
+  top: 15px;
 `;
 
 const DropDownView = styled.View`
@@ -55,10 +60,10 @@ const DropDownView = styled.View`
   margin-top: 20px;
   right: 5px;
   width: 100px;
-  height: 110px;
+  height: 100px;
   border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  justify-content: center;
+  align-items: center;
   background-color: ${DROPDOWN_BACKGROUND_COLOR};
 `;
 

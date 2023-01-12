@@ -1,20 +1,29 @@
-import React, { useState } from "react";
-import { TouchableOpacity, View, ActivityIndicator } from "react-native";
+import React, { useState, useCallback } from "react";
+import { View, ActivityIndicator, Alert } from "react-native";
 import styled from "@emotion/native";
-import {
-  DROPDOWN_BACKGROUND_COLOR,
-  DARK_BTN,
-  DROPDOWN_FONT_COLOR,
-} from "../../color";
 import { SCREEN_WIDTH, SCREEN_HEIGHT } from "../../util";
-import { Entypo } from "@expo/vector-icons";
-import { Alert } from "react-native";
 import { deletePost, getDetail } from "../../posts";
 import { useNavigation } from "@react-navigation/native";
 import { useQuery, useMutation } from "react-query";
 import DropDown from "../DropDown";
+import YoutubePlayer from "react-native-youtube-iframe";
+import { auth } from "../../firebase";
 
 const DetailContent = ({ item }) => {
+  // youtube
+  const [playing, setPlaying] = useState(false);
+
+  const onStateChange = useCallback((state) => {
+    if (state === "ended") {
+      setPlaying(false);
+      Alert.alert("video has finished playing!");
+    }
+  }, []);
+
+  // const youtubeLink = "https://www.youtube.com/watch?v=c9zX5VYSNSc";
+  // let result = youtubeLink.slice(-11);
+  // console.log(result);
+
   // 삭제
   const { isLoading: isLoadingDeleting, mutate: del } = useMutation(
     ["deletePost", item.id],
@@ -30,18 +39,24 @@ const DetailContent = ({ item }) => {
   );
 
   const { navigate } = useNavigation();
+  const goToPostEditing = () => {
+    navigate("Stacks", {
+      screen: "PostEditing",
+      params: { item },
+    });
+  };
   const postId = item.id;
 
   const { isLoading, data } = useQuery(["contents", postId], getDetail, {
     onSuccess: () => {
-      console.log("성공!");
+      console.log("로딩되었습니다!");
     },
     onError: (error) => {
       console.log("error : ", error);
     },
   });
 
-  if (isLoading) {
+  if (isLoading || isLoadingDeleting) {
     return (
       <View>
         <ActivityIndicator />
@@ -66,12 +81,8 @@ const DetailContent = ({ item }) => {
     ]);
   };
 
-  if (isLoadingDeleting) {
-    return <DropDownText>삭제</DropDownText>;
-  }
-
   return (
-    <DetailContentWrapper>
+    <View>
       <ContentHeader>
         <UserInfo>
           <UserImage
@@ -80,18 +91,33 @@ const DetailContent = ({ item }) => {
           />
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
-        <DropDown onDeletePost={onDeletePost} />
       </ContentHeader>
-      {/* <Youtube /> */}
+      {item.userId === auth.currentUser.uid ? (
+        <DropDown
+          onDeletePost={onDeletePost}
+          item={item}
+          goToPostEditing={goToPostEditing}
+        />
+      ) : null}
+      {item.videoLink ? (
+        <YoutubeWrapper>
+          <YoutubePlayer
+            height={SCREEN_HEIGHT / 3.5}
+            play={playing}
+            videoId={data?.data().videoLink?.slice(-11)}
+            onChangeState={onStateChange}
+          />
+        </YoutubeWrapper>
+      ) : null}
       <ContentText>{data?.data().text}</ContentText>
-    </DetailContentWrapper>
+    </View>
   );
 };
-const DetailContentWrapper = styled.View`
-  border-bottom-width: 2px;
-  border-bottom-color: ${(props) => props.theme.gray};
-  padding-bottom: 15%;
-`;
+// const DetailContentWrapper = styled.View`
+//   /* border-bottom-width: 2px;
+//   border-bottom-color: ${(props) => props.theme.gray}; */
+//   padding-bottom: 15%;
+// `;
 //콘텐츠,코멘트 헤더 (프로필 + 버튼)
 const ContentHeader = styled.View`
   flex-direction: row;
@@ -120,15 +146,13 @@ const ContentText = styled.Text`
   width: 85%;
   margin: auto;
   font-size: 18px;
-  line-height: ${SCREEN_HEIGHT / 30 + "px"};
-  margin-top: 5%;
+  line-height: ${SCREEN_HEIGHT / 50 + "px"};
+
   color: ${(props) => props.theme.color};
 `;
 
-const DropDownText = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  color: ${DROPDOWN_FONT_COLOR};
+const YoutubeWrapper = styled.View`
+  width: 98%;
+  margin: 40px auto 40px auto;
 `;
-
 export default DetailContent;

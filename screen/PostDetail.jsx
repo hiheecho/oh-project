@@ -14,7 +14,7 @@ const PostDetail = ({
   return (
     <PostDetailWrapper>
       <DetailContent item={item} />
-      <CommentList>
+      {/* <CommentList>
         <Comment />
       </CommentList>
       <KeyboardAvoidingView
@@ -30,7 +30,7 @@ const PostDetail = ({
             </TouchableOpacity>
           </CommentInputWrapper>
         </CommentInputContainer>
-      </KeyboardAvoidingView>
+      </KeyboardAvoidingView> */}
     </PostDetailWrapper>
   );
 };
@@ -49,36 +49,36 @@ const PostDetailWrapper = styled.View`
   background-color: ${(props) => props.theme.background};
   flex: 1;
 `;
-const CommentList = styled.ScrollView`
-  height: 0;
-`;
+// const CommentList = styled.ScrollView`
+//   height: 0;
+// `;
 
-const CommentInputContainer = styled.View`
-  width: 100%;
-  flex-direction: row;
-  height: ${SCREEN_HEIGHT / 15 + "px"};
-  justify-content: space-evenly;
-  align-items: center;
-`;
+// const CommentInputContainer = styled.View`
+//   width: 100%;
+//   flex-direction: row;
+//   height: ${SCREEN_HEIGHT / 15 + "px"};
+//   justify-content: space-evenly;
+//   align-items: center;
+// `;
 
-const CommentInputWrapper = styled.View`
-  width: 85%;
-  flex-direction: row;
-  height: 85%;
-  background-color: ${LIGHT_GRAY};
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 60px;
-  padding-right: 5%;
-`;
-const CommentInput = styled.TextInput`
-  width: 75%;
-  height: 100%;
-  margin: auto;
-`;
-const CommentUser = styled.Image`
-  width: 40px;
-  height: 40px;
-  border-radius: 40px;
-`;
+// const CommentInputWrapper = styled.View`
+//   width: 85%;
+//   flex-direction: row;
+//   height: 85%;
+//   background-color: ${LIGHT_GRAY};
+//   justify-content: space-between;
+//   align-items: center;
+//   border-radius: 60px;
+//   padding-right: 5%;
+// `;
+// const CommentInput = styled.TextInput`
+//   width: 75%;
+//   height: 100%;
+//   margin: auto;
+// `;
+// const CommentUser = styled.Image`
+//   width: 40px;
+//   height: 40px;
+//   border-radius: 40px;
+// `;
 export default PostDetail;

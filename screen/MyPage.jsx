@@ -45,16 +45,15 @@ import { updateProfile } from "firebase/auth";
 import { useMutation } from "react-query";
 import { deletePost } from "../posts";
 import DropDown from "../components/DropDown";
-
 /**-------------------------------postsExample---------------------------------- */
-/** 참고contents 
+/** 참고contents
     const newPost = {
     text,
     createdAt: Date.now(),
     isEdit: false,
     userName: auth.currentUser.displayName,
     userId: auth.currentUser?.uid,
-  }; 
+  };
 /**---------------------------------Poster------------------------------------- */
 const MyPage = () => {
   const onLogOutClick = () => {
@@ -64,6 +63,8 @@ const MyPage = () => {
   const { navigate } = useNavigation();
   const [myComments, setMyComments] = useState([]);
 
+  // const test = auth.currentUser.uid;
+
   /**작성한 글 불러오기 */
   useEffect(() => {
     const q = query(
@@ -72,69 +73,71 @@ const MyPage = () => {
       where("userId", "==", auth.currentUser?.uid)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newPosts = snapshot.docs.map((doc) => ({
+      const newUsers = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setMyComments(newPosts);
+      setMyComments(newUsers);
     });
     return unsubscribe;
   }, []);
-
   /**---------------------------------Users-------------------------------------- */
+  /** 닉네임 */
+  const [userName, setUserName] = useState(auth.currentUser.displayName);
+  const [disPlayName, setDisPlayName] = useState("");
 
+  const ChangeNickName = async () => {
+    await updateProfile(auth.currentUser, {
+      displayName: disPlayName,
+    }).catch((error) => alert(error.message));
+    setUserName(disPlayName);
+  };
+
+  /** 자기소개 */
   const [detailItem, setDetailItem] = useState({});
-  const [content, setContent] = useState("");
-  // console.log("content", content);
+  const [detailItemContent, setDetailItemContent] = useState("");
 
-  const newUser = {
-    content,
-    createdAt: Date.now(),
-    isEdit: false,
-    userName: auth.currentUser.displayName,
-    userId: auth.currentUser?.uid,
-  };
-  // console.log("newUser", newUser);
+  const updateDocProfile = async () => {
+    const newDetailItem = {
+      ...detailItem,
+      content: detailItemContent,
+    };
 
-  const updateProfile = async () => {
-    await updateDoc(doc(dbService, "users"), {
-      ...newUser,
-    });
-    setDetailItem(newUser);
-    setContent("");
+    // await updateDoc(doc(dbService, "users", test.toString()), newDetailItem);
+    await setDoc(doc(dbService, "users", auth.currentUser.uid), newDetailItem);
+
+    setDetailItem(newDetailItem);
+    setEdit(newDetailItem);
   };
 
-  const setUser = async () => {
-    await setDoc(doc(dbService, "users"), {
-      content: content,
-      createdAt: Date.now(),
-      isEdit: false,
-      userName: auth.currentUser.displayName,
-      userId: auth.currentUser?.uid,
-    });
-  };
-
+  /**데이터 불러오기 */
   useEffect(() => {
-    const q = query(
-      collection(dbService, "users"),
-      orderBy("createdAt", "desc"),
-      where("userId", "==", auth.currentUser?.uid)
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newUser = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setDetailItem(newUser);
-    });
-    return unsubscribe;
+    const getData = async () => {
+      const docRef = doc(dbService, "users", auth.currentUser.uid);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.data() === undefined) {
+        return;
+      }
+      setDetailItemContent(docSnap.data().content);
+
+      setDetailItem({
+        id: docSnap.id,
+        ...docSnap.data(),
+      });
+    };
+
+    const getUserData = () => {
+      setDisPlayName(auth.currentUser.displayName);
+    };
+
+    getData();
+    getUserData();
   }, []);
 
   const setEdit = async (detailItem) => {
     setDetailItem({ ...detailItem, isEdit: !detailItem.isEdit });
-    setContent("");
   };
-
   /**-----------------------------------Return--------------------------------------- */
   return (
     <>
@@ -145,35 +148,48 @@ const MyPage = () => {
         />
         <>
           <MyInfo>
-            <MyInfoName style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}>
-              {auth.currentUser.displayName}
-            </MyInfoName>
             <UserProfile>
               {detailItem.isEdit === true ? (
-                <UserInfoInput
-                  value={content}
-                  onChangeText={setContent}
-                  multiline={true}
-                  autoFocus
-                  placeholder="간단하게 자기소개 해주세요"
-                  placeholderTextColor="#aaaaaa"
-                />
+                <View>
+                  <NickNameView>
+                    <NickNameInput
+                      placeholder="닉네임을 변경하세요"
+                      placeholderTextColor="#AAAAAA"
+                      value={disPlayName}
+                      onChangeText={(text) => setDisPlayName(text)}
+                      onSubmitEditing={ChangeNickName}
+                    />
+                  </NickNameView>
+                  <UserInfoView>
+                    <UserInfoInput
+                      value={detailItemContent}
+                      onChangeText={setDetailItemContent}
+                      onSubmitEditing={updateDocProfile}
+                      multiline={true}
+                      autoFocus
+                      placeholder="간단하게 자기소개 해주세요"
+                      placeholderTextColor="#AAAAAA"
+                    />
+                  </UserInfoView>
+                </View>
               ) : (
-                <TouchableOpacity onPress={setUser}>
-                  <UserInfoText
+                <>
+                  <MyInfoName
                     style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
                   >
-                    {detailItem.content}
-                  </UserInfoText>
-                </TouchableOpacity>
+                    {userName}
+                  </MyInfoName>
+                  <MyIntroView>
+                    <MyInfoText>{detailItemContent}</MyInfoText>
+                  </MyIntroView>
+                </>
               )}
-
               {detailItem.isEdit === true ? (
-                <UserCompleteBtn onPress={() => updateProfile(detailItem)}>
+                <UserCompleteBtn onPress={() => updateDocProfile()}>
                   <MaterialCommunityIcons
                     name="account-edit"
                     size={30}
-                    color="#aaaaaa"
+                    color="#AAAAAA"
                   />
                 </UserCompleteBtn>
               ) : (
@@ -181,7 +197,7 @@ const MyPage = () => {
                   <MaterialCommunityIcons
                     name="account-edit-outline"
                     size={30}
-                    color="#aaaaaa"
+                    color="#AAAAAA"
                   />
                 </UserEditBtn>
               )}
@@ -190,11 +206,10 @@ const MyPage = () => {
         </>
       </DimensionView>
 
-      {/* ------------------------------------------------------------------------- */}
       <LogOutBtn onPress={onLogOutClick}>
         <LogOutText>로그아웃</LogOutText>
       </LogOutBtn>
-      {/* ------------------------------------------------------------------------- */}
+
       <FlatList
         data={myComments}
         keyExtractor={(item) => item.id}
@@ -210,7 +225,7 @@ const MyPage = () => {
               <MyCommentName
                 style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
               >
-                {item.userName}
+                {auth.currentUser.displayName}
               </MyCommentName>
               <MyCommentText
                 style={{ color: isDark ? DARK_COLOR : LIGHT_COLOR }}
@@ -228,9 +243,7 @@ const MyPage = () => {
   );
 };
 export default MyPage;
-
 /**-----------------------------------Styled--------------------------------------- */
-
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
 `;
@@ -238,7 +251,6 @@ const CommentContainer = styled.View`
   align-items: center;
   margin: 5px 0;
 `;
-
 const MyImg = styled.Image`
   width: 120px;
   height: 120px;
@@ -250,13 +262,13 @@ const MyInfo = styled.View`
   margin-top: 30px;
 `;
 const MyInfoName = styled.Text`
-  margin-left: 160px;
-  margin-top: 13px;
+  left: 15px;
+  bottom: 50px;
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 10px;
+  width: 180px;
+  height: 140px;
 `;
-
 const MyCommentRow = styled.View`
   width: 355px;
   height: 120px;
@@ -285,12 +297,10 @@ const MyCommentName = styled.Text`
   font-size: 17px;
   font-weight: 600;
 `;
-
 const LogOutText = styled.Text`
   font-size: 18px;
   color: white;
 `;
-
 const LogOutBtn = styled.TouchableOpacity`
   width: 30%;
   align-items: center;
@@ -304,25 +314,43 @@ const UserProfile = styled.View`
   width: 185px;
   left: 150px;
   top: 45px;
-  height: 75px;
+  height: 30px;
 `;
 const UserInfoInput = styled.TextInput`
-  position: absolute;
   width: 185px;
   height: 75px;
   left: 10px;
+  bottom: 30px;
+  padding: 8px;
+  padding-bottom: 50px;
+  color: ${DARK_BTN};
 `;
-const UserInfoText = styled.Text`
-  position: absolute;
-  width: 185px;
-  height: 75px;
-  left: 13px;
-`;
+
 const UserEditBtn = styled.TouchableOpacity`
-  left: 182px;
-  bottom: 60px;
+  left: 180px;
+  bottom: 290px;
 `;
 const UserCompleteBtn = styled.TouchableOpacity`
-  left: 180px;
-  bottom: 60px;
+  left: 175px;
+  bottom: 165px;
+`;
+const NickNameView = styled.View``;
+const UserInfoView = styled.View``;
+const NickNameInput = styled.TextInput`
+  width: 185px;
+  height: 30px;
+  left: 10px;
+  bottom: 50px;
+  padding: 8px;
+  color: ${DARK_BTN};
+`;
+const MyIntroView = styled.View`
+  width: 90%;
+  height: 300%;
+  bottom: 150px;
+  left: 10px;
+`;
+const MyInfoText = styled.Text`
+  color: ${DARK_BTN};
+  font-size: 15px;
 `;

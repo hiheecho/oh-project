@@ -19,9 +19,10 @@ export const getDetail = async ({ queryKey }) => {
   const [_, postId] = queryKey;
   return await getDoc(doc(dbService, "posts", postId));
 };
+
 // Update
-export const updatePost = async ({ id, text }) => {
-  await updateDoc(doc(dbService, "posts", id), { text });
+export const updatePost = async ({ id, text, videoLink }) => {
+  await updateDoc(doc(dbService, "posts", id), { text, videoLink });
 };
 
 export const updateLikes = async ({ id, userLikes }) => {

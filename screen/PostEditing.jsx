@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { updatePost } from "../posts.js";
-import { useMutation } from "react-query";
+import { QueryClient, useMutation } from "react-query";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const PostEditing = ({
@@ -15,6 +15,7 @@ const PostEditing = ({
   },
 }) => {
   const [text, setText] = useState(item.text);
+  const [videoLink, setVideoLink] = useState(item.videoLink);
   const { navigate } = useNavigation();
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
@@ -35,6 +36,10 @@ const PostEditing = ({
     {
       onSuccess: () => {
         console.log("게시글 수정");
+        //"contents"라는 쿼리키를 가진 쿼리를 리패치 하라는 명령이 실행되는 부분
+        // QueryClient.refetchQueries(["contents", 1], {
+        //   active: true,
+        // });
       },
       onError: (error) => {
         console.log("error", error);
@@ -46,6 +51,18 @@ const PostEditing = ({
     return <PostBtnInactive>수정</PostBtnInactive>;
   }
 
+<<<<<<< HEAD
+=======
+  const onUpdatePost = async () => {
+    try {
+      await edit({ id: item.id, text, videoLink });
+      navigate("Tabs", { screen: "Main" });
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+>>>>>>> develop
   return (
     <Contents>
       <FakeNavi>
@@ -63,6 +80,11 @@ const PostEditing = ({
           </PostBtnActive>
         )}
       </FakeNavi>
+      <YoutubeInput
+        value={videoLink}
+        onChangeText={setVideoLink}
+        placeholderTextColor="#a1a1a1"
+      />
       <TextArea
         value={text}
         onChangeText={setText}
@@ -130,7 +152,14 @@ const TextArea = styled.TextInput`
   color: ${(props) => props.theme.color};
   background-color: ${(props) => props.theme.background};
 `;
-
+const YoutubeInput = styled.TextInput`
+  height: ${SCREEN_HEIGHT / 13 + "px"};
+  padding: 20px;
+  font-size: 17px;
+  color: ${(props) => props.theme.color};
+  background-color: ${(props) => props.theme.background};
+  margin-bottom: 2px;
+`;
 const LettersCount = styled.View`
   padding: 15px;
   font-size: 18px;
