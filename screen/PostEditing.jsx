@@ -5,7 +5,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { BRAND_COLOR } from "../color";
 import { updatePost } from "../posts.js";
-import { QueryClient, useMutation } from "react-query";
+import { useMutation } from "react-query";
 // import useKeyboardHeight from "react-native-use-keyboard-height";
 
 const PostEditing = ({
@@ -20,15 +20,6 @@ const PostEditing = ({
 
   // 키보드 높이에 따른 TextArea height 변경 작업(미완료)
   // const keyboardHeight = useKeyboardHeight();
-
-  const onUpdatePost = async () => {
-    try {
-      await edit({ id: item.id, text });
-      navigate("Tabs", { screen: "Main" });
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
 
   const { isLoading, mutate: edit } = useMutation(
     ["update", item.id],
@@ -51,8 +42,6 @@ const PostEditing = ({
     return <PostBtnInactive>수정</PostBtnInactive>;
   }
 
-<<<<<<< HEAD
-=======
   const onUpdatePost = async () => {
     try {
       await edit({ id: item.id, text, videoLink });
@@ -62,7 +51,6 @@ const PostEditing = ({
     }
   };
 
->>>>>>> develop
   return (
     <Contents>
       <FakeNavi>

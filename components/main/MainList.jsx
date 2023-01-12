@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { View, TouchableOpacity, StyleSheet } from "react-native";
+import { TouchableOpacity, StyleSheet } from "react-native";
 import styled from "@emotion/native";
 import {
   DARK_BTN,
   DROPDOWN_FONT_COLOR,
   DROPDOWN_BACKGROUND_COLOR,
 } from "../../color";
-import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import { deletePost } from "../../posts";
 import { useMutation } from "react-query";
 import { Alert } from "react-native";
 import Likes from "./Likes";
+import DropDown from "../DropDown";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
@@ -81,7 +81,6 @@ const MainList = ({ item }) => {
             onDeletePost={onDeletePost}
             item={item}
             goToPostEditing={goToPostEditing}
-
           />
         ) : null}
       </CommentRow>
@@ -114,7 +113,7 @@ const CommentText = styled.Text`
   font-size: 15px;
   margin-bottom: 20px;
   color: ${(props) => props.theme.color};
-  width: 100%;
+  width: 95%;
 `;
 const CommentName = styled.Text`
   position: absolute;
@@ -123,48 +122,6 @@ const CommentName = styled.Text`
   font-size: 17px;
   font-weight: 600;
   color: ${(props) => props.theme.color};
-`;
-
-// 수정 & 삭제 드롭다운
-const EditDeleteBtn = styled.TouchableOpacity`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
-
-const DropDownView = styled.View`
-  position: absolute;
-  margin-top: 20px;
-  right: 5px;
-  width: 100px;
-  height: 110px;
-  border-radius: 10px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  background-color: ${DROPDOWN_BACKGROUND_COLOR};
-`;
-
-const DropDownEdit = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 8px;
-  padding-bottom: 10px;
-  border-bottom-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-const DropDownDelete = styled.TouchableOpacity`
-  margin-left: 15px;
-  margin-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  border-top-width: 0.3px;
-  border-color: ${DARK_BTN};
-`;
-
-const DropDownText = styled.Text`
-  text-align: center;
-  font-size: 18px;
-  color: ${DROPDOWN_FONT_COLOR};
 `;
 
 export default MainList;

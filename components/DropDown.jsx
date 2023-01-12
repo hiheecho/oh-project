@@ -11,7 +11,6 @@ import { useState, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
 const DropDown = ({ onDeletePost, goToPostEditing }) => {
-
   useFocusEffect(
     useCallback(() => {
       return () => {
@@ -21,10 +20,6 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
   );
 
   const [check, setCheck] = useState(false);
-
-  if (isLoadingDeleting) {
-    return <DropDownText>삭제</DropDownText>;
-  }
 
   return (
     <EditDeleteBtn>
@@ -37,10 +32,10 @@ const DropDown = ({ onDeletePost, goToPostEditing }) => {
         {check === true ? (
           <DropDownView>
             <DropDownEdit onPress={goToPostEditing}>
-              <DropDownText>글 수정</DropDownText>
+              <DropDownText>수정</DropDownText>
             </DropDownEdit>
             <DropDownDelete onPress={onDeletePost}>
-              <DropDownText>글 삭제</DropDownText>
+              <DropDownText>삭제</DropDownText>
             </DropDownDelete>
           </DropDownView>
         ) : null}
