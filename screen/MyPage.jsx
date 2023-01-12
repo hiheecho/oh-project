@@ -29,8 +29,6 @@ const MyPage = () => {
   const [myComments, setMyComments] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
 
-  // const test = auth.currentUser.uid;
-
   /**작성한 글 불러오기 */
   useEffect(() => {
     const q = query(

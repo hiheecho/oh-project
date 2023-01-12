@@ -4,7 +4,6 @@ import { useNavigation } from "@react-navigation/native";
 import { auth } from "../../firebase";
 import Likes from "./Likes";
 import DropDown from "../DropDown";
-import { SCREEN_HEIGHT } from "../../util";
 
 const MainList = ({ item }) => {
   const { navigate } = useNavigation();
