@@ -99,14 +99,16 @@ const DetailContent = ({ item }) => {
           goToPostEditing={goToPostEditing}
         />
       ) : null}
-      <YoutubeWrapper>
-        <YoutubePlayer
-          height={230}
-          play={playing}
-          videoId={data?.data().videoLink?.slice(-11)}
-          onChangeState={onStateChange}
-        />
-      </YoutubeWrapper>
+      {item.videoLink ? (
+        <YoutubeWrapper>
+          <YoutubePlayer
+            height={SCREEN_HEIGHT / 3.5}
+            play={playing}
+            videoId={data?.data().videoLink?.slice(-11)}
+            onChangeState={onStateChange}
+          />
+        </YoutubeWrapper>
+      ) : null}
       <ContentText>{data?.data().text}</ContentText>
     </View>
   );
