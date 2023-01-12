@@ -65,10 +65,6 @@ const MainList = ({ item }) => {
     ]);
   };
 
-  if (isLoadingDeleting) {
-    return <DropDownText>삭제</DropDownText>;
-  }
-
   return (
     <TouchableOpacity onPress={goToDetail}>
       <CommentRow>
@@ -76,6 +72,7 @@ const MainList = ({ item }) => {
           style={StyleSheet.absoluteFill}
           source={require("../assets/icon.png")}
         />
+
         <CommentName>{item.userName}</CommentName>
         <CommentText>{item.text}</CommentText>
         {item.userId === auth.currentUser.uid ? (
@@ -83,6 +80,7 @@ const MainList = ({ item }) => {
             onDeletePost={onDeletePost}
             item={item}
             goToPostEditing={goToPostEditing}
+
           />
         ) : null}
       </CommentRow>

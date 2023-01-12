@@ -91,6 +91,7 @@ const DetailContent = ({ item }) => {
           />
           <Nickname>{data?.data().userName}</Nickname>
         </UserInfo>
+
       </ContentHeader>
       {item.userId === auth.currentUser.uid ? (
         <DropDown
@@ -150,8 +151,10 @@ const ContentText = styled.Text`
 
   color: ${(props) => props.theme.color};
 `;
+
 const YoutubeWrapper = styled.View`
   width: 98%;
   margin: 40px auto 40px auto;
 `;
 export default DetailContent;
+
