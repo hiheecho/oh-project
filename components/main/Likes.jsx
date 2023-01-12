@@ -48,7 +48,7 @@ const Likes = ({ item }) => {
       {likesArray?.length === 0 ? (
         <AntDesign
           name="heart"
-          size={15}
+          size={20}
           color={isDark ? DARK_COLOR : LIGHT_COLOR}
           onPress={onCountLikes}
         />
@@ -56,7 +56,7 @@ const Likes = ({ item }) => {
         <>
           <AntDesign
             name="heart"
-            size={15}
+            size={20}
             color={BRAND_COLOR}
             onPress={onCountLikes}
           />
@@ -71,12 +71,13 @@ export default Likes;
 
 const LikesArea = styled.View`
   flex-direction: row;
-  margin-left: 3%;
+  height: 20px;
 `;
 
 const LikesCount = styled.Text`
-  font-size: 15px;
+  font-size: 18px;
   font-weight: bold;
-  margin: -1% 0 0 1%;
+  margin-left: 10px;
+  margin-top: -3px;
   color: ${(props) => props.theme.color};
 `;

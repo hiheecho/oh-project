@@ -7,7 +7,7 @@ import { auth } from "../firebase";
 import { BRAND_COLOR } from "../color";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../util";
+import { SCREEN_WIDTH } from "../util";
 
 import { Feather } from "@expo/vector-icons";
 
@@ -74,7 +74,7 @@ const SignUp = () => {
   };
 
   return (
-    <SignUpContainer isDark={isDark}>
+    <SignUpContainer>
       <ImageContainer>
         {isDark ? (
           <ImageBox source={require("../assets/mainLogoDark.png")} />
@@ -98,48 +98,53 @@ const SignUp = () => {
           />
         </InputContainer>
         <InputContainer>
-          <InputBox
-            placeholder="비밀번호를 입력해주세요"
-            placeholderTextColor="#a1a1a1"
-            value={userPassword}
-            secureTextEntry={visible}
-            onChangeText={setUserPassword}
-          />
+          <PasswordBox>
+            <InputBox
+              placeholder="비밀번호를 입력해주세요"
+              placeholderTextColor="#a1a1a1"
+              value={userPassword}
+              secureTextEntry={visible}
+              onChangeText={setUserPassword}
+            />
+            <ShowHideButton
+              onPress={() => {
+                setVisible(!visible), setPwShow(!pwShow);
+              }}
+            >
+              <Feather
+                name={pwShow === false ? "eye-off" : "eye"}
+                size={24}
+                color={"#6b6b6b79"}
+              />
+            </ShowHideButton>
+          </PasswordBox>
 
-          <InputBox
-            placeholder="비밀번호를 한번 더 입력해주세요"
-            placeholderTextColor="#a1a1a1"
-            value={userPasswordCheck}
-            secureTextEntry={visible}
-            onChangeText={setUserPasswordCheck}
-            onSubmitEditing={() => {
-              handleSignUp();
-            }}
-          />
-          <PwHideTouchInput
-            onPress={() => {
-              setVisible(!visible), setPwShow(!pwShow);
-            }}
-          >
-            <Feather
-              name={pwShow === false ? "eye-off" : "eye"}
-              size={24}
-              color={"#6b6b6b79"}
+          <PasswordBox>
+            <InputBox
+              placeholder="비밀번호를 한번 더 입력해주세요"
+              placeholderTextColor="#a1a1a1"
+              value={userPasswordCheck}
+              secureTextEntry={visible}
+              onChangeText={setUserPasswordCheck}
+              onSubmitEditing={() => {
+                handleSignUp();
+              }}
             />
-          </PwHideTouchInput>
-          <PwHideTouchCheck
-            onPress={() => {
-              setVisible(!visible), setPwShow(!pwShow);
-            }}
-          >
-            <Feather
-              name={pwShow === false ? "eye-off" : "eye"}
-              size={24}
-              color={"#6b6b6b79"}
-            />
-          </PwHideTouchCheck>
+            <ShowHideButton
+              onPress={() => {
+                setVisible(!visible), setPwShow(!pwShow);
+              }}
+            >
+              <Feather
+                name={pwShow === false ? "eye-off" : "eye"}
+                size={24}
+                color={"#6b6b6b79"}
+              />
+            </ShowHideButton>
+          </PasswordBox>
         </InputContainer>
       </KeyboardAvoidingView>
+
       <SignUpButton
         onPress={() => {
           handleSignUp();
@@ -162,15 +167,15 @@ const SignUpContainer = styled.View`
 `;
 
 const ImageContainer = styled.View`
+  justify-content: center;
+  align-items: center;
   width: ${SCREEN_WIDTH / 2 + "px"};
-  height: ${SCREEN_HEIGHT / 7 + "px"};
-  position: absolute;
-  right: 32%;
-  top: 24%;
+  height: ${SCREEN_WIDTH / 4.2 + "px"};
+  margin-bottom: 20px;
 `;
 
 const ImageBox = styled.Image`
-  width: 130%;
+  width: 100%;
   height: 100%;
 `;
 
@@ -182,13 +187,22 @@ const InputBox = styled.TextInput`
   padding: 5px 15px;
   margin-bottom: 10px;
 
-  background-color: #eee;
+  background-color: ${(props) => props.theme.gray};
+`;
+const PasswordBox = styled.View`
+  flex-direction: row;
+  align-items: center;
+`;
+const ShowHideButton = styled.TouchableOpacity`
+  position: absolute;
+  height: 24px;
+  right: 15px;
+  bottom: 18px;
 `;
 
 const InputContainer = styled.View`
-  margin-bottom: 10px;
+  margin: 10px 0;
   width: 80%;
-  top: 12%;
 `;
 
 const LoginButton = styled.TouchableOpacity`
@@ -200,8 +214,6 @@ const LoginButton = styled.TouchableOpacity`
   align-items: center;
 
   background-color: ${BRAND_COLOR};
-  position: absolute;
-  bottom: 24.5%;
 `;
 
 const SignUpButton = styled.TouchableOpacity`
@@ -209,28 +221,18 @@ const SignUpButton = styled.TouchableOpacity`
   height: 50px;
   border-radius: 10px;
 
-  margin-bottom: 10px;
+  margin: 10px 0;
 
   justify-content: center;
   align-items: center;
 
   background-color: ${BRAND_COLOR};
-  position: absolute;
-  bottom: 30%;
 `;
 
 const TextBox = styled.Text`
   color: #fff;
   font-weight: bold;
   font-size: 16px;
-`;
-const PwHideTouchInput = styled.TouchableOpacity`
-  bottom: 62%;
-  left: 87%;
-`;
-const PwHideTouchCheck = styled.TouchableOpacity`
-  bottom: 45%;
-  left: 87%;
 `;
 
 export default SignUp;

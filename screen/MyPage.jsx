@@ -1,14 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-  Dimensions,
-  FlatList,
-  TextInput,
-  ActivityIndicator,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList, ActivityIndicator, TouchableOpacity } from "react-native";
 import {
   collection,
   doc,
@@ -19,40 +10,22 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import {
-  LIGHT_GRAY,
-  DARK_COLOR,
-  LIGHT_COLOR,
-  DARK_GRAY,
-  DARK_BTN,
-} from "../color";
+import { DARK_BTN } from "../color";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import styled from "@emotion/native";
-import { StyleSheet, useColorScheme, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { SCREEN_HEIGHT } from "../util";
 import { dbService, auth } from "../firebase";
 import { updateProfile } from "firebase/auth";
-import DropDown from "../components/DropDown";
 import { launchImageLibraryAsync } from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import Likes from "../components/main/Likes";
-/**-------------------------------postsExample---------------------------------- */
-/** 참고contents
-    const newPost = {
-    text,
-    createdAt: Date.now(),
-    isEdit: false,
-    userName: auth.currentUser.displayName,
-    userId: auth.currentUser?.uid,
-  };
-/**---------------------------------Poster------------------------------------- */
+import MainList from "../components/main/MainList";
+
 const MyPage = () => {
+  const [image, setImage] = useState();
+
   const onLogOutClick = () => {
     auth.signOut();
   };
-  const isDark = useColorScheme() === "dark";
-  const { navigate } = useNavigation();
   const [myComments, setMyComments] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
 
@@ -121,6 +94,7 @@ const MyPage = () => {
 
     const getUserData = () => {
       setDisPlayName(auth.currentUser.displayName);
+      setImage(auth.currentUser.photoURL);
     };
 
     getData();
@@ -132,25 +106,14 @@ const MyPage = () => {
     setIsEdit(true);
   };
 
-  /**-----------------------------------IMAGE PICK--------------------------------------- */
-  const [image, setImage] = useState();
   const [uploading, setUploading] = useState();
 
   const _maybeRenderUploadingOverlay = () => {
     if (uploading) {
       return (
-        <View
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              backgroundColor: "rgba(0,0,0,0.4)",
-              alignItems: "center",
-              justifyContent: "center",
-            },
-          ]}
-        >
+        <ActivityIndicatorBox>
           <ActivityIndicator color="#fff" animating size="large" />
-        </View>
+        </ActivityIndicatorBox>
       );
     }
   };
@@ -160,7 +123,7 @@ const MyPage = () => {
       return <MyImg source={require("../assets/icon.png")} />;
     }
 
-    return <MyImg source={{ uri: auth.currentUser.photoURL }} />;
+    return <MyImg source={{ uri: image }} />;
   };
 
   const _pickImage = async () => {
@@ -178,11 +141,13 @@ const MyPage = () => {
 
       if (!pickerResult.cancelled) {
         const uploadUrl = await uploadImageAsync(pickerResult.uri);
-        setImage(uploadUrl);
+
         updateProfile(auth.currentUser, {
           displayName: auth.currentUser.displayName,
           photoURL: uploadUrl,
         });
+
+        setImage(uploadUrl);
       }
     } catch (e) {
       console.log(e);
@@ -218,18 +183,17 @@ const MyPage = () => {
     return await getDownloadURL(fileRef);
   };
 
-  /**-----------------------------------Return--------------------------------------- */
   return (
     <>
       <DimensionView>
-        <ImgBox
+        <TouchableOpacity
           onPress={() => {
             _pickImage();
           }}
         >
           {_maybeRenderImage()}
           {_maybeRenderUploadingOverlay()}
-        </ImgBox>
+        </TouchableOpacity>
 
         {isEdit ? (
           <ProfileEdit
@@ -292,42 +256,34 @@ const MyPage = () => {
       <FlatList
         data={myComments}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <CommentContainer>
-            <MyCommentRow>
-              <MyCommentHeader>
-                <MyCommentImg source={{ uri: item.userImage }} />
-                <MyCommentName>{item.userName}</MyCommentName>
-              </MyCommentHeader>
-              <MyCommentText numberOfLines={3}>{item.text}</MyCommentText>
-              <DropDown item={item} />
-              <LikesBox>
-                <Likes item={item} />
-              </LikesBox>
-            </MyCommentRow>
-          </CommentContainer>
-        )}
+        renderItem={({ item }) => <MainList item={item} />}
       />
     </>
   );
 };
 export default MyPage;
-/**-----------------------------------Styled--------------------------------------- */
 const DimensionView = styled.View`
   height: ${SCREEN_HEIGHT / 4.5 + "px"};
   flex-direction: row;
 `;
-const CommentContainer = styled.View`
-  align-items: center;
-  margin: 5px 0;
-`;
 
-const ImgBox = styled.TouchableOpacity``;
 const MyImg = styled.Image`
   width: 120px;
   height: 120px;
   border-radius: 100px;
   margin: 20px;
+`;
+
+const ActivityIndicatorBox = styled.View`
+  top: 20px;
+  left: 20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 60px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.4);
+  align-items: center;
+  justify-content: center;
 `;
 
 const ProfileEdit = styled.TouchableOpacity`
@@ -348,37 +304,9 @@ const MyInfoName = styled.Text`
   font-weight: 700;
   color: ${(props) => props.theme.color};
 `;
-const MyCommentRow = styled.View`
-  background-color: ${(props) => props.theme.gray};
-  margin: auto;
-  width: 95%;
-  border-radius: 10px;
-  margin: 5px 0;
-  padding: 10px 15px 40px 15px;
-`;
-const MyCommentHeader = styled.View`
-  flex-direction: row;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-const MyCommentImg = styled.Image`
-  width: 50px;
-  height: 50px;
-  border-radius: 50px;
-`;
-const MyCommentName = styled.Text`
-  margin-left: 10px;
-  font-size: 17px;
-  font-weight: 600;
-  color: ${(props) => props.theme.color};
-`;
-const MyCommentText = styled.Text`
-  color: ${(props) => props.theme.color};
-  font-size: 15px;
-  margin-bottom: 5px;
-`;
 const LogOutText = styled.Text`
-  font-size: 12px;
+  font-size: 16px;
+  font-weight: bold;
   color: white;
 `;
 const LogOutBtn = styled.TouchableOpacity`
@@ -402,10 +330,4 @@ const NickNameInput = styled.TextInput`
 const MyInfoText = styled.Text`
   width: 80%;
   color: ${(props) => props.theme.color};
-`;
-
-const LikesBox = styled.View`
-  position: absolute;
-  bottom: 10px;
-  left: 15px;
 `;
