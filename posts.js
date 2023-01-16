@@ -15,9 +15,9 @@ export const addPost = async (newPost) => {
 };
 
 // Read
-export const getDetail = async ({ queryKey }) => {
+export const getDetail = ({ queryKey }) => {
   const [_, postId] = queryKey;
-  return await getDoc(doc(dbService, "posts", postId));
+  return getDoc(doc(dbService, "posts", postId));
 };
 
 // Update
