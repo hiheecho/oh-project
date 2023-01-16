@@ -48,7 +48,7 @@ const PostEditing = ({
         <BackBtn onPress={() => goBack()}>
           <Ionicons name="chevron-back-outline" size={24} color="white" />
         </BackBtn>
-        {(text && text.length > 150) || !text ? (
+        {text?.length > 150 || !text ? (
           <PostBtnInactive>수정</PostBtnInactive>
         ) : (
           <PostBtnActive
